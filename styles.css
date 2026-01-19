@@ -1,0 +1,403 @@
+/* Minecraft Fonts */
+@font-face {
+    font-family: 'MinecraftFive';
+    src: url('https://raw.githubusercontent.com/Mojang/web-theme-bootstrap/main/assets/fonts/MinecraftFive-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Minecraft';
+    src: url('https://raw.githubusercontent.com/IdreesInc/Minecraft-Font/main/fonts/otf/MinecraftRegular.otf') format('opentype');
+    font-weight: normal;
+}
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.logo {
+    width: 400px;
+    height: auto;
+    margin-bottom: 20px;
+    image-rendering: pixelated;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Minecraft', 'Press Start 2P', monospace;
+    background: url('./assets/pixel-black.png');
+    background-size: 500px auto;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #ffffff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Main Container */
+.main-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 20px 140px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Profile Section */
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: -12px;
+}
+
+/* Frame Container - Minecraft Bedrock Style */
+.frame-container {
+    position: relative;
+    padding: 8px;
+    margin-bottom: 10px;
+    background: #48494a;
+    border: 4px solid #1e1e1f;
+    box-shadow: 
+        inset 0 -4px 0 #313233,
+        inset 0 4px 0 #5a5b5c;
+}
+
+/* Photo Wrapper */
+.photo-wrapper {
+    background: #313233;
+    padding: 4px;
+    border: 2px solid #1e1e1f;
+    overflow: hidden;
+}
+
+.profile-photo {
+    width: 180px;
+    height: 180px;
+    display: block;
+    image-rendering: pixelated;
+    object-fit: cover;
+    object-position: center top;
+}
+
+/* Header Name - Minecraft Style */
+.header-name {
+    font-family: 'MinecraftFive', 'Press Start 2P', monospace;
+    font-size: 2.8rem;
+    color: #ffffff;
+    text-shadow: 
+        3px 3px 0 #3f3f3f;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+/* Description - Green Background */
+.description {
+    font-family: 'Minecraft', monospace;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #ffffff;
+    max-width: 600px;
+    margin-bottom: 30px;
+    padding: 16px 24px;
+    background: #3c8527;
+    border: 4px solid #1e1e1f;
+    box-shadow: 
+        inset 0 -4px 0 #2d6a1e,
+        inset 0 4px 0 #4ca632;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Separator Line */
+.separator-line {
+    width: 100%;
+    max-width: 500px;
+    height: 4px;
+    background: #313233;
+    border-top: 1px solid #48494a;
+    border-bottom: 1px solid #1e1e1f;
+    margin: 10px 0 40px;
+}
+
+/* Social Section */
+.social-section {
+    text-align: center;
+}
+
+.social-title {
+    font-family: 'MinecraftFive', monospace;
+    font-size: 1.3rem;
+    color: #ffffff;
+    text-shadow: 2px 2px 0 #3f3f3f;
+    margin-bottom: 20px;
+}
+
+.social-container {
+    background: #48494a;
+    border: 4px solid #1e1e1f;
+    box-shadow: 
+        inset 0 -4px 0 #313233,
+        inset 0 4px 0 #5a5b5c;
+    padding: 24px 30px;
+    max-width: 600px;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.social-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    background: transparent;
+    border: none;
+    transition: transform 0.15s ease;
+}
+
+.social-link img {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+}
+
+.social-link:hover {
+    transform: scale(1.15);
+}
+
+/* Footer with iOS Glass Effect */
+.footer-glass {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: rgba(40, 40, 40, 0.7);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.copyright {
+    font-family: 'Minecraft';
+    font-weight: 300;
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.5px;
+}
+
+.contact-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.contact-item {
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'SF Pro Display', sans-serif;
+    font-weight: 300;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s ease;
+}
+
+.contact-item:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+.separator {
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 200;
+}
+
+.whatsapp-icon {
+    width: 20px;
+    height: 20px;
+    image-rendering: pixelated;
+}
+
+.location {
+    font-family: Helvetica Neue, 'SF Pro Display', sans-serif;
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: -px;
+}
+
+/* Responsive Design - Tablet */
+@media (max-width: 768px) {
+    .social-container {
+        max-width: 500px;
+        padding: 20px 24px;
+    }
+    
+    .social-link img {
+        width: 56px;
+        height: 56px;
+    }
+    .logo{
+        width: 400px;
+    }
+}
+
+/* Responsive Design - Mobile */
+@media (max-width: 600px) {
+    .header-name {
+        font-size: 2rem;
+    }
+    
+    .profile-photo {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .description {
+        font-size: 0.9rem;
+        padding: 14px 18px;
+    }
+    
+    .social-container {
+        max-width: 340px;
+        width: 95%;
+        padding: 16px 18px;
+    }
+    
+    .social-grid {
+        gap: 6px;
+    }
+    
+    .social-link img {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .footer-content {
+        gap: 8px;
+    }
+    
+    .contact-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .separator {
+        display: none;
+    }
+    .logo{
+        width: 300px;
+    }
+}
+@media (max-width: 470px) {
+    .logo {
+        width: 290px;
+    }
+
+}
+
+/* Scrollbar Minecraft Style */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1e1f;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #48494a;
+    border: 2px solid #1e1e1f;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5a5b5c;
+}
+
+/* Selection Style */
+::selection {
+    background: rgba(60, 133, 39, 0.6);
+    color: #ffffff;
+}
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #3c8527;
+    opacity: 0.7;
+    animation: floatParticle 8s infinite ease-in-out;
+    image-rendering: pixelated;
+}
+.particle:nth-child(1) { left: 5%; top: 20%; animation-delay: 0s; background: #4ca632; }
+.particle:nth-child(2) { left: 15%; top: 60%; animation-delay: 1s; width: 6px; height: 6px; }
+.particle:nth-child(3) { left: 25%; top: 40%; animation-delay: 2s; background: #5cb83c; }
+.particle:nth-child(4) { left: 35%; top: 80%; animation-delay: 0.5s; width: 10px; height: 10px; }
+.particle:nth-child(5) { left: 45%; top: 30%; animation-delay: 1.5s; }
+.particle:nth-child(6) { left: 55%; top: 70%; animation-delay: 2.5s; background: #4ca632; }
+.particle:nth-child(7) { left: 65%; top: 50%; animation-delay: 3s; width: 6px; height: 6px; }
+.particle:nth-child(8) { left: 75%; top: 25%; animation-delay: 0.8s; background: #5cb83c; }
+.particle:nth-child(9) { left: 85%; top: 65%; animation-delay: 1.8s; }
+.particle:nth-child(10) { left: 90%; top: 45%; animation-delay: 2.2s; width: 10px; height: 10px; }
+.particle:nth-child(11) { left: 10%; top: 85%; animation-delay: 3.5s; background: #4ca632; }
+.particle:nth-child(12) { left: 30%; top: 15%; animation-delay: 4s; width: 6px; height: 6px; }
+.particle:nth-child(13) { left: 50%; top: 90%; animation-delay: 4.5s; }
+.particle:nth-child(14) { left: 70%; top: 10%; animation-delay: 5s; background: #5cb83c; }
+.particle:nth-child(15) { left: 80%; top: 75%; animation-delay: 5.5s; width: 6px; height: 6px; }
+
+@keyframes floatParticle {
+    0%, 100% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0.7;
+    }
+    25% {
+        transform: translateY(-30px) translateX(10px) rotate(45deg);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateY(-50px) translateX(-5px) rotate(90deg);
+        opacity: 0.8;
+    }
+    75% {
+        transform: translateY(-20px) translateX(-10px) rotate(135deg);
+        opacity: 0.4;
+    }
+}
