@@ -211,7 +211,7 @@ body {
 
 .copyright {
     font-family: 'Minecraft-Bold';
-    font-weight: 300;
+    font-weight: bold;
     font-size: 0.6rem;
     color: rgba(255, 255, 255, 0.8);
     letter-spacing: 0.5px;
