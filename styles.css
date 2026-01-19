@@ -30,7 +30,7 @@ html {
 }
 
 body {
-    font-family: 'Minecraft', 'Press Start 2P', monospace;
+    font-family: 'Minecraft';
     background: url('./assets/pixel-black.png');
     background-size: 500px auto;
     background-position: center;
@@ -101,7 +101,7 @@ body {
 
 /* Description - Green Background */
 .description {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 1rem;
     line-height: 1.8;
     color: #ffffff;
