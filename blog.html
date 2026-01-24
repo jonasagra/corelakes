@@ -95,44 +95,29 @@
             
             // Render posts
             posts.forEach(post => {
-                const excerpt = post.content.length > 150 
-                    ? post.content.substring(0, 150) + '...' 
-                    : post.content;
+                const excerpt = post.excerpt || (post.content.length > 150 
+                    ? post.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...' 
+                    : post.content.replace(/<[^>]*>/g, ''));
                 
                 const postElement = document.createElement('article');
                 postElement.className = 'blog-post';
                 postElement.innerHTML = `
+                    ${post.image_url ? `
+                        <div class="post-image">
+                            <img src="${post.image_url}" alt="${escapeHtml(post.title)}">
+                        </div>
+                    ` : ''}
                     <div class="post-content">
                         <h2 class="post-title">${escapeHtml(post.title)}</h2>
                         <p class="post-excerpt">${escapeHtml(excerpt)}</p>
                         <div class="post-meta">
                             <span class="post-date">📅 ${post.date}</span>
-                            <button class="post-read-more" onclick="openPost(${post.id})">Ler mais →</button>
+                            <a href="posts.html?slug=${post.slug}" class="post-read-more">Ler mais →</a>
                         </div>
                     </div>
                 `;
                 blogPosts.appendChild(postElement);
             });
-        }
-        
-        // Open full post
-        function openPost(id) {
-            const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
-            const post = posts.find(p => p.id === id);
-            
-            if (!post) return;
-            
-            const modal = document.createElement('div');
-            modal.className = 'post-modal';
-            modal.innerHTML = `
-                <div class="post-modal-content">
-                    <button class="modal-close" onclick="this.parentElement.parentElement.remove()">✕</button>
-                    <h1 class="modal-title">${escapeHtml(post.title)}</h1>
-                    <p class="modal-date">📅 ${post.date}</p>
-                    <div class="modal-body">${escapeHtml(post.content).replace(/\n/g, '<br>')}</div>
-                </div>
-            `;
-            document.body.appendChild(modal);
         }
         
         // Escape HTML to prevent XSS
