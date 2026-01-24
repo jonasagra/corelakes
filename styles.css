@@ -413,7 +413,7 @@ body {
 .location-wrapper {
     display: flex;
     align-items: center; 
-    gap: 3px;       
+    gap: 16px;       
 }
 .location {
     font-weight: 300;
