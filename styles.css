@@ -225,7 +225,7 @@ body {
 }
 
 .contact-item {
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'SF Pro Display', sans-serif;
+    font-family: Minecraft;
     font-weight: 300;
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.7);
@@ -238,6 +238,7 @@ body {
 
 .contact-item:hover {
     color: rgba(255, 255, 255, 1);
+    
 }
 
 .separator {
@@ -249,14 +250,6 @@ body {
     width: 20px;
     height: 20px;
     image-rendering: pixelated;
-}
-
-.location {
-    font-family: Helvetica Neue, 'SF Pro Display', sans-serif;
-    font-weight: 300;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.6);
-    margin-top: -px;
 }
 
 /* Responsive Design - Tablet */
@@ -405,4 +398,26 @@ body {
         transform: translateY(-20px) translateX(-10px) rotate(135deg);
         opacity: 0.4;
     }
+}
+.email-icon {
+    width: 20px;
+    height: 20px;
+    image-rendering: pixelated;
+}
+.location-icon {
+    width: 20px;
+    height: 20px;
+    image-rendering: pixelated;
+    
+}
+.location-wrapper {
+    display: flex;
+    align-items: center; 
+    gap: 3px;       
+}
+.location {
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: Minecraft;    
 }
