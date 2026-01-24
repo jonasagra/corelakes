@@ -50,7 +50,7 @@ body {
 .main-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 60px 20px 140px;
+    padding: 100px 20px 140px;
     position: relative;
     z-index: 1;
 }
@@ -68,7 +68,7 @@ body {
     align-items: flex-end;
     justify-content: center;
     gap: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
 }
 /* Frame Container - Minecraft Bedrock Style */
 .frame-container {
