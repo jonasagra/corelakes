@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Corelakes</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://minecraft.wiki/images/Corelakes_pfp_avatar.png?84b72" type="image/png">
+    <meta name="description" content="Blog pessoal do Corelakes - Pensamentos, experiências e dia a dia.">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" title="Início">
+                    <img src="https://minecraft.wiki/images/Grass_Block_%28item%29_BE2.png" alt="Início" class="nav-icon">
+                </a>
+                <a href="blog.html" class="nav-link active" title="Blog">
+                    <img src="https://minecraft.wiki/images/Book_and_Quill_JE2_BE2.gif" alt="Blog" class="nav-icon">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="main-container blog-container">
+        <!-- Blog Header -->
+        <section class="blog-header">
+            <h1 class="blog-title">Blog</h1>
+            <p class="blog-subtitle">Pensamentos, experiências e dia a dia</p>
+        </section>
+
+        <!-- Blog Posts Grid -->
+        <section class="blog-posts" id="blog-posts">
+            <!-- Posts serão carregados via JavaScript -->
+            <p class="no-posts" id="no-posts">Nenhum post publicado ainda.</p>
+        </section>
+    </main>
+
+    <!-- Footer with iOS Glass Effect -->
+    <footer class="footer-glass">
+        <div class="footer-content">
+            <div class="contact-info">
+                <a href="mailto:jonas.agra@icloud.com" class="contact-item">
+                    <span>✉️</span> jonas.agra@icloud.com
+                </a>
+                <span class="separator">|</span>
+                <a href="https://wa.me/5583981306043" class="contact-item">
+                    <img src="https://pt.minecraft.wiki/images/Socials_WhatsApp.png?9030f&format=original" alt="WhatsApp" class="whatsapp-icon">
+                    (83) 98130-6043
+                </a>
+            </div>
+            <p class="location">📍 João Pessoa - Paraíba</p>
+            <p class="copyright">© 2026 Jonas Agra - Corelakes</p>
+        </div>
+    </footer>
+
+    <script>
+        const blogPosts = document.getElementById('blog-posts');
+        const noPosts = document.getElementById('no-posts');
+        
+        // Load posts from localStorage (will be replaced by Supabase)
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
+            
+            if (posts.length === 0) {
+                noPosts.style.display = 'block';
+                return;
+            }
+            
+            noPosts.style.display = 'none';
+            
+            // Clear existing posts
+            const existingPosts = blogPosts.querySelectorAll('.blog-post');
+            existingPosts.forEach(post => post.remove());
+            
+            // Render posts
+            posts.forEach(post => {
+                const excerpt = post.content.length > 150 
+                    ? post.content.substring(0, 150) + '...' 
+                    : post.content;
+                
+                const postElement = document.createElement('article');
+                postElement.className = 'blog-post';
+                postElement.innerHTML = `
+                    <div class="post-content">
+                        <h2 class="post-title">${escapeHtml(post.title)}</h2>
+                        <p class="post-excerpt">${escapeHtml(excerpt)}</p>
+                        <div class="post-meta">
+                            <span class="post-date">📅 ${post.date}</span>
+                            <button class="post-read-more" onclick="openPost(${post.id})">Ler mais →</button>
+                        </div>
+                    </div>
+                `;
+                blogPosts.appendChild(postElement);
+            });
+        }
+        
+        // Open full post
+        function openPost(id) {
+            const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
+            const post = posts.find(p => p.id === id);
+            
+            if (!post) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'post-modal';
+            modal.innerHTML = `
+                <div class="post-modal-content">
+                    <button class="modal-close" onclick="this.parentElement.parentElement.remove()">✕</button>
+                    <h1 class="modal-title">${escapeHtml(post.title)}</h1>
+                    <p class="modal-date">📅 ${post.date}</p>
+                    <div class="modal-body">${escapeHtml(post.content).replace(/\n/g, '<br>')}</div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Load posts on page load
+        loadPosts();
+    </script>
+</body>
+</html>

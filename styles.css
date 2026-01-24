@@ -63,7 +63,13 @@ body {
     text-align: center;
     margin-bottom: -12px;
 }
-
+.photos-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
 /* Frame Container - Minecraft Bedrock Style */
 .frame-container {
     position: relative;
@@ -79,12 +85,43 @@ body {
 /* Photo Wrapper */
 .photo-wrapper {
     background: #313233;
-    padding: 4px;
-    border: 2px solid #1e1e1f;
+    padding: 6px;
+    border: 3px solid #1e1e1f;
     overflow: hidden;
 }
 
-.profile-photo {
+.frame-personal {
+    padding: 10px;
+}
+
+.frame-personal .photo-wrapper {
+    padding: 6px;
+}
+
+.personal-photo {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    object-position: center top;
+}
+
+/* Avatar Frame (Secondary - smaller) */
+.frame-avatar {
+    padding: 6px;
+    border-width: 4px;
+}
+
+.frame-avatar .photo-wrapper {
+    padding: 4px;
+    border-width: 2px;
+}
+
+.avatar-photo {
+    width: 80px;
+    height: 80px;
+}
+
+.avatar-photo {
     width: 180px;
     height: 180px;
     display: block;
@@ -92,6 +129,8 @@ body {
     object-fit: cover;
     object-position: center top;
 }
+
+
 
 /* Header Name - Minecraft Style */
 .header-name {
