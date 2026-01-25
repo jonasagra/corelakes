@@ -799,7 +799,7 @@
         // DASHBOARD FUNCTIONS
         // ============================================
         
-        function initDashboard() {
+function initDashboard() {
             // Set user email
             document.getElementById('user-email').textContent = currentUser.email;
             
@@ -824,6 +824,21 @@
             
             // Load posts
             loadPosts();
+            
+            // Check if editing a post from URL parameter
+            checkEditFromUrl();
+        }
+        
+        async function checkEditFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const editId = urlParams.get('edit');
+            
+            if (editId) {
+                // Wait a bit for Quill to initialize
+                setTimeout(() => {
+                    editPost(parseInt(editId));
+                }, 500);
+            }
         }
         async function loadPosts() {
             try {

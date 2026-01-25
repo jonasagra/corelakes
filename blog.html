@@ -76,9 +76,11 @@
 
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <script>
+   <script>
         const blogPosts = document.getElementById('blog-posts');
         const noPosts = document.getElementById('no-posts');
+        let isLoggedIn = false;
+        let supabaseClient = null;
         
         // Get Supabase config from localStorage
         function getSupabaseConfig() {
@@ -88,9 +90,26 @@
             };
         }
         
+        // Check if user is logged in
+        async function checkAuth() {
+            const config = getSupabaseConfig();
+            if (!config.url || !config.key) return false;
+            
+            try {
+                supabaseClient = window.supabase.createClient(config.url, config.key);
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                return !!session;
+            } catch (error) {
+                return false;
+            }
+        }
+        
         // Load posts from Supabase
         async function loadPosts() {
             const config = getSupabaseConfig();
+            
+            // Check if logged in
+            isLoggedIn = await checkAuth();
             
             // If no Supabase config, try localStorage as fallback
             if (!config.url || !config.key) {
@@ -99,7 +118,9 @@
             }
             
             try {
-                const supabaseClient = window.supabase.createClient(config.url, config.key);
+                if (!supabaseClient) {
+                    supabaseClient = window.supabase.createClient(config.url, config.key);
+                }
                 
                 const { data: posts, error } = await supabaseClient
                     .from('posts')
@@ -156,6 +177,12 @@
                 const postElement = document.createElement('article');
                 postElement.className = 'blog-post';
                 postElement.innerHTML = `
+                    ${isLoggedIn ? `
+                        <div class="post-admin-actions">
+                            <button class="admin-action-btn edit-btn" onclick="editPost(${post.id})" title="Editar">✏️</button>
+                            <button class="admin-action-btn delete-btn" onclick="deletePost(${post.id})" title="Excluir">🗑️</button>
+                        </div>
+                    ` : ''}
                     ${post.image_url ? `
                         <div class="post-image">
                             <img src="${post.image_url}" alt="${escapeHtml(post.title)}">
@@ -172,6 +199,32 @@
                 `;
                 blogPosts.appendChild(postElement);
             });
+        }
+        
+        // Edit post - redirect to admin with post id
+        function editPost(postId) {
+            localStorage.setItem('edit_post_id', postId);
+            window.location.href = 'admin.html?edit=' + postId;
+        }
+        
+        // Delete post
+        async function deletePost(postId) {
+            if (!confirm('Tem certeza que deseja excluir este post?')) return;
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('posts')
+                    .delete()
+                    .eq('id', postId);
+                
+                if (error) throw error;
+                
+                // Reload posts
+                loadPosts();
+                
+            } catch (error) {
+                alert('Erro ao excluir: ' + error.message);
+            }
         }
         
         // Escape HTML to prevent XSS
