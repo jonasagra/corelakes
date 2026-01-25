@@ -8,20 +8,38 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 function isSocialBot(userAgent) {
   if (!userAgent) return false;
   
+  const ua = userAgent.toLowerCase();
+  
   const botPatterns = [
+    // Facebook
     'facebookexternalhit',
-    'Facebot', 
-    'Twitterbot',
-    'WhatsApp',
-    'LinkedInBot',
-    'Slackbot',
-    'TelegramBot',
-    'Discordbot',
-    'SkypeUriPreview',
+    'facebot',
+    // Twitter/X
+    'twitterbot',
+    // WhatsApp
+    'whatsapp',
+    // Discord
+    'discordbot',
+    // LinkedIn
+    'linkedinbot',
+    // Telegram
+    'telegrambot',
+    // Slack
+    'slackbot',
+    'slack-imgproxy',
+    // Skype
+    'skypeuripreview',
+    // Pinterest
     'pinterest',
+    // Reddit
+    'redditbot',
+    // Mastodon
+    'mastodon',
+    // iMessage
+    'applebot',
   ];
   
-  return botPatterns.some(bot => userAgent.toLowerCase().includes(bot.toLowerCase()));
+  return botPatterns.some(bot => ua.includes(bot));
 }
 
 function escapeHtml(text) {
@@ -85,14 +103,14 @@ export default async function middleware(request) {
     let html = await htmlResponse.text();
     
     // Prepare meta tags
-    const title = post.title || 'Blog de Corelakes';
+    const title = post.title || 'Blog pessoal - Corelakes';
     const description = post.excerpt || '';
     const image = post.image_url || 'https://minecraft.wiki/images/Corelakes_pfp_avatar.png?84b72';
     const postUrl = `${url.origin}/posts.html?slug=${slug}`;
     
     // Inject meta tags
     html = html.replace(
-      '<title id="page-title">Blog de Corelakes</title>',
+      '<title id="page-title">Blog pessoal</title>',
       `<title id="page-title">${escapeHtml(title)} - Corelakes</title>`
     );
     
