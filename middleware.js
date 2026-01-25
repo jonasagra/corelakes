@@ -1,17 +1,16 @@
 export const config = {
-  runtime: 'edge',
+  matcher: '/posts.html',
 };
 
 const supabaseUrl = 'https://nkrpxjlixrpvmvkyzobf.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rcnB4amxpeHJwdm12a3l6b2JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyOTU1ODAsImV4cCI6MjA4NDg3MTU4MH0.EvfrUfAQKQo-scZ487m4nT2FyUggYDpavD1YTUZhfWs';
 
-// Check if request is from a social media bot
 function isSocialBot(userAgent) {
   if (!userAgent) return false;
   
   const botPatterns = [
     'facebookexternalhit',
-    'Facebot',
+    'Facebot', 
     'Twitterbot',
     'WhatsApp',
     'LinkedInBot',
@@ -25,18 +24,36 @@ function isSocialBot(userAgent) {
   return botPatterns.some(bot => userAgent.toLowerCase().includes(bot.toLowerCase()));
 }
 
-export default async function handler(request) {
-  const url = new URL(request.url);
-  const slug = url.searchParams.get('slug');
+function escapeHtml(text) {
+  if (!text) return '';
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+
+export default async function middleware(request) {
   const userAgent = request.headers.get('user-agent') || '';
   
-  // If not a bot or no slug, return original HTML
-  if (!isSocialBot(userAgent) || !slug) {
-    return fetch(new URL('/posts.html', url.origin).toString());
+  // If not a social bot, let it through normally
+  if (!isSocialBot(userAgent)) {
+    return;
+  }
+  
+  const url = new URL(request.url);
+  const slug = url.searchParams.get('slug');
+  
+  // If no slug, let it through
+  if (!slug) {
+    return;
   }
   
   try {
-    // Fetch post from Supabase using REST API
+    // Fetch post from Supabase
     const response = await fetch(
       `${supabaseUrl}/rest/v1/posts?slug=eq.${encodeURIComponent(slug)}&select=*`,
       {
@@ -48,19 +65,24 @@ export default async function handler(request) {
     );
     
     if (!response.ok) {
-      return fetch(new URL('/posts.html', url.origin).toString());
+      return;
     }
     
     const posts = await response.json();
     const post = posts[0];
     
     if (!post) {
-      return fetch(new URL('/posts.html', url.origin).toString());
+      return;
     }
     
-    // Fetch original HTML
-    const originalHtml = await fetch(new URL('/posts.html', url.origin).toString());
-    let html = await originalHtml.text();
+    // Fetch the original HTML
+    const htmlResponse = await fetch(url.toString(), {
+      headers: {
+        'user-agent': 'vercel-bot', // Avoid infinite loop
+      },
+    });
+    
+    let html = await htmlResponse.text();
     
     // Prepare meta tags
     const title = post.title || 'Blog de Corelakes';
@@ -116,24 +138,13 @@ export default async function handler(request) {
     
     return new Response(html, {
       headers: {
-        'content-type': 'text/html',
+        'content-type': 'text/html; charset=utf-8',
         'cache-control': 'public, max-age=3600',
       },
     });
     
   } catch (error) {
-    console.error('Error generating OG tags:', error);
-    return fetch(new URL('/posts.html', url.origin).toString());
+    console.error('Middleware error:', error);
+    return;
   }
-}
-
-function escapeHtml(text) {
-  const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;'
-  };
-  return text.replace(/[&<>"']/g, m => map[m]);
 }
