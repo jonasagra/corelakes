@@ -7,12 +7,14 @@
 
 @font-face {
     font-family: 'Minecraft';
-    src: url('fonts/Minecraft.ttf') format('truetype');
+    src: url('fonts/Minecraft.woff') format('woff'),
+         url('fonts/Minecraft.woff2') format('woff2');
     font-weight: normal;
 }
 @font-face {
     font-family: 'Minecraft-Bold';
-    src: url('fonts/Minecraft-Bold.ttf') format('truetype');
+    src: url('fonts/Minecraft-Bold.woff') format('woff'),
+        url('fonts/Minecraft-Bold.woff2') format('woff2');
     font-weight: normal;
 }
 
@@ -177,7 +179,7 @@ body {
 }
 
 .social-title {
-    font-family: 'MinecraftFive', monospace;
+    font-family: 'MinecraftFive', ;
     font-size: 1.3rem;
     color: #ffffff;
     text-shadow: 2px 2px 0 #3f3f3f;
@@ -528,7 +530,7 @@ body {
 }
 
 .blog-title {
-    font-family: 'MinecraftFive', monospace;
+    font-family: 'MinecraftFive';
     font-size: 2.5rem;
     color: #ffffff;
     text-shadow: 3px 3px 0 #3f3f3f;
@@ -536,7 +538,7 @@ body {
 }
 
 .blog-subtitle {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 1rem;
     color: rgba(255, 255, 255, 0.7);
 }
@@ -589,7 +591,7 @@ body {
 }
 
 .post-category {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.7rem;
     color: #4ca632;
     background: rgba(60, 133, 39, 0.2);
@@ -600,7 +602,7 @@ body {
 }
 
 .post-title {
-    font-family: 'MinecraftFive', monospace;
+    font-family: 'MinecraftFive';
     font-size: 1rem;
     color: #ffffff;
     margin-bottom: 10px;
@@ -609,7 +611,7 @@ body {
 }
 
 .post-excerpt {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.7);
     line-height: 1.5;
@@ -625,13 +627,13 @@ body {
 }
 
 .post-date {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.5);
 }
 
 .post-read-more {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.8rem;
     color: #4ca632;
     text-decoration: none;
@@ -650,7 +652,7 @@ body {
 
 /* No Posts Message */
 .no-posts {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 1rem;
     color: rgba(255, 255, 255, 0.5);
     text-align: center;
@@ -705,7 +707,7 @@ body {
 }
 
 .admin-panel h3 {
-    font-family: 'MinecraftFive', monospace;
+    font-family: 'MinecraftFive';
     font-size: 1rem;
     color: #ffffff;
     text-shadow: 2px 2px 0 #3f3f3f;
@@ -717,7 +719,7 @@ body {
     width: 100%;
     padding: 12px;
     margin-bottom: 10px;
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.9rem;
     background: #313233;
     border: 3px solid #1e1e1f;
@@ -734,7 +736,7 @@ body {
     height: 120px;
     padding: 12px;
     margin-bottom: 10px;
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.9rem;
     background: #313233;
     border: 3px solid #1e1e1f;
@@ -749,7 +751,7 @@ body {
 
 .admin-btn {
     padding: 10px 20px;
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.9rem;
     color: #ffffff;
     background: #48494a;
@@ -873,7 +875,7 @@ body {
 }
 
 .admin-title {
-    font-family: 'MinecraftFive', monospace;
+    font-family: 'MinecraftFive';
     font-size: 1.5rem;
     color: #ffffff;
     text-shadow: 2px 2px 0 #3f3f3f;
@@ -882,7 +884,7 @@ body {
 }
 
 .admin-subtitle {
-    font-family: 'MinecraftFive', monospace;
+    font-family: 'MinecraftFive';
     font-size: 1.1rem;
     color: #ffffff;
     text-shadow: 2px 2px 0 #3f3f3f;
@@ -890,7 +892,7 @@ body {
 }
 
 .admin-description {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.7);
     text-align: center;
@@ -904,7 +906,7 @@ body {
 }
 
 .admin-label {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.85rem;
     color: #4ca632;
     margin-bottom: -5px;
@@ -916,7 +918,7 @@ body {
 }
 
 .admin-link {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.5);
     background: none;
@@ -967,14 +969,14 @@ body {
 }
 
 .post-item-info h3 {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.95rem;
     color: #ffffff;
     margin-bottom: 4px;
 }
 
 .post-item-date {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.5);
 }
@@ -993,7 +995,7 @@ body {
 }
 
 .no-posts-admin {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.5);
     text-align: center;
@@ -1001,7 +1003,7 @@ body {
 }
 
 .loading, .error {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.5);
     text-align: center;
@@ -1019,7 +1021,7 @@ body {
     left: 50%;
     transform: translateX(-50%);
     padding: 12px 24px;
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.9rem;
     border: 3px solid #1e1e1f;
     z-index: 200;
@@ -1100,7 +1102,7 @@ body {
 }
 
 .modal-title {
-    font-family: 'MinecraftFive', monospace;
+    font-family: 'MinecraftFive';
     font-size: 1.5rem;
     color: #ffffff;
     text-shadow: 2px 2px 0 #3f3f3f;
@@ -1109,14 +1111,14 @@ body {
 }
 
 .modal-date {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.6);
     margin-bottom: 20px;
 }
 
 .modal-body {
-    font-family: 'Minecraft', monospace;
+    font-family: 'Minecraft';
     font-size: 1rem;
     color: #ffffff;
     line-height: 1.8;
