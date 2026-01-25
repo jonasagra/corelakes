@@ -74,12 +74,60 @@
         </div>
     </footer>
 
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script>
         const blogPosts = document.getElementById('blog-posts');
         const noPosts = document.getElementById('no-posts');
         
-        // Load posts from localStorage (will be replaced by Supabase)
-        function loadPosts() {
+        // Get Supabase config from localStorage
+        function getSupabaseConfig() {
+            return {
+                url: localStorage.getItem('supabase_url') || '',
+                key: localStorage.getItem('supabase_key') || ''
+            };
+        }
+        
+        // Load posts from Supabase
+        async function loadPosts() {
+            const config = getSupabaseConfig();
+            
+            // If no Supabase config, try localStorage as fallback
+            if (!config.url || !config.key) {
+                loadFromLocalStorage();
+                return;
+            }
+            
+            try {
+                const supabaseClient = window.supabase.createClient(config.url, config.key);
+                
+                const { data: posts, error } = await supabaseClient
+                    .from('posts')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Erro ao carregar posts:', error);
+                    loadFromLocalStorage();
+                    return;
+                }
+                
+                if (!posts || posts.length === 0) {
+                    noPosts.style.display = 'block';
+                    return;
+                }
+                
+                noPosts.style.display = 'none';
+                renderPosts(posts);
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                loadFromLocalStorage();
+            }
+        }
+        
+        // Fallback: Load from localStorage
+        function loadFromLocalStorage() {
             const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
             
             if (posts.length === 0) {
@@ -88,7 +136,11 @@
             }
             
             noPosts.style.display = 'none';
-            
+            renderPosts(posts);
+        }
+        
+        // Render posts to page
+        function renderPosts(posts) {
             // Clear existing posts
             const existingPosts = blogPosts.querySelectorAll('.blog-post');
             existingPosts.forEach(post => post.remove());
@@ -98,6 +150,8 @@
                 const excerpt = post.excerpt || (post.content.length > 150 
                     ? post.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...' 
                     : post.content.replace(/<[^>]*>/g, ''));
+                
+                const postDate = post.date || new Date(post.created_at).toLocaleDateString('pt-BR');
                 
                 const postElement = document.createElement('article');
                 postElement.className = 'blog-post';
@@ -111,7 +165,7 @@
                         <h2 class="post-title">${escapeHtml(post.title)}</h2>
                         <p class="post-excerpt">${escapeHtml(excerpt)}</p>
                         <div class="post-meta">
-                            <span class="post-date">📅 ${post.date}</span>
+                            <span class="post-date">📅 ${postDate}</span>
                             <a href="posts.html?slug=${post.slug}" class="post-read-more">Ler mais →</a>
                         </div>
                     </div>
