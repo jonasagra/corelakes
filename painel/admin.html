@@ -448,6 +448,97 @@
         .config-link button:hover {
             color: rgba(255, 255, 255, 0.8);
         }
+
+        .admin-section {
+            background: #48494a;
+            border: 4px solid #1e1e1f;
+            box-shadow: 
+                inset 0 -4px 0 #313233,
+                inset 0 4px 0 #5a5b5c;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .admin-section.hidden {
+            display: none;
+        }
+
+        .admin-title {
+            font-family: 'MinecraftFive', monospace;
+            font-size: 1.5rem;
+            color: #ffffff;
+            text-shadow: 2px 2px 0 #3f3f3f;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .admin-description {
+            font-family: 'Minecraft', monospace;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .admin-label {
+            font-family: 'Minecraft', monospace;
+            font-size: 0.85rem;
+            color: #4ca632;
+            margin-bottom: -5px;
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-family: 'Minecraft', monospace;
+            font-size: 0.9rem;
+            background: #313233;
+            border: 3px solid #1e1e1f;
+            color: #ffffff;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .admin-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .admin-btn {
+            padding: 10px 20px;
+            font-family: 'Minecraft', monospace;
+            font-size: 0.9rem;
+            color: #ffffff;
+            background: #48494a;
+            border: 3px solid #1e1e1f;
+            box-shadow: 
+                inset 0 -3px 0 #313233,
+                inset 0 3px 0 #5a5b5c;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            width: 100%;
+        }
+
+        .admin-btn:hover {
+            background: #5a5b5c;
+            transform: translateY(-2px);
+        }
+
+        .admin-btn.publish {
+            background: #3c8527;
+            box-shadow: 
+                inset 0 -3px 0 #2d6a1e,
+                inset 0 3px 0 #4ca632;
+        }
+
+        .admin-btn.publish:hover {
+            background: #4ca632;
+        }
     </style>
 </head>
 <body>
@@ -579,8 +670,8 @@
                 
                 <div class="publish-actions">
                     <button id="publish-btn" class="btn btn-primary">📤 Publicar Post</button>
-                    <button id="cancel-edit-btn" class="btn btn-secondary hidden">Cancelar Edição</button>
                     <button id="preview-btn" class="btn btn-secondary">👁️ Preview</button>
+                    <button id="clear-btn" class="btn btn-secondary">🗑️ Limpar</button>
                 </div>
             </div>
 
@@ -618,46 +709,32 @@
     </footer>
 
     <script>
-        // ============================================
-        // SUPABASE CONFIGURATION
-        // ============================================
-        
         let supabaseClient = null;
         let currentUser = null;
         let quill = null;
         
-        // Check admin authentication and show/hide admin link
-        function checkAdminAuth() {
-            const isAuthenticated = localStorage.getItem('admin_authenticated') === 'true';
-            const adminLink = document.querySelector('.nav-admin');
-            
-            if (adminLink) {
-                if (isAuthenticated) {
-                    adminLink.style.display = 'flex';
-                } else {
-                    adminLink.style.display = 'none';
-                }
-            }
-        }
-        
-        // DOM Elements
         const configSection = document.getElementById('config-section');
         const loginSection = document.getElementById('login-section');
         const dashboardSection = document.getElementById('dashboard-section');
         
-        // Initialize on page load
         document.addEventListener('DOMContentLoaded', init);
+        
+        function checkAdminAuth() {
+            const isAuthenticated = localStorage.getItem('admin_authenticated') === 'true';
+            const adminLink = document.querySelector('.nav-admin');
+            if (adminLink) {
+                adminLink.style.display = isAuthenticated ? 'flex' : 'none';
+            }
+        }
         
         async function init() {
             const config = getStoredConfig();
-            
             if (config.url && config.key) {
                 initSupabase(config.url, config.key);
                 await checkSession();
             } else {
                 showSection('config');
             }
-            
             setupEventListeners();
             checkAdminAuth();
         }
@@ -676,7 +753,6 @@
         async function checkSession() {
             try {
                 const { data: { session } } = await supabaseClient.auth.getSession();
-                
                 if (session) {
                     currentUser = session.user;
                     localStorage.setItem('admin_authenticated', 'true');
@@ -697,7 +773,6 @@
         }
         
         function showSection(section) {
-            // Esconder todas as seções
             configSection.classList.add('hidden');
             configSection.style.display = 'none';
             loginSection.classList.add('hidden');
@@ -705,7 +780,6 @@
             dashboardSection.classList.add('hidden');
             dashboardSection.style.display = 'none';
             
-            // Mostrar apenas a seção desejada
             if (section === 'config') {
                 configSection.classList.remove('hidden');
                 configSection.style.display = 'block';
@@ -720,40 +794,21 @@
             }
         }
         
-        // ============================================
-        // EVENT LISTENERS
-        // ============================================
-        
         function setupEventListeners() {
-            // Config
             document.getElementById('save-config-btn').addEventListener('click', saveConfig);
             document.getElementById('reset-config-btn').addEventListener('click', resetConfig);
-            
-            // Login
             document.getElementById('login-btn').addEventListener('click', login);
             document.getElementById('login-password').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') login();
             });
-            
-            // Logout
             document.getElementById('logout-btn').addEventListener('click', logout);
-            
-            // Post title -> slug
             document.getElementById('post-title').addEventListener('input', updateSlugPreview);
-            
-            // Image preview
             document.getElementById('post-image').addEventListener('input', updateImagePreview);
             document.getElementById('image-file').addEventListener('change', handleImageUpload);
-            
-            // Publish
             document.getElementById('publish-btn').addEventListener('click', publishPost);
-            document.getElementById('cancel-edit-btn').addEventListener('click', cancelEdit);
             document.getElementById('preview-btn').addEventListener('click', previewPost);
+            document.getElementById('clear-btn').addEventListener('click', clearEditor);
         }
-        
-        // ============================================
-        // CONFIG FUNCTIONS
-        // ============================================
         
         function saveConfig() {
             const url = document.getElementById('supabase-url').value.trim();
@@ -766,7 +821,6 @@
             
             localStorage.setItem('supabase_url', url);
             localStorage.setItem('supabase_key', key);
-            
             initSupabase(url, key);
             showToast('Configuração salva!', 'success');
             showSection('login');
@@ -774,15 +828,10 @@
         
         function resetConfig() {
             if (!confirm('Tem certeza? Você precisará configurar novamente.')) return;
-            
             localStorage.removeItem('supabase_url');
             localStorage.removeItem('supabase_key');
             showSection('config');
         }
-        
-        // ============================================
-        // AUTH FUNCTIONS
-        // ============================================
         
         async function login() {
             const email = document.getElementById('login-email').value.trim();
@@ -806,15 +855,10 @@
                 if (error) throw error;
                 
                 currentUser = data.user;
-                
-                // Marcar como autenticado
                 localStorage.setItem('admin_authenticated', 'true');
-                
                 showToast('Login realizado com sucesso!', 'success');
                 showSection('dashboard');
                 initDashboard();
-                
-                // Atualizar visibilidade do ícone
                 checkAdminAuth();
                 
             } catch (error) {
@@ -829,26 +873,15 @@
         async function logout() {
             await supabaseClient.auth.signOut();
             currentUser = null;
-            
-            // Remover marca de autenticação
             localStorage.removeItem('admin_authenticated');
-            
             showSection('login');
             showToast('Você saiu da dashboard.', 'success');
-            
-            // Atualizar visibilidade do ícone
             checkAdminAuth();
         }
         
-        // ============================================
-        // DASHBOARD FUNCTIONS
-        // ============================================
-        
         function initDashboard() {
-            // Set user email
             document.getElementById('user-email').textContent = currentUser.email;
             
-            // Initialize Quill editor
             if (!quill) {
                 quill = new Quill('#editor', {
                     theme: 'snow',
@@ -867,19 +900,14 @@
                 });
             }
             
-            // Load posts
             loadPosts();
-            
-            // Check if editing a post from URL parameter
             checkEditFromUrl();
         }
         
         async function checkEditFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             const editId = urlParams.get('edit');
-            
             if (editId) {
-                // Wait a bit for Quill to initialize
                 setTimeout(() => {
                     editPost(parseInt(editId));
                 }, 500);
@@ -895,7 +923,6 @@
                 
                 if (error) throw error;
                 
-                // Update stats
                 document.getElementById('total-posts').textContent = posts.length;
                 
                 if (posts.length > 0) {
@@ -903,10 +930,7 @@
                     document.getElementById('last-post-date').textContent = lastDate;
                 }
                 
-                // Render posts table
                 renderPostsTable(posts);
-                
-                // Sync to localStorage for blog.html
                 syncToLocalStorage(posts);
                 
             } catch (error) {
@@ -939,16 +963,12 @@
                         <div class="post-actions">
                             <button class="btn btn-secondary btn-small" onclick="editPost(${post.id})">✏️</button>
                             <button class="btn btn-danger btn-small" onclick="deletePost(${post.id})">🗑️</button>
-                            <a href="posts.html?slug=${post.slug}" target="_blank" class="btn btn-secondary btn-small">👁️</a>
+                            <a href="/posts.html?slug=${post.slug}" target="_blank" class="btn btn-secondary btn-small">👁️</a>
                         </div>
                     </td>
                 </tr>
             `).join('');
         }
-        
-        // ============================================
-        // POST FUNCTIONS
-        // ============================================
         
         function generateSlug(title) {
             return title
@@ -1081,7 +1101,6 @@
                 
                 document.getElementById('editor-title').textContent = '✏️ Editando Post';
                 document.getElementById('publish-btn').textContent = '💾 Salvar Alterações';
-                document.getElementById('cancel-edit-btn').classList.remove('hidden');
                 
                 document.querySelector('.editor-section').scrollIntoView({ behavior: 'smooth' });
                 
@@ -1109,13 +1128,6 @@
             }
         }
         
-        function cancelEdit() {
-            clearEditor();
-            document.getElementById('editor-title').textContent = '✏️ Novo Post';
-            document.getElementById('publish-btn').textContent = '📤 Publicar Post';
-            document.getElementById('cancel-edit-btn').classList.add('hidden');
-        }
-        
         function clearEditor() {
             document.getElementById('edit-post-id').value = '';
             document.getElementById('post-title').value = '';
@@ -1124,6 +1136,8 @@
             quill.root.innerHTML = '';
             document.getElementById('image-preview').classList.remove('visible');
             updateSlugPreview();
+            document.getElementById('editor-title').textContent = '✏️ Novo Post';
+            document.getElementById('publish-btn').textContent = '📤 Publicar Post';
         }
         
         function previewPost() {
@@ -1160,10 +1174,6 @@
             `);
         }
         
-        // ============================================
-        // SYNC TO LOCALSTORAGE
-        // ============================================
-        
         function syncToLocalStorage(posts) {
             const formattedPosts = posts.map(post => ({
                 id: post.id,
@@ -1177,10 +1187,6 @@
             }));
             localStorage.setItem('blog_posts', JSON.stringify(formattedPosts));
         }
-        
-        // ============================================
-        // UTILITIES
-        // ============================================
         
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
@@ -1198,7 +1204,6 @@
             return div.innerHTML;
         }
         
-        // Make functions available globally
         window.editPost = editPost;
         window.deletePost = deletePost;
     </script>

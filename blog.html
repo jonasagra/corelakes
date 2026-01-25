@@ -55,7 +55,7 @@
         <!-- Blog Posts Grid -->
         <section class="blog-posts" id="blog-posts">
             <!-- Posts serão carregados via JavaScript -->
-            <p class="no-posts" id="no-posts">Nenhum post publicado ainda.</p>
+            <p class="no-posts" id="no-posts">Carregando posts...</p>
         </section>
     </main>
 
@@ -113,13 +113,15 @@
             };
         }
         
-        // Check if user is logged in
+        // Check if user is logged in (admin)
         async function checkAuth() {
             const config = getSupabaseConfig();
             if (!config.url || !config.key) return false;
             
             try {
-                supabaseClient = window.supabase.createClient(config.url, config.key);
+                if (!supabaseClient) {
+                    supabaseClient = window.supabase.createClient(config.url, config.key);
+                }
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 return !!session;
             } catch (error) {
@@ -127,45 +129,50 @@
             }
         }
         
-        // Load posts from Supabase
+        // Load posts from Supabase (PÚBLICO)
         async function loadPosts() {
             const config = getSupabaseConfig();
             
-            // Check if logged in
+            // Check if logged in (for admin buttons)
             isLoggedIn = await checkAuth();
             
-            // If no Supabase config, try localStorage as fallback
-            if (!config.url || !config.key) {
-                loadFromLocalStorage();
-                return;
-            }
-            
-            try {
-                if (!supabaseClient) {
-                    supabaseClient = window.supabase.createClient(config.url, config.key);
-                }
-                
-                const { data: posts, error } = await supabaseClient
-                    .from('posts')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) {
-                    console.error('Erro ao carregar posts:', error);
+            // Try Supabase first (even for anonymous users)
+            if (config.url && config.key) {
+                try {
+                    if (!supabaseClient) {
+                        supabaseClient = window.supabase.createClient(config.url, config.key);
+                    }
+                    
+                    // IMPORTANTE: Buscar posts SEM autenticação (público)
+                    const { data: posts, error } = await supabaseClient
+                        .from('posts')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) {
+                        console.error('Erro ao carregar posts do Supabase:', error);
+                        loadFromLocalStorage();
+                        return;
+                    }
+                    
+                    if (!posts || posts.length === 0) {
+                        noPosts.textContent = 'Nenhum post publicado ainda.';
+                        noPosts.style.display = 'block';
+                        return;
+                    }
+                    
+                    noPosts.style.display = 'none';
+                    renderPosts(posts);
+                    
+                    // Sync to localStorage for offline access
+                    syncToLocalStorage(posts);
+                    
+                } catch (error) {
+                    console.error('Erro ao conectar com Supabase:', error);
                     loadFromLocalStorage();
-                    return;
                 }
-                
-                if (!posts || posts.length === 0) {
-                    noPosts.style.display = 'block';
-                    return;
-                }
-                
-                noPosts.style.display = 'none';
-                renderPosts(posts);
-                
-            } catch (error) {
-                console.error('Erro:', error);
+            } else {
+                // Fallback to localStorage if no Supabase config
                 loadFromLocalStorage();
             }
         }
@@ -175,12 +182,28 @@
             const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
             
             if (posts.length === 0) {
+                noPosts.textContent = 'Nenhum post publicado ainda.';
                 noPosts.style.display = 'block';
                 return;
             }
             
             noPosts.style.display = 'none';
             renderPosts(posts);
+        }
+        
+        // Sync posts to localStorage
+        function syncToLocalStorage(posts) {
+            const formattedPosts = posts.map(post => ({
+                id: post.id,
+                title: post.title,
+                slug: post.slug,
+                content: post.content,
+                excerpt: post.excerpt,
+                image_url: post.image_url,
+                date: post.date || new Date(post.created_at).toLocaleDateString('pt-BR'),
+                created_at: post.created_at
+            }));
+            localStorage.setItem('blog_posts', JSON.stringify(formattedPosts));
         }
         
         // Render posts to page
@@ -225,12 +248,12 @@
             });
         }
         
-        // Edit post - CORRIGIDO: Caminho absoluto
+        // Edit post - redirect to edit page
         function editPost(postSlug) {
             window.location.href = '/edit.html?slug=' + postSlug;
         }
         
-        // Delete post
+        // Delete post (only for logged in users)
         async function deletePost(postId) {
             if (!confirm('Tem certeza que deseja excluir este post?')) return;
             
@@ -242,7 +265,7 @@
                 
                 if (error) throw error;
                 
-                // Reload posts
+                alert('Post excluído com sucesso!');
                 loadPosts();
                 
             } catch (error) {
