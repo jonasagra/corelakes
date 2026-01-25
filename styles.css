@@ -5,6 +5,7 @@
          url('fonts/MinecraftFive-Bold.woff') format('woff'),
          url('fonts/MinecraftFive-Bold.woff2') format('woff2');
     font-weight: bold;
+    font-display: swap;
 }
 
 @font-face {
@@ -12,12 +13,14 @@
     src: url('fonts/Minecraft.woff') format('woff'),
          url('fonts/Minecraft.woff2') format('woff2');
     font-weight: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Minecraft-Bold';
     src: url('fonts/Minecraft-Bold.woff') format('woff'),
         url('fonts/Minecraft-Bold.woff2') format('woff2');
     font-weight: normal;
+    font-display: swap;
 }
 
 /* Reset & Base */
