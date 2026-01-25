@@ -267,7 +267,7 @@
             <p class="copyright">© 2026 Jonas Agra - Corelakes</p>
         </div>
     </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const container = document.getElementById('post-container');
         
@@ -281,23 +281,45 @@
             loadPost();
         }
         
-        function loadPost() {
-            // Load from localStorage
-            const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
-            const post = posts.find(p => p.slug === slug);
-            
-            if (!post) {
-                showError();
-                return;
-            }
-            
-            // Update meta tags
-            updateMetaTags(post);
-            
-            // Render post
-            renderPost(post);
-        }
+async function loadPost() {
+    // Try Supabase first
+    try {
+        const supabase = window.supabase.createClient(
+            'https://nkrpxjlixrpvmvkyzobf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rcnB4amxpeHJwdm12a3l6b2JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyOTU1ODAsImV4cCI6MjA4NDg3MTU4MH0.EvfrUfAQKQo-scZ487m4nT2FyUggYDpavD1YTUZhfWs'
+        );
         
+        const { data, error } = await supabase
+            .from('posts')
+            .select('*')
+            .eq('slug', slug)
+            .single();
+        
+        if (!error && data) {
+            data.date = data.date || new Date(data.created_at).toLocaleDateString('pt-BR');
+            updateMetaTags(data);
+            renderPost(data);
+            return;
+        }
+    } catch (e) {
+        // Supabase failed, try localStorage
+    }
+    
+    // Load from localStorage
+    const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
+    const post = posts.find(p => p.slug === slug);
+    
+    if (!post) {
+        showError();
+        return;
+    }
+    
+    // Update meta tags
+    updateMetaTags(post);
+    
+    // Render post
+    renderPost(post);
+}
         function updateMetaTags(post) {
             const baseUrl = window.location.origin;
             const postUrl = `${baseUrl}/post.html?slug=${post.slug}`;
