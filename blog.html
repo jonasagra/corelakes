@@ -212,11 +212,12 @@
                         </div>
                     ` : ''}
                     <div class="post-content">
-                        <h2 class="post-title">${escapeHtml(post.title)}</h2>
+                        <a href="posts.html?slug=${post.slug}" style="text-decoration: none; color: inherit;">
+                            <h2 class="post-title">${escapeHtml(post.title)}</h2>
+                        </a>
                         <p class="post-excerpt">${escapeHtml(excerpt)}</p>
                         <div class="post-meta">
                             <span class="post-date">📅 ${postDate}</span>
-                            <a href="posts.html?slug=${post.slug}" class="post-read-more">Ler mais →</a>
                         </div>
                     </div>
                 `;
@@ -225,10 +226,9 @@
         }
         
         // Edit post - redirect to admin with post id
-        function editPost(postId) {
-            localStorage.setItem('edit_post_id', postId);
-            window.location.href = 'admin.html?edit=' + postId;
-        }
+  function editPost(postId) {
+    window.location.href = 'admin.html?edit=' + postId;
+}
         
         // Delete post
         async function deletePost(postId) {
