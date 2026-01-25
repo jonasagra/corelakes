@@ -194,7 +194,7 @@
         }
         
         .ql-snow .ql-picker-item {
-            color: #000000;
+            color: #ffffff;
         }
         
         .ql-snow .ql-picker-item:hover {
@@ -427,6 +427,27 @@
         .upload-btn:hover {
             background: #5a5b5c;
         }
+        
+        /* Config Link */
+        .config-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .config-link button {
+            font-family: 'Minecraft', monospace;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 5px;
+        }
+        
+        .config-link button:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
     </style>
 </head>
 <body>
@@ -440,7 +461,7 @@
                 <a href="/blog.html" class="nav-link" title="Blog">
                     <img src="/assets/Journal_Icon_MCL.png" alt="Blog" class="nav-icon">
                 </a>
-                <a href="/painel/admin.html" class="nav-link active nav-admin" title="Admin">
+                <a href="admin.html" class="nav-link active nav-admin" title="Admin">
                     <img src="/assets/admin-painel-icon.png" alt="Admin" class="nav-icon-admin">
                 </a>
             </div>
@@ -460,10 +481,10 @@
 
     <!-- Main Container -->
     <main class="main-container dashboard-container">
-        <!-- Config Section (shown first time) -->
+        <!-- Config Section (primeira vez) -->
         <section id="config-section" class="admin-section">
             <h1 class="admin-title">⚙️ Configuração do Supabase</h1>
-            <p class="admin-description">Configure suas credenciais do Supabase. Elas serão salvas de forma segura no seu navegador.</p>
+            <p class="admin-description">Configure suas credenciais do Supabase uma única vez.</p>
             
             <div class="admin-form">
                 <label class="admin-label">URL do Projeto</label>
@@ -478,8 +499,8 @@
 
         <!-- Login Section -->
         <section id="login-section" class="admin-section hidden">
-            <h1 class="admin-title">🔒 Área Restrita</h1>
-            <p class="admin-description">Faça login para acessar a dashboard</p>
+            <h1 class="admin-title">🔒 Login Admin</h1>
+            <p class="admin-description">Faça login para acessar o painel</p>
             
             <div class="admin-form">
                 <label class="admin-label">E-mail</label>
@@ -490,14 +511,14 @@
                 
                 <button id="login-btn" class="admin-btn publish">Entrar</button>
                 
-                <p class="admin-note">
-                    <button id="reset-config-btn" class="admin-link">Reconfigurar Supabase</button>
+                <p class="config-link">
+                    <button id="reset-config-btn">⚙️ Reconfigurar Supabase</button>
                 </p>
             </div>
         </section>
 
-        <!-- Dashboard Section -->
-        <section id="dashboard-section" class="hidden">
+        <!-- Dashboard Section (SÓ APARECE LOGADO) -->
+        <section id="dashboard-section" class="hidden" style="display: none;">
             <!-- Dashboard Header -->
             <div class="dashboard-header">
                 <h1 class="dashboard-title">📊 Dashboard</h1>
@@ -592,7 +613,7 @@
     <!-- Footer -->
     <footer class="footer-glass">
         <div class="footer-content">
-            <p class="copyright">© 2026 Jonas Agra - Corelakes | Dashboard Admin</p>
+            <p class="copyright">© 2026 Corelakes | Panel</p>
         </div>
     </footer>
 
@@ -648,10 +669,11 @@
             };
         }
         
-   function initSupabase(url, key) {
+        function initSupabase(url, key) {
             supabaseClient = window.supabase.createClient(url, key);
         }
-      async function checkSession() {
+        
+        async function checkSession() {
             try {
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 
@@ -675,13 +697,27 @@
         }
         
         function showSection(section) {
+            // Esconder todas as seções
             configSection.classList.add('hidden');
+            configSection.style.display = 'none';
             loginSection.classList.add('hidden');
+            loginSection.style.display = 'none';
             dashboardSection.classList.add('hidden');
+            dashboardSection.style.display = 'none';
             
-            if (section === 'config') configSection.classList.remove('hidden');
-            if (section === 'login') loginSection.classList.remove('hidden');
-            if (section === 'dashboard') dashboardSection.classList.remove('hidden');
+            // Mostrar apenas a seção desejada
+            if (section === 'config') {
+                configSection.classList.remove('hidden');
+                configSection.style.display = 'block';
+            }
+            if (section === 'login') {
+                loginSection.classList.remove('hidden');
+                loginSection.style.display = 'block';
+            }
+            if (section === 'dashboard') {
+                dashboardSection.classList.remove('hidden');
+                dashboardSection.style.display = 'block';
+            }
         }
         
         // ============================================
@@ -737,6 +773,8 @@
         }
         
         function resetConfig() {
+            if (!confirm('Tem certeza? Você precisará configurar novamente.')) return;
+            
             localStorage.removeItem('supabase_url');
             localStorage.removeItem('supabase_key');
             showSection('config');
@@ -746,7 +784,7 @@
         // AUTH FUNCTIONS
         // ============================================
         
-    async function login() {
+        async function login() {
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value.trim();
             
@@ -759,16 +797,11 @@
             btn.textContent = 'Entrando...';
             btn.disabled = true;
             
-        console.log('Tentando login com:', email);
-            console.log('Supabase inicializado:', !!supabaseClient);
-            
             try {
                 const { data, error } = await supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
-                
-                console.log('Resposta do login:', { data, error });
                 
                 if (error) throw error;
                 
@@ -811,7 +844,7 @@
         // DASHBOARD FUNCTIONS
         // ============================================
         
-function initDashboard() {
+        function initDashboard() {
             // Set user email
             document.getElementById('user-email').textContent = currentUser.email;
             
@@ -852,11 +885,11 @@ function initDashboard() {
                 }, 500);
             }
         }
+        
         async function loadPosts() {
             try {
                 const { data: posts, error } = await supabaseClient
                     .from('posts')
-                
                     .select('*')
                     .order('created_at', { ascending: false });
                 
@@ -921,18 +954,18 @@ function initDashboard() {
             return title
                 .toLowerCase()
                 .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-                .replace(/[^a-z0-9\s-]/g, '') // Remove caracteres especiais
-                .replace(/\s+/g, '-') // Espaços para hífens
-                .replace(/-+/g, '-') // Múltiplos hífens para um
-                .replace(/^-|-$/g, ''); // Remove hífens do início/fim
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
         }
         
         function updateSlugPreview() {
             const title = document.getElementById('post-title').value;
             const slug = generateSlug(title);
             document.getElementById('slug-preview').textContent = 
-                `seusite.com/post/${slug || 'titulo-do-post'}`;
+                `corelakes.vercel.app/posts/${slug || 'titulo-do-post'}`;
         }
         
         function updateImagePreview() {
@@ -951,12 +984,11 @@ function initDashboard() {
             const file = event.target.files[0];
             if (!file) return;
             
-            // For now, convert to base64 (in production, you'd upload to Supabase Storage)
             const reader = new FileReader();
             reader.onload = function(e) {
                 document.getElementById('post-image').value = e.target.result;
                 updateImagePreview();
-                showToast('Imagem carregada! Para produção, configure o Supabase Storage.', 'success');
+                showToast('Imagem carregada!', 'success');
             };
             reader.readAsDataURL(file);
         }
@@ -1001,14 +1033,12 @@ function initDashboard() {
                 let result;
                 
                 if (editId) {
-                    // Update existing post
                     result = await supabaseClient
                         .from('posts')
                         .update(postData)
                         .eq('id', editId)
                         .select();
                 } else {
-                    // Create new post
                     postData.created_at = new Date().toISOString();
                     result = await supabaseClient
                         .from('posts')
@@ -1040,7 +1070,6 @@ function initDashboard() {
                 
                 if (error) throw error;
                 
-                // Fill form with post data
                 document.getElementById('edit-post-id').value = post.id;
                 document.getElementById('post-title').value = post.title;
                 document.getElementById('post-image').value = post.image_url || '';
@@ -1050,12 +1079,10 @@ function initDashboard() {
                 updateSlugPreview();
                 updateImagePreview();
                 
-                // Update UI
                 document.getElementById('editor-title').textContent = '✏️ Editando Post';
                 document.getElementById('publish-btn').textContent = '💾 Salvar Alterações';
                 document.getElementById('cancel-edit-btn').classList.remove('hidden');
                 
-                // Scroll to editor
                 document.querySelector('.editor-section').scrollIntoView({ behavior: 'smooth' });
                 
             } catch (error) {
@@ -1109,7 +1136,6 @@ function initDashboard() {
                 return;
             }
             
-            // Open preview in new window
             const previewWindow = window.open('', '_blank');
             previewWindow.document.write(`
                 <!DOCTYPE html>
