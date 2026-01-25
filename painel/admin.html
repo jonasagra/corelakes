@@ -194,7 +194,7 @@
         }
         
         .ql-snow .ql-picker-item {
-            color: #ffffff;
+            color: #000000;
         }
         
         .ql-snow .ql-picker-item:hover {
@@ -473,29 +473,6 @@
                 <input type="text" id="supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." class="admin-input">
                 
                 <button id="save-config-btn" class="admin-btn publish">Salvar Configuração</button>
-            </div>
-            
-            <div class="admin-help">
-                <h3>📋 Como configurar o Supabase:</h3>
-                <ol>
-                    <li>Acesse <a href="https://supabase.com" target="_blank">supabase.com</a> e faça login</li>
-                    <li>Crie um novo projeto ou selecione um existente</li>
-                    <li>Vá em Settings → API</li>
-                    <li>Copie a "Project URL" e a "anon public" key</li>
-                    <li>Crie uma tabela "posts" com as colunas:
-                        <ul>
-                            <li><code>id</code> (int8, primary key, auto increment)</li>
-                            <li><code>title</code> (text)</li>
-                            <li><code>slug</code> (text, unique)</li>
-                            <li><code>content</code> (text)</li>
-                            <li><code>excerpt</code> (text)</li>
-                            <li><code>image_url</code> (text)</li>
-                            <li><code>created_at</code> (timestamptz, default now())</li>
-                            <li><code>updated_at</code> (timestamptz)</li>
-                        </ul>
-                    </li>
-                    <li>Em Authentication → Users, crie seu usuário admin</li>
-                </ol>
             </div>
         </section>
 
