@@ -1,7 +1,9 @@
 /* Minecraft Fonts */
 @font-face {
     font-family: 'MinecraftFive';
-    src: url('https://raw.githubusercontent.com/Mojang/web-theme-bootstrap/main/assets/fonts/MinecraftFive-Bold.ttf') format('truetype');
+    src: url('fonts/MinecraftFive-Bold.ttf') format('truetype'),
+         url('fonts/MinecraftFive-Bold.woff') format('woff'),
+         url('fonts/MinecraftFive-Bold.woff2') format('woff2');
     font-weight: bold;
 }
 
