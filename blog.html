@@ -106,12 +106,13 @@
         checkAdminAuth();
         
         // Get Supabase config from localStorage
-        function getSupabaseConfig() {
-            return {
-                url: localStorage.getItem('supabase_url') || '',
-                key: localStorage.getItem('supabase_key') || ''
-            };
-        }
+// Get Supabase config from localStorage or use public credentials
+            function getSupabaseConfig() {
+                return {
+                    url: localStorage.getItem('supabase_url') || 'https://nkrpxjlixrpvmvkyzobf.supabase.co',
+                    key: localStorage.getItem('supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rcnB4amxpeHJwdm12a3l6b2JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyOTU1ODAsImV4cCI6MjA4NDg3MTU4MH0.EvfrUfAQKQo-scZ487m4nT2FyUggYDpavD1YTUZhfWs'
+                };
+            }
         
         // Check if user is logged in (admin)
         async function checkAuth() {
