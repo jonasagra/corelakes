@@ -1,23 +1,23 @@
 /* Minecraft Fonts */
 @font-face {
     font-family: 'MinecraftFive';
-    src: url('fonts/MinecraftFive-Bold.woff') format('woff'),
-         url('fonts/MinecraftFive-Bold.woff2') format('woff2');
+    src: url('/fonts/MinecraftFive-Bold.woff') format('woff'),
+         url('/fonts/MinecraftFive-Bold.woff2') format('woff2');
     font-weight: 700;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Minecraft';
-    src: url('fonts/Minecraft.woff') format('woff'),
-         url('fonts/Minecraft.woff2') format('woff2');
+    src: url('/fonts/Minecraft.woff') format('woff'),
+         url('/fonts/Minecraft.woff2') format('woff2');
     font-weight: normal;
     font-display: swap;
 }
 @font-face {
     font-family: 'Minecraft-Bold';
-    src: url('fonts/Minecraft-Bold.woff') format('woff'),
-        url('fonts/Minecraft-Bold.woff2') format('woff2');
+    src: url('/fonts/Minecraft-Bold.woff') format('woff'),
+        url('/fonts/Minecraft-Bold.woff2') format('woff2');
     font-weight: normal;
     font-display: swap;
 }
@@ -42,7 +42,7 @@ html {
 
 body {
     font-family: 'Minecraft';
-    background: url('./assets/pixel-black.png');
+    background: url('/assets/pixel-black.png');
     background-size: 500px auto;
     background-position: center;
     background-attachment: fixed;
@@ -133,7 +133,7 @@ body {
     display: block;
     image-rendering: pixelated;
     object-fit: cover;
-    object-position: center top;
+    object-position: center -8px;
 }
 
 
