@@ -628,6 +628,20 @@
         let currentUser = null;
         let quill = null;
         
+        // Check admin authentication and show/hide admin link
+        function checkAdminAuth() {
+            const isAuthenticated = localStorage.getItem('admin_authenticated') === 'true';
+            const adminLink = document.querySelector('.nav-admin');
+            
+            if (adminLink) {
+                if (isAuthenticated) {
+                    adminLink.style.display = 'flex';
+                } else {
+                    adminLink.style.display = 'none';
+                }
+            }
+        }
+        
         // DOM Elements
         const configSection = document.getElementById('config-section');
         const loginSection = document.getElementById('login-section');
@@ -647,6 +661,7 @@
             }
             
             setupEventListeners();
+            checkAdminAuth();
         }
         
         function getStoredConfig() {
@@ -665,14 +680,20 @@
                 
                 if (session) {
                     currentUser = session.user;
+                    localStorage.setItem('admin_authenticated', 'true');
                     showSection('dashboard');
                     initDashboard();
+                    checkAdminAuth();
                 } else {
+                    localStorage.removeItem('admin_authenticated');
                     showSection('login');
+                    checkAdminAuth();
                 }
             } catch (error) {
                 showToast('Erro ao verificar sessão: ' + error.message, 'error');
+                localStorage.removeItem('admin_authenticated');
                 showSection('login');
+                checkAdminAuth();
             }
         }
         
@@ -775,9 +796,16 @@
                 if (error) throw error;
                 
                 currentUser = data.user;
+                
+                // Marcar como autenticado
+                localStorage.setItem('admin_authenticated', 'true');
+                
                 showToast('Login realizado com sucesso!', 'success');
                 showSection('dashboard');
                 initDashboard();
+                
+                // Atualizar visibilidade do ícone
+                checkAdminAuth();
                 
             } catch (error) {
                 console.error('Erro de login:', error);
@@ -791,8 +819,15 @@
         async function logout() {
             await supabaseClient.auth.signOut();
             currentUser = null;
+            
+            // Remover marca de autenticação
+            localStorage.removeItem('admin_authenticated');
+            
             showSection('login');
             showToast('Você saiu da dashboard.', 'success');
+            
+            // Atualizar visibilidade do ícone
+            checkAdminAuth();
         }
         
         // ============================================
