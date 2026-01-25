@@ -624,7 +624,7 @@
         // SUPABASE CONFIGURATION
         // ============================================
         
-        let supabase = null;
+        let supabaseClient = null;
         let currentUser = null;
         let quill = null;
         
@@ -656,13 +656,12 @@
             };
         }
         
-        function initSupabase(url, key) {
-            supabase = window.supabase.createClient(url, key);
+   function initSupabase(url, key) {
+            supabaseClient = window.supabase.createClient(url, key);
         }
-        
-        async function checkSession() {
+      async function checkSession() {
             try {
-                const { data: { session } } = await supabase.auth.getSession();
+                const { data: { session } } = await supabaseClient.auth.getSession();
                 
                 if (session) {
                     currentUser = session.user;
@@ -762,11 +761,11 @@
             btn.textContent = 'Entrando...';
             btn.disabled = true;
             
-            console.log('Tentando login com:', email);
-            console.log('Supabase inicializado:', !!supabase);
+        console.log('Tentando login com:', email);
+            console.log('Supabase inicializado:', !!supabaseClient);
             
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
@@ -790,7 +789,7 @@
         }
         
         async function logout() {
-            await supabase.auth.signOut();
+            await supabaseClient.auth.signOut();
             currentUser = null;
             showSection('login');
             showToast('Você saiu da dashboard.', 'success');
@@ -826,11 +825,11 @@
             // Load posts
             loadPosts();
         }
-        
         async function loadPosts() {
             try {
-                const { data: posts, error } = await supabase
+                const { data: posts, error } = await supabaseClient
                     .from('posts')
+                
                     .select('*')
                     .order('created_at', { ascending: false });
                 
@@ -976,7 +975,7 @@
                 
                 if (editId) {
                     // Update existing post
-                    result = await supabase
+                    result = await supabaseClient
                         .from('posts')
                         .update(postData)
                         .eq('id', editId)
@@ -984,7 +983,7 @@
                 } else {
                     // Create new post
                     postData.created_at = new Date().toISOString();
-                    result = await supabase
+                    result = await supabaseClient
                         .from('posts')
                         .insert([postData])
                         .select();
@@ -1006,7 +1005,7 @@
         
         async function editPost(id) {
             try {
-                const { data: post, error } = await supabase
+                const { data: post, error } = await supabaseClient
                     .from('posts')
                     .select('*')
                     .eq('id', id)
@@ -1041,7 +1040,7 @@
             if (!confirm('Tem certeza que deseja excluir este post?')) return;
             
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('posts')
                     .delete()
                     .eq('id', id);
