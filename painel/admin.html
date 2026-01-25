@@ -749,7 +749,7 @@
         // AUTH FUNCTIONS
         // ============================================
         
-        async function login() {
+    async function login() {
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value.trim();
             
@@ -762,11 +762,16 @@
             btn.textContent = 'Entrando...';
             btn.disabled = true;
             
+            console.log('Tentando login com:', email);
+            console.log('Supabase inicializado:', !!supabase);
+            
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
+                
+                console.log('Resposta do login:', { data, error });
                 
                 if (error) throw error;
                 
@@ -776,6 +781,7 @@
                 initDashboard();
                 
             } catch (error) {
+                console.error('Erro de login:', error);
                 showToast('Erro: ' + error.message, 'error');
             } finally {
                 btn.textContent = 'Entrar';
