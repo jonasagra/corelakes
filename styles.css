@@ -40,6 +40,13 @@
     height: 36px;
     image-rendering: pixelated;
 }
+/* Responsive Logo */ 
+@media (max-width: 600px) {
+    .nav-logo{
+        width: 140px;
+        height: 27px;
+    }
+}
 
 html {
     scroll-behavior: smooth;
