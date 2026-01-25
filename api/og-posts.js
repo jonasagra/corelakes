@@ -1,5 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
-
 export const config = {
   runtime: 'edge',
 };
@@ -38,15 +36,25 @@ export default async function handler(request) {
   }
   
   try {
-    // Fetch post from Supabase
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    const { data: post, error } = await supabase
-      .from('posts')
-      .select('*')
-      .eq('slug', slug)
-      .single();
+    // Fetch post from Supabase using REST API
+    const response = await fetch(
+      `${supabaseUrl}/rest/v1/posts?slug=eq.${encodeURIComponent(slug)}&select=*`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+        },
+      }
+    );
     
-    if (error || !post) {
+    if (!response.ok) {
+      return fetch(new URL('/posts.html', url.origin).toString());
+    }
+    
+    const posts = await response.json();
+    const post = posts[0];
+    
+    if (!post) {
       return fetch(new URL('/posts.html', url.origin).toString());
     }
     
