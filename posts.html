@@ -252,8 +252,8 @@
         <div class="footer-content">
             
             <div class="contact-info">
-                <a href="mailto:jonas.agra@icloud.com" class="contact-item">
-                    <span><img src="https://minecraft.wiki/images/Ore_UI_-_Inbox_Screen_%22Invites%22_Tab_-_Envelope_Icon_%28Bedrock%29.png?06ee1&format=original" alt="Email" class="email-icon"></span> jonas.agra@icloud.com
+                <a href="/cdn-cgi/l/email-protection#e3898c8d8290cd82849182a38a808f8c9687cd808c8e" class="contact-item">
+                    <span><img src="https://minecraft.wiki/images/Ore_UI_-_Inbox_Screen_%22Invites%22_Tab_-_Envelope_Icon_%28Bedrock%29.png?06ee1&format=original" alt="Email" class="email-icon"></span> <span class="__cf_email__" data-cfemail="2f4540414e5c014e485d4e6f464c43405a4b014c4042">[email&#160;protected]</span>
                 </a>
                 <span class="separator">|</span>
                 <a href="https://wa.me/5583981306043" class="contact-item">
@@ -268,8 +268,18 @@
         </div>
     </footer>
 
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const container = document.getElementById('post-container');
+        let supabaseClient = null;
+        
+        // Get Supabase config with hardcoded fallback
+        function getSupabaseConfig() {
+            return {
+                url: localStorage.getItem('supabase_url') || 'https://nkrpxjlixrpvmvkyzobf.supabase.co',
+                key: localStorage.getItem('supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rcnB4amxpeHJwdm12a3l6b2JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyOTU1ODAsImV4cCI6MjA4NDg3MTU4MH0.EvfrUfAQKQo-scZ487m4nT2FyUggYDpavD1YTUZhfWs'
+            };
+        }
         
         // Get slug from URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -281,8 +291,54 @@
             loadPost();
         }
         
-        function loadPost() {
-            // Load from localStorage
+        async function loadPost() {
+            const config = getSupabaseConfig();
+            
+            // Try Supabase first
+            if (config.url && config.key) {
+                try {
+                    if (!supabaseClient) {
+                        supabaseClient = window.supabase.createClient(config.url, config.key);
+                    }
+                    
+                    const { data: posts, error } = await supabaseClient
+                        .from('posts')
+                        .select('*')
+                        .eq('slug', slug)
+                        .limit(1);
+                    
+                    if (error) {
+                        console.error('Erro ao carregar post do Supabase:', error);
+                        loadFromLocalStorage();
+                        return;
+                    }
+                    
+                    if (!posts || posts.length === 0) {
+                        showError();
+                        return;
+                    }
+                    
+                    const post = posts[0];
+                    // Format post date
+                    post.date = post.date || new Date(post.created_at).toLocaleDateString('pt-BR');
+                    
+                    // Update meta tags
+                    updateMetaTags(post);
+                    
+                    // Render post
+                    renderPost(post);
+                    
+                } catch (error) {
+                    console.error('Erro ao conectar com Supabase:', error);
+                    loadFromLocalStorage();
+                }
+            } else {
+                loadFromLocalStorage();
+            }
+        }
+        
+        function loadFromLocalStorage() {
+            // Fallback: Load from localStorage
             const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
             const post = posts.find(p => p.slug === slug);
             
@@ -368,15 +424,4 @@
             
             if (adminLink) {
                 if (isAuthenticated) {
-                    adminLink.style.display = 'flex';
-                } else {
-                    adminLink.style.display = 'none';
-                }
-            }
-        }
-
-        // Run on page load
-        checkAdminAuth();
-    </script>
-</body>
-</html>
+             
