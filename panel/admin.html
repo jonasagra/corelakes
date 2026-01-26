@@ -12,7 +12,7 @@
     <link rel="preload" href="/fonts/MinecraftFive-Bold.woff" as="font" type="font/woff2" crossorigin>
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Quill Editor -->
+
     <!-- Quill Editor -->
     <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
@@ -294,34 +294,37 @@
         .posts-table {
             width: 100%;
             border-collapse: collapse;
+            
         }
         
         .posts-table th,
         .posts-table td {
-            padding: 12px 15px;
-            text-align: left;
-            font-family: 'Minecraft', monospace;
+            padding: 12px 4px;
+            text-align: center;
+            font-family: 'Minecraft';
             border-bottom: 2px solid #313233;
         }
         
         .posts-table th {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #4ca632;
             background: #313233;
         }
         
         .posts-table td {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #ffffff;
+
         }
         
         .posts-table tr:hover td {
             background: rgba(60, 133, 39, 0.1);
+            
         }
         
         .post-thumb {
-            width: 60px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             object-fit: cover;
             border: 2px solid #1e1e1f;
         }
@@ -329,6 +332,7 @@
         .post-actions {
             display: flex;
             gap: 8px;
+            
         }
         
         .btn-small {
