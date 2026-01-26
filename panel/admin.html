@@ -653,7 +653,7 @@
                     <input type="text" id="post-image" class="form-input" placeholder="Cole a URL da imagem ou use o upload abaixo">
                     <div class="image-upload-area" id="image-upload-area">
                         <p>📷 Arraste uma imagem ou clique para fazer upload</p>
-                        <input type="file" id="image-file" accept="image/*">
+                        <input type="file" id="image-file" accept="image/*" onchange="handleImageUpload(event)">
                         <label for="image-file" class="upload-btn">Escolher Imagem</label>
                     </div>
                     <div class="image-preview-container">
