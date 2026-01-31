@@ -1304,35 +1304,35 @@
         window.deletePost = deletePost;
 
         // Menu responsivo
-        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-const mobileMenuPanel = document.querySelector('.mobile-menu-panel');
-const body = document.body;
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const mobileMenuPanel = document.querySelector('.mobile-menu-panel');
+            const body = document.body;
 
-if (mobileMenuToggle) {
-    mobileMenuToggle.addEventListener('click', () => {
-        const isOpen = mobileMenuPanel.classList.contains('open');
-        
-        if (isOpen) {
-            mobileMenuPanel.classList.remove('open');
-            body.classList.remove('menu-open');
-            mobileMenuToggle.setAttribute('aria-expanded', 'false');
-        } else {
-            mobileMenuPanel.classList.add('open');
-            body.classList.add('menu-open');
-            mobileMenuToggle.setAttribute('aria-expanded', 'true');
-        }
-    });
-    
-    // Close menu when clicking on a link
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-    mobileNavLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenuPanel.classList.remove('open');
-            body.classList.remove('menu-open');
-            mobileMenuToggle.setAttribute('aria-expanded', 'false');
-        });
-    });
-}
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    const isOpen = mobileMenuPanel.classList.contains('open');
+                    
+                    if (isOpen) {
+                        mobileMenuPanel.classList.remove('open');
+                        body.classList.remove('menu-open');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    } else {
+                        mobileMenuPanel.classList.add('open');
+                        body.classList.add('menu-open');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'true');
+                    }
+                });
+                
+                // Close menu when clicking on a link
+                const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenuPanel.classList.remove('open');
+                        body.classList.remove('menu-open');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            }
     </script>
 </body>
 </html>

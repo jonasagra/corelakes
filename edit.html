@@ -318,6 +318,8 @@
    <!-- Navigation Menu -->
     <nav class="main-nav">
         <div class="nav-container">
+            
+            <!-- Desktop Navigation -->
             <div class="nav-links">
                 <a href="index.html" class="nav-link" title="Início">
                     <img src="/icons/home.webp" alt="Início" class="nav-icon">
@@ -327,6 +329,53 @@
                 </a>
                 <a href="/panel/admin.html" class="nav-link nav-admin" title="Admin" style="display: none;">
                     <img src="/icons/redstone-sysop.webp" alt="Admin" class="nav-icon-admin">
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+        
+            <button class="mobile-menu-toggle" aria-label="Abrir o menu" type="button" aria-expanded="false">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 40 46" xml:space="preserve" role="img">
+                    <title>Abrir o menu</title>
+                    <g>
+                        <path class="MC_svg_path_0" d="M20,0L0,11v22l20,11l20-11V11L20,0z"></path>
+                        <path class="MC_svg_path_1" d="M20,44L0,33V11L20,0l20,11v22L20,44z M2,31.8l18,9.9l18-9.9V12.2L20,2.3L2,12.2V31.8z"></path>
+                        <path class="MC_svg_path_2" d="M14,17h12v2H14V17z M14,21h12v2H14V21z M14,25h12v2H14V25z"></path>
+                        <polygon class="MC_svg_path_3" points="2,15 20,5.3 38,15 38,12.2 20,2.3 2,12.2"></polygon>
+                        <polygon class="MC_svg_path_4" points="2,31.8 20,41.7 38,31.8 38,29 20,38.7 2,29"></polygon>
+                        <polygon class="MC_svg_path_5" points="0,34.8 20,46 40,34.8 40,33 20,44 0,33"></polygon>
+                    </g>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu Panel -->
+        <div class="mobile-menu-panel">
+                <a href="./index.html" class="nav-logo-link">
+                    <img src="/assets/logo.webp" alt="Corelakes logo, personal brand mark for Jonas Agra" class="nav-logo">
+                </a>
+            <div class="mobile-nav-links">
+                <a href="index.html" class="mobile-nav-link active">
+                    <div class="mobile-nav-link-content">
+>
+                        <img src="/icons/home.webp" alt="Início" class="nav-icon">
+                        <span>Início</span>
+                    </div>
+                    <span class="mobile-nav-arrow">></span>
+                </a>
+                <a href="blog.html" class="mobile-nav-link active">
+                    <div class="mobile-nav-link-content">
+                        <img src="/icons/journal.webp" alt="Blog" class="nav-icon">
+                        <span>Blog</span>
+                    </div>
+                    <span class="mobile-nav-arrow">></span>
+                </a>
+                <a href="/panel/admin.html" class="mobile-nav-link nav-admin" style="display: none;">
+                    <div class="mobile-nav-link-content">
+                        <img src="/icons/redstone-sysop.webp" alt="Admin" class="nav-icon-admin">
+                        <span>Dashboard</span>
+                    </div>
+                    <span class="mobile-nav-arrow">></span>
                 </a>
             </div>
         </div>
@@ -706,6 +755,36 @@
         }
         
         checkAdminAuth();
+        // Menu responsivo
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const mobileMenuPanel = document.querySelector('.mobile-menu-panel');
+            const body = document.body;
+
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    const isOpen = mobileMenuPanel.classList.contains('open');
+                    
+                    if (isOpen) {
+                        mobileMenuPanel.classList.remove('open');
+                        body.classList.remove('menu-open');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    } else {
+                        mobileMenuPanel.classList.add('open');
+                        body.classList.add('menu-open');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'true');
+                    }
+                });
+                
+                // Close menu when clicking on a link
+                const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenuPanel.classList.remove('open');
+                        body.classList.remove('menu-open');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            }
     </script>
 </body>
 </html>
