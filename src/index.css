@@ -1,0 +1,86 @@
+/* ========== Custom Fonts ========== */
+@font-face {
+  font-family: 'MinecraftFive';
+  src: url('/fonts/MinecraftFive-Bold.woff') format('woff'),
+       url('/fonts/MinecraftFive-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Minecraft';
+  src: url('/fonts/Minecraft.woff') format('woff'),
+       url('/fonts/Minecraft.woff2') format('woff2');
+  font-weight: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Minecraft-Bold';
+  src: url('/fonts/Minecraft-Bold.woff') format('woff'),
+       url('/fonts/Minecraft-Bold.woff2') format('woff2');
+  font-weight: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Minecraft', monospace;
+    background-color: #0a0a0a;
+    background-image: url('/assets/pixel-black.png');
+    background-size: 500px auto;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #fff;
+    overflow-x: hidden;
+  }
+  body.menu-open { overflow: hidden; }
+  img { image-rendering: pixelated; }
+}
+
+/* ========== Quill dark-theme override ========== */
+.ql-editor {
+  background: #313233 !important;
+  color: #fff !important;
+  font-family: 'Minecraft', monospace !important;
+  min-height: 300px;
+}
+.ql-toolbar.ql-snow {
+  background: #48494a !important;
+  border: none !important;
+  border-bottom: 2px solid #1e1e1f !important;
+}
+.ql-container.ql-snow            { border: none !important; }
+.ql-snow .ql-stroke              { stroke: #fff; }
+.ql-snow .ql-fill                { fill:  #fff; }
+.ql-snow .ql-picker-label        { color: #fff; }
+.ql-snow .ql-picker-options      { background: #48494a; border: 2px solid #1e1e1f; }
+.ql-snow .ql-picker-item         { color: #fff; }
+.ql-snow .ql-picker-item:hover   { color: #4ca632; }
+.ql-snow.ql-toolbar button:hover { background: #5a5b5c; }
+.ql-snow.ql-toolbar button.ql-active { background: #3c8527; }
+.ql-editor.ql-blank::before      { color: rgba(255,255,255,0.4) !important; font-style: normal !important; }
+
+/* ========== Post-body rich-text styles (Quill output) ========== */
+.post-body h1, .post-body h2, .post-body h3 {
+  font-family: 'MinecraftFive', monospace;
+  color: #4ca632;
+  margin: 25px 0 15px;
+}
+.post-body h1 { font-size: 1.5rem; }
+.post-body h2 { font-size: 1.3rem; }
+.post-body h3 { font-size: 1.1rem; }
+.post-body p              { margin-bottom: 15px; }
+.post-body a              { color: #4ca632; text-decoration: underline; }
+.post-body a:hover        { color: #5cb83c; }
+.post-body img            { max-width: 100%; border: 3px solid #1e1e1f; margin: 20px 0; }
+.post-body blockquote     { border-left: 4px solid #3c8527; padding-left: 20px; margin: 20px 0; color: rgba(255,255,255,0.8); font-style: italic; }
+.post-body code           { background: #313233; padding: 2px 8px; font-family: monospace; font-size: 0.9rem; }
+.post-body pre            { background: #313233; padding: 15px; overflow-x: auto; border: 2px solid #1e1e1f; margin: 15px 0; }
+.post-body ul, .post-body ol { margin: 15px 0; padding-left: 25px; }
+.post-body li             { margin-bottom: 8px; }
