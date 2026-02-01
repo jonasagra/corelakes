@@ -137,8 +137,7 @@ function LoginSection({ onLoggedIn, onResetConfig }) {
 /** 3. Full Dashboard (editor + posts table) */
 function Dashboard({ onLogout }) {
   const { user }    = useAuth();
-  const postsHook   = usePosts();
-  const [posts, setPosts] = useState([]);
+  const { posts, fetchPosts, createPost, updatePost, deletePost } = usePosts();
   const navigate          = useNavigate();
   const [searchParams]    = useSearchParams();
 
@@ -151,13 +150,10 @@ function Dashboard({ onLogout }) {
   const [uploading, setUploading] = useState('');
   const [publishing,setPublishing]= useState(false);
 
-  /* ── load posts ── */
-  const load = useCallback(async () => {
-    await postsHook.fetchPosts();
-  }, [postsHook]);
-
-  useEffect(() => { load(); }, [load]);
-  useEffect(() => { setPosts(postsHook.posts); }, [postsHook.posts]);
+  /* ── CORREÇÃO: Carregar posts apenas uma vez no mount ── */
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   /* ── handle ?edit=<slug> from URL ── */
   useEffect(() => {
@@ -188,63 +184,68 @@ function Dashboard({ onLogout }) {
     setUploading('Processando…');
     try {
       const uploader = new SupabaseUploader(getSupabaseClient());
-      const result   = await uploader.uploadImage(file, ({ stage }) => {
-        setUploading(stage === 'processing' ? '🔄 Otimizando…' : '⬆️ Enviando…');
-      });
-      setImageUrl(result.url);
-      showToast(`✅ Foto enviada! (${(result.size / 1024).toFixed(0)}KB)`, 'success');
+      const url = await uploader.upload(file, { folder: 'posts' });
+      setImageUrl(url);
+      showToast('Imagem enviada!', 'success');
     } catch (err) {
-      showToast('❌ ' + err.message, 'error');
-    } finally { setUploading(''); }
+      showToast('Erro no upload: ' + err.message, 'error');
+    } finally {
+      setUploading('');
+    }
   };
 
-  /* ── publish / update ── */
+  /* ── publish / update post ── */
   const publish = async () => {
-    if (!title.trim())                  { showToast('Digite um título!', 'error'); return; }
-    if (!excerpt.trim())                { showToast('Digite um resumo!', 'error'); return; }
-    if (content.replace(/<[^>]*>/g, '').trim().length < 10) { showToast('O conteúdo está muito curto!', 'error'); return; }
-
+    if (!title.trim()) { showToast('Adicione um título!', 'error'); return; }
+    if (!content.trim()) { showToast('Escreva algum conteúdo!', 'error'); return; }
     setPublishing(true);
     try {
       if (editId) {
-        await postsHook.updatePost(editId, { title, content, excerpt, imageUrl });
+        await updatePost(editId, { title: title.trim(), content, excerpt: excerpt.trim(), imageUrl });
         showToast('Post atualizado!', 'success');
       } else {
-        await postsHook.createPost({ title, content, excerpt, imageUrl });
-        showToast('Post publicado!', 'success');
+        await createPost({ title: title.trim(), content, excerpt: excerpt.trim(), imageUrl });
+        showToast('Post criado com sucesso!', 'success');
       }
       clearEditor();
-      load();
-    } catch (err) {
-      showToast('Erro: ' + err.message, 'error');
-    } finally { setPublishing(false); }
+      await fetchPosts();
+      navigate('/admin');
+    } catch (e) {
+      showToast('Erro: ' + e.message, 'error');
+    } finally {
+      setPublishing(false);
+    }
   };
 
-  /* ── delete from table ── */
+  /* ── delete post ── */
   const handleDelete = async (id) => {
     if (!confirm('Tem certeza que deseja excluir este post?')) return;
     try {
-      await postsHook.deletePost(id);
+      await deletePost(id);
       showToast('Post excluído!', 'success');
-      load();
-    } catch (err) { showToast('Erro: ' + err.message, 'error'); }
+      await fetchPosts();
+    } catch (e) {
+      showToast('Erro ao excluir: ' + e.message, 'error');
+    }
   };
 
-  const lastDate = posts.length ? new Date(posts[0].created_at).toLocaleDateString('pt-BR') : '-';
+  /* ── stats ── */
+  const lastDate = posts.length
+    ? new Date(posts[0].created_at).toLocaleDateString('pt-BR')
+    : '—';
 
   return (
     <>
       {/* ── header ── */}
-      <div className="flex justify-between items-center mb-[30px] pb-5 border-b-[3px] border-mc-dark flex-col gap-[15px] md:flex-row md:gap-0">
-        <h1 className="font-mc-five text-[1.8rem] text-white" style={{ textShadow: '2px 2px 0 #3f3f3f' }}>📊 Dashboard</h1>
-        <div className="flex items-center gap-[15px]">
-          <span className="font-mc text-[0.85rem] text-white/70">{user?.email}</span>
-          <McBtn variant="danger" onClick={onLogout}>Sair</McBtn>
-        </div>
-      </div>
+      <header className="flex justify-between items-center mb-[30px]">
+        <h1 className="font-mc-five text-[2rem] text-white" style={{ textShadow: '3px 3px 0 #3f3f3f' }}>
+          🎮 Dashboard
+        </h1>
+        <McBtn variant="danger" onClick={onLogout}>🚪 Sair</McBtn>
+      </header>
 
       {/* ── stats cards ── */}
-      <div className="grid grid-cols-1 gap-5 mb-[30px] md:grid-cols-2">
+      <div className="grid grid-cols-2 gap-5 mb-[30px] sm:grid-cols-1">
         {[
           { label: '📝 Total de Posts', value: posts.length },
           { label: '📅 Último Post',    value: lastDate     },
