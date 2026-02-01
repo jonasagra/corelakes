@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
 /* Minecraft-cube SVG hamburger icon – paths/colours match the original */
 const HamburgerSVG = () => (
@@ -14,13 +14,27 @@ const HamburgerSVG = () => (
 );
 
 const LINKS = [
-  { to: '/',      icon: '/icons/home.webp',            label: 'Início' },
-  { to: '/blog',  icon: '/icons/journal.webp',        label: 'Blog' },
+  { to: '/',      
+    icon: '/icons/home.webp',           
+    label: 'Início' },
+  { to: '/blog',  
+    icon: '/icons/journal.webp',        
+    label: 'Blog' },
 ];
 
 export default function Navbar({ isAdmin }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  location.pathname;
+  
+  const isBlog = location.pathname === '/blog';
+  const isPost = location.pathname === "/post";
+  const isDashboard = location.pathname === "/admin";
+
+  const contentHeader = isBlog || isPost || isDashboard;
+  const showLogotipo = contentHeader;
+
 
   // body scroll-lock
   useEffect(() => {
@@ -39,6 +53,16 @@ export default function Navbar({ isAdmin }) {
     <nav className="fixed top-0 left-0 right-0 z-[200] bg-mc-nav border-b-2 border-black shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
       {/* ── top bar ── */}
       <div className="max-w-[1200px] mx-auto px-5 flex items-center justify-center h-16">
+      
+      {/* Aparecer apenas no blog e posts */}
+      { showLogotipo && (
+         <div className="flex items-center px-5 py-4">
+         <NavLink to="/" className="flex items-center px-3">
+         <img src="/assets/logo.webp" alt="Corelakes logo" className="h-9 w-auto"/>  
+        </NavLink>
+        </div>
+        ) 
+        }
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-0">
@@ -72,6 +96,7 @@ export default function Navbar({ isAdmin }) {
           <HamburgerSVG />
         </button>
       </div>
+
 
       {/* ── mobile slide panel ── */}
       <div
