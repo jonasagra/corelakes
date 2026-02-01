@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -140,6 +140,7 @@ function Dashboard({ onLogout }) {
   const { posts, fetchPosts, createPost, updatePost, deletePost } = usePosts();
   const navigate          = useNavigate();
   const [searchParams]    = useSearchParams();
+  const hasFetchedRef     = useRef(false);
 
   // editor state
   const [editId,    setEditId]    = useState(null);
@@ -150,9 +151,12 @@ function Dashboard({ onLogout }) {
   const [uploading, setUploading] = useState('');
   const [publishing,setPublishing]= useState(false);
 
-  /* ── CORREÇÃO: Carregar posts apenas uma vez no mount ── */
+  /* ── CORREÇÃO FINAL: Carregar posts apenas UMA vez usando useRef ── */
   useEffect(() => {
-    fetchPosts();
+    if (!hasFetchedRef.current) {
+      hasFetchedRef.current = true;
+      fetchPosts();
+    }
   }, [fetchPosts]);
 
   /* ── handle ?edit=<slug> from URL ── */
@@ -208,6 +212,7 @@ function Dashboard({ onLogout }) {
         showToast('Post criado com sucesso!', 'success');
       }
       clearEditor();
+      hasFetchedRef.current = false; // Reset para permitir re-fetch
       await fetchPosts();
       navigate('/admin');
     } catch (e) {
@@ -223,6 +228,7 @@ function Dashboard({ onLogout }) {
     try {
       await deletePost(id);
       showToast('Post excluído!', 'success');
+      hasFetchedRef.current = false; // Reset para permitir re-fetch
       await fetchPosts();
     } catch (e) {
       showToast('Erro ao excluir: ' + e.message, 'error');
