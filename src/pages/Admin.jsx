@@ -360,7 +360,7 @@ function Dashboard({ onLogout }) {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  {['Titulo', 'Data', 'Acoes'].map(h => (
+                  {['Titulo/Data', 'Ações'].map(h => (
                     <th key={h} className="px-1 py-3 text-center font-mc text-[0.8rem] text-mc-green-light border-b-2 border-mc-dark"
                         style={{ background: '#313233' }}>
                       {h}
@@ -372,31 +372,33 @@ function Dashboard({ onLogout }) {
                 {posts.map(p => (
                   <tr key={p.id} className="hover:bg-mc-green/10 transition-colors">
                     <td className="px-2 py-3 text-left font-mc text-[0.8rem] text-white border-b-2 border-mc-dark max-w-[360px] sm:max-w-[220px]">
-                      <div className="truncate">{p.title}</div>
+                      <div className="w-full truncate">{p.title}</div>
                       <div className="mt-1 flex items-center gap-2 text-white/60 text-[0.75rem] md:hidden">
                         <img src="https://minecraft.wiki/images/archive/20181112133323%21Calendar_sheet.png?ec376&format=original" alt="Data" className="oreUI-icon" />
                         {p.date}
                       </div>
                     </td>
-                    <td className="px-1 py-3 text-center font-mc text-[0.8rem] text-white border-b-2 border-mc-dark hidden md:table-cell">
-                      <span className="inline-flex items-center gap-2">
-                        <img src="https://minecraft.wiki/images/archive/20181112133323%21Calendar_sheet.png?ec376&format=original" alt="Data" className="oreUI-icon" />
-                        {p.date}
-                      </span>
-                    </td>
                     <td className="px-1 py-3 text-center border-b-2 border-mc-dark">
                       <div className="flex flex-wrap gap-2 justify-center">
-                        <OreButton variant="default" onClick={() => fillEditor(p)}
-                               className="!px-3 !py-[6px] !text-[0.8rem]">
+                        <OreButton
+                          variant="default"
+                          onClick={() => fillEditor(p)}
+                          className="!px-3 !py-[6px] !text-[0.8rem] !border-mc-dark !border-solid"
+                          style={{ background: '#5a5b5c', boxShadow: 'inset 0 -3px 0 #3f3f40, inset 0 3px 0 #6a6b6c', border: '3px solid #1e1e1f' }}
+                        >
                           <img src="https://minecraft.wiki/images/Brush_JE1_BE1.png?fd417" alt="Editar" className="oreUI-icon" />
                         </OreButton>
-                        <OreButton variant="danger" onClick={() => handleDelete(p.id)}
-                               className="!px-3 !py-[6px] !text-[0.8rem]">
+                        <OreButton
+                          variant="danger"
+                          onClick={() => handleDelete(p.id)}
+                          className="!px-3 !py-[6px] !text-[0.8rem] !border-mc-dark !border-solid"
+                          style={{ background: '#8b2020', boxShadow: 'inset 0 -3px 0 #6a1818, inset 0 3px 0 #a52a2a', border: '3px solid #1e1e1f' }}
+                        >
                           <img src="https://minecraft.wiki/images/Lava_Bucket_JE2_BE2.png?55ee0&format=original" alt="Excluir" className="oreUI-icon" />
                         </OreButton>
                         <a href={`/post/${p.slug}`} target="_blank" rel="noreferrer"
                            className="inline-flex items-center justify-center px-3 py-[6px] font-mc text-[0.8rem] text-white border-[3px] border-mc-dark no-underline"
-                           style={{ background: '#48494a', boxShadow: 'inset 0 -3px 0 #313233, inset 0 3px 0 #5a5b5c' }}>
+                           style={{ background: '#5a5b5c', boxShadow: 'inset 0 -3px 0 #3f3f40, inset 0 3px 0 #6a6b6c' }}>
                           <img src="https://minecraft.wiki/images/Night_Vision_JE1_BE1.png?92706&format=original" alt="Visualizar" className="oreUI-icon" />
                         </a>
                       </div>
