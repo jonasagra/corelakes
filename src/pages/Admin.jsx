@@ -253,7 +253,7 @@ function Dashboard({ onLogout }) {
         <OreButton variant="danger" onClick={onLogout}>
           <span className="inline-flex items-center gap-2">
             <img src="https://minecraft.wiki/images/Oak_Door_JE8.png?f3318&format=original" alt="Sair" className="oreUI-icon" />
-            Sair
+            <span className="hidden sm:inline">Sair</span>
           </span>
         </OreButton>
       </header>
@@ -371,7 +371,7 @@ function Dashboard({ onLogout }) {
               <tbody>
                 {posts.map(p => (
                   <tr key={p.id} className="hover:bg-mc-green/10 transition-colors">
-                    <td className="px-2 py-3 text-left font-mc text-[0.8rem] text-white border-b-2 border-mc-dark max-w-[360px]">
+                    <td className="px-2 py-3 text-left font-mc text-[0.8rem] text-white border-b-2 border-mc-dark max-w-[360px] sm:max-w-[220px]">
                       <div className="truncate">{p.title}</div>
                       <div className="mt-1 flex items-center gap-2 text-white/60 text-[0.75rem] md:hidden">
                         <img src="https://minecraft.wiki/images/archive/20181112133323%21Calendar_sheet.png?ec376&format=original" alt="Data" className="oreUI-icon" />
@@ -385,7 +385,7 @@ function Dashboard({ onLogout }) {
                       </span>
                     </td>
                     <td className="px-1 py-3 text-center border-b-2 border-mc-dark">
-                      <div className="flex gap-2 justify-center">
+                      <div className="flex flex-wrap gap-2 justify-center">
                         <OreButton variant="default" onClick={() => fillEditor(p)}
                                className="!px-3 !py-[6px] !text-[0.8rem]">
                           <img src="https://minecraft.wiki/images/Brush_JE1_BE1.png?fd417" alt="Editar" className="oreUI-icon" />

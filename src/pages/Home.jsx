@@ -53,7 +53,7 @@ export default function Home() {
           </header>
 
           <p className="oreUI-text text-base leading-[1.6] max-w-[600px] mb-[30px] px-6 py-4 border-[4px] border-mc-dark sm:text-[0.9rem] sm:px-[18px] sm:py-[14px]"
-             style={{ background:'#3c8527', boxShadow:'inset 0 -4px 0 #2d6a1e, inset 0 4px 0 #4ca632', textShadow:'2px 2px 0 rgba(0,0,0,0.4)' }}>
+             style={{ background:'#3c8527', boxShadow:'inset 0 -4px 0 #2d6a1e, inset 0 4px 0 #4ca632' }}>
             Eu sou Jonas Agra, conhecido como Corelakes. Sou estudante de Engenharia de Software, testador, designer e criador de conteúdo.
             Sou paraibano, administro a Minecraft Wiki em português e já lancei algumas músicas no Spotify.<br/><br/>Também sou bastante conhecido na comunidade brasileira de Minecraft, principalmente pelos vídeos e por ser um dos maiores contribuidores da Minecraft Wiki.
           </p>
