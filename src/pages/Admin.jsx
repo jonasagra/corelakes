@@ -24,11 +24,11 @@ const TOOLBAR = [
  * ────────────────────────────────────────────────────── */
 
 /** Minecraft-styled input */
-const McInput = ({ label, ...props }) => (
+const OreInput = ({ label, ...props }) => (
   <div className="flex flex-col gap-1">
     {label && <label className="font-mc text-[0.85rem] text-mc-green-light">{label}</label>}
     <input
-      className="w-full px-[15px] py-3 font-mc text-base text-white border-[3px] border-mc-dark placeholder-white/40 focus:outline-none focus:border-mc-green"
+      className="w-full px-[15px] py-3 oreUI-text text-base border-[3px] border-mc-dark placeholder-white/40 focus:outline-none focus:border-mc-green"
       style={{ background: '#313233', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3)' }}
       {...props}
     />
@@ -36,7 +36,7 @@ const McInput = ({ label, ...props }) => (
 );
 
 /** Minecraft-styled button */
-const McBtn = ({ variant = 'default', disabled, children, ...props }) => {
+const OreButton = ({ variant = 'default', disabled, children, ...props }) => {
   const styles = {
     default:  { background: '#48494a', boxShadow: 'inset 0 -3px 0 #313233, inset 0 3px 0 #5a5b5c' },
     primary:  { background: '#3c8527', boxShadow: 'inset 0 -3px 0 #2d6a1e, inset 0 3px 0 #4ca632' },
@@ -80,9 +80,9 @@ function ConfigSection({ onSaved }) {
         Configure suas credenciais do Supabase uma única vez.
       </p>
       <div className="flex flex-col gap-[10px]">
-        <McInput label="URL do Projeto" placeholder="https://xxxxx.supabase.co" value={url} onChange={e => setUrl(e.target.value)} />
-        <McInput label="Anon Key" placeholder="eyJhbGciOiJIUzI1NiI…" value={key} onChange={e => setKey(e.target.value)} />
-        <McBtn variant="primary" onClick={save}>Salvar Configuração</McBtn>
+        <OreInput label="URL do Projeto" placeholder="https://xxxxx.supabase.co" value={url} onChange={e => setUrl(e.target.value)} />
+        <OreInput label="Anon Key" placeholder="eyJhbGciOiJIUzI1NiI…" value={key} onChange={e => setKey(e.target.value)} />
+        <OreButton variant="primary" onClick={save}>Salvar Configuração</OreButton>
       </div>
     </section>
   );
@@ -117,12 +117,12 @@ function LoginSection({ onLoggedIn, onResetConfig }) {
         Faça login para acessar o painel
       </p>
       <div className="flex flex-col gap-[10px]">
-        <McInput label="E-mail" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} />
-        <McInput label="Senha" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)}
+        <OreInput label="E-mail" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} />
+        <OreInput label="Senha" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)}
                  onKeyDown={e => e.key === 'Enter' && handleLogin()} />
-        <McBtn variant="primary" disabled={busy} onClick={handleLogin}>
+        <OreButton variant="primary" disabled={busy} onClick={handleLogin}>
           {busy ? 'Entrando…' : 'Entrar'}
-        </McBtn>
+        </OreButton>
         <p className="text-center mt-[15px]">
           <button onClick={onResetConfig}
                   className="font-mc text-[0.8rem] text-white/50 bg-transparent border-none cursor-pointer underline hover:text-white/80">
@@ -245,35 +245,49 @@ function Dashboard({ onLogout }) {
       {/* ── header ── */}
       <header className="flex justify-between items-center mb-[30px]">
         <h1 className="font-mc-five text-[2rem] text-white" style={{ textShadow: '3px 3px 0 #3f3f3f' }}>
-          🎮 Dashboard
+          <span className="inline-flex items-center gap-2">
+            <img src="/icons/redstone-sysop.webp" alt="Dashboard" className="oreUI-icon" />
+            Dashboard
+          </span>
         </h1>
-        <McBtn variant="danger" onClick={onLogout}>🚪 Sair</McBtn>
+        <OreButton variant="danger" onClick={onLogout}>
+          <span className="inline-flex items-center gap-2">
+            <img src="https://minecraft.wiki/images/Oak_Door_JE8.png?f3318&format=original" alt="Sair" className="oreUI-icon" />
+            Sair
+          </span>
+        </OreButton>
       </header>
 
-      {/* ── stats cards ── */}
-      <div className="grid grid-cols-2 gap-5 mb-[30px] sm:grid-cols-1">
-        {[
-          { label: '📝 Total de Posts', value: posts.length },
-          { label: '📅 Último Post',    value: lastDate     },
-        ].map(({ label, value }) => (
-          <div key={label} className="border-[4px] border-mc-dark p-5"
-               style={{ background: '#48494a', boxShadow: 'inset 0 -4px 0 #313233, inset 0 4px 0 #5a5b5c' }}>
-            <h3 className="font-mc-five text-base text-mc-green-light mb-[10px]">{label}</h3>
-            <p className="font-mc text-[2rem] text-white">{value}</p>
+      {/* stats */}
+      <div className="border-[4px] border-mc-dark p-5 mb-[30px]"
+           style={{ background: '#48494a', boxShadow: 'inset 0 -4px 0 #313233, inset 0 4px 0 #5a5b5c' }}>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="font-mc-five text-base text-mc-green-light">Total de Posts</h3>
+            <p className="font-mc text-[1.6rem] text-white">{posts.length}</p>
           </div>
-        ))}
+          <div className="flex items-center justify-between gap-4 border-t-2 border-mc-dark pt-3">
+            <h3 className="font-mc-five text-base text-mc-green-light">Ultimo Post</h3>
+            <p className="font-mc text-[1rem] text-white text-right break-words max-w-[220px]">
+              {lastDate}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* ── editor section ── */}
       <div className="border-[4px] border-mc-dark p-[25px] mb-[30px]"
            style={{ background: '#48494a', boxShadow: 'inset 0 -4px 0 #313233, inset 0 4px 0 #5a5b5c' }}>
         <h2 className="font-mc-five text-[1.3rem] text-white mb-5" style={{ textShadow: '2px 2px 0 #3f3f3f' }}>
-          {editId ? '✏️ Editando Post' : '✏️ Novo Post'}
+          <span className="inline-flex items-center gap-2">
+            <img src="https://minecraft.wiki/images/Book_and_Quill_JE2_BE2.png?2128f&format=original" alt="Editar" className="oreUI-icon" />
+            {editId ? 'Editando Post' : 'Novo Post'}
+          </span>
         </h2>
 
         {/* title */}
         <div className="mb-5">
-          <McInput label="Título" placeholder="Digite o título do post…" value={title} onChange={e => setTitle(e.target.value)} />
+          <OreInput label="Título" placeholder="Digite o título do post…" value={title} onChange={e => setTitle(e.target.value)} />
           <p className="font-mc text-[0.8rem] text-white/50 mt-[5px]">
             URL: <span className="text-mc-green-light">corelakes.vercel.app/post/{generateSlug(title) || 'titulo-do-post'}</span>
           </p>
@@ -281,7 +295,7 @@ function Dashboard({ onLogout }) {
 
         {/* image */}
         <div className="mb-5">
-          <McInput label="Imagem de Destaque" placeholder="Cole a URL da imagem ou use o upload abaixo" value={imageUrl} onChange={e => setImageUrl(e.target.value)} />
+          <OreInput label="Imagem de Destaque" placeholder="Cole a URL da imagem ou use o upload abaixo" value={imageUrl} onChange={e => setImageUrl(e.target.value)} />
           {/* upload area */}
           <div className="border-[3px] border-dashed border-mc-bg-light p-5 text-center mt-[10px] cursor-pointer hover:border-mc-green-light transition-colors duration-200"
                onClick={() => document.getElementById('img-file').click()}>
@@ -303,28 +317,32 @@ function Dashboard({ onLogout }) {
         </div>
 
         {/* excerpt */}
-        <div className="mb-5">
-          <McInput label="Resumo (aparece na listagem)" placeholder="Breve descrição do post (max 200 caracteres)…"
+        <div className="mb-2">
+          <OreInput label="Resumo (aparece na listagem)" placeholder="Breve descrição do post (max 200 caracteres)…"
                    value={excerpt} maxLength={200} onChange={e => setExcerpt(e.target.value)} />
         </div>
 
         {/* Quill editor */}
-        <div className="mb-5">
-          <label className="block font-mc text-[0.9rem] text-mc-green-light mb-2">Conteúdo</label>
-          <div className="border-[3px] border-mc-dark" style={{ background: '#313233' }}>
-            <ReactQuill theme="snow" value={content} onChange={setContent}
-                        placeholder="Escreva o conteúdo do seu post…"
-                        modules={{ toolbar: TOOLBAR }}
-                        style={{ height: '300px' }} />
+        <div className="mb-1">
+          <label className="block font-mc text-[0.85em] text-mc-green-light mb-4">Conteúdo</label>
+          <div className="border-[4px] border-mc-dark" style={{ background: '#313233' }}>
+            <ReactQuill
+              className="oreUI-quill"
+              theme="snow"
+              value={content}
+              onChange={setContent}
+              placeholder="Escreva o conteúdo do seu post..."
+              modules={{ toolbar: TOOLBAR }}
+            />
           </div>
         </div>
 
         {/* actions */}
-        <div className="flex flex-wrap gap-[15px] mt-5">
-          <McBtn variant="primary" disabled={publishing} onClick={publish}>
+        <div className="flex flex-wrap gap-[12px] mt-1">
+          <OreButton variant="primary" disabled={publishing} onClick={publish}>
             {publishing ? 'Publicando…' : (editId ? '💾 Salvar Alterações' : '📤 Publicar Post')}
-          </McBtn>
-          <McBtn variant="default" onClick={clearEditor}>🗑️ Limpar</McBtn>
+          </OreButton>
+          <OreButton variant="default" onClick={clearEditor}>🗑️ Limpar</OreButton>
         </div>
       </div>
 
@@ -332,7 +350,7 @@ function Dashboard({ onLogout }) {
       <div className="border-[4px] border-mc-dark p-[25px]"
            style={{ background: '#48494a', boxShadow: 'inset 0 -4px 0 #313233, inset 0 4px 0 #5a5b5c' }}>
         <h2 className="font-mc-five text-[1.3rem] text-white mb-5" style={{ textShadow: '2px 2px 0 #3f3f3f' }}>
-          📚 Posts Publicados
+          Posts Publicados
         </h2>
 
         {posts.length === 0 ? (
@@ -342,7 +360,7 @@ function Dashboard({ onLogout }) {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  {['Imagem', 'Título', 'Data', 'Ações'].map(h => (
+                  {['Titulo', 'Data', 'Acoes'].map(h => (
                     <th key={h} className="px-1 py-3 text-center font-mc text-[0.8rem] text-mc-green-light border-b-2 border-mc-dark"
                         style={{ background: '#313233' }}>
                       {h}
@@ -353,24 +371,33 @@ function Dashboard({ onLogout }) {
               <tbody>
                 {posts.map(p => (
                   <tr key={p.id} className="hover:bg-mc-green/10 transition-colors">
-                    <td className="px-1 py-3 text-center border-b-2 border-mc-dark">
-                      {p.image_url
-                        ? <img src={p.image_url} alt="" className="w-[50px] h-[50px] object-cover border-[2px] border-mc-dark mx-auto" />
-                        : <span className="text-white/40 font-mc text-[0.75rem]">Sem imagem</span>
-                      }
+                    <td className="px-2 py-3 text-left font-mc text-[0.8rem] text-white border-b-2 border-mc-dark max-w-[360px]">
+                      <div className="truncate">{p.title}</div>
+                      <div className="mt-1 flex items-center gap-2 text-white/60 text-[0.75rem] md:hidden">
+                        <img src="https://minecraft.wiki/images/archive/20181112133323%21Calendar_sheet.png?ec376&format=original" alt="Data" className="oreUI-icon" />
+                        {p.date}
+                      </div>
                     </td>
-                    <td className="px-1 py-3 text-center font-mc text-[0.8rem] text-white border-b-2 border-mc-dark">{p.title}</td>
-                    <td className="px-1 py-3 text-center font-mc text-[0.8rem] text-white border-b-2 border-mc-dark hidden md:table-cell">{p.date}</td>
+                    <td className="px-1 py-3 text-center font-mc text-[0.8rem] text-white border-b-2 border-mc-dark hidden md:table-cell">
+                      <span className="inline-flex items-center gap-2">
+                        <img src="https://minecraft.wiki/images/archive/20181112133323%21Calendar_sheet.png?ec376&format=original" alt="Data" className="oreUI-icon" />
+                        {p.date}
+                      </span>
+                    </td>
                     <td className="px-1 py-3 text-center border-b-2 border-mc-dark">
                       <div className="flex gap-2 justify-center">
-                        <McBtn variant="default" onClick={() => fillEditor(p)}
-                               className="!px-3 !py-[6px] !text-[0.8rem]">✏️</McBtn>
-                        <McBtn variant="danger" onClick={() => handleDelete(p.id)}
-                               className="!px-3 !py-[6px] !text-[0.8rem]">🗑️</McBtn>
+                        <OreButton variant="default" onClick={() => fillEditor(p)}
+                               className="!px-3 !py-[6px] !text-[0.8rem]">
+                          <img src="https://minecraft.wiki/images/Brush_JE1_BE1.png?fd417" alt="Editar" className="oreUI-icon" />
+                        </OreButton>
+                        <OreButton variant="danger" onClick={() => handleDelete(p.id)}
+                               className="!px-3 !py-[6px] !text-[0.8rem]">
+                          <img src="https://minecraft.wiki/images/Lava_Bucket_JE2_BE2.png?55ee0&format=original" alt="Excluir" className="oreUI-icon" />
+                        </OreButton>
                         <a href={`/post/${p.slug}`} target="_blank" rel="noreferrer"
                            className="inline-flex items-center justify-center px-3 py-[6px] font-mc text-[0.8rem] text-white border-[3px] border-mc-dark no-underline"
                            style={{ background: '#48494a', boxShadow: 'inset 0 -3px 0 #313233, inset 0 3px 0 #5a5b5c' }}>
-                          👁️
+                          <img src="https://minecraft.wiki/images/Night_Vision_JE1_BE1.png?92706&format=original" alt="Visualizar" className="oreUI-icon" />
                         </a>
                       </div>
                     </td>

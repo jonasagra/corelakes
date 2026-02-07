@@ -62,15 +62,21 @@ export default function Post() {
             {post.title}
           </h1>
           <div className="flex gap-5 font-mc text-[0.9rem] text-white/60 pb-5 border-b-[3px] border-mc-dark sm:flex-col sm:gap-[10px]">
-            <span className="flex items-center gap-[6px]">📅 {post.date}</span>
-            <span className="flex items-center gap-[6px]">✍️ Jonas Agra</span>
+            <span className="flex items-center gap-[6px]">
+              <img src="https://minecraft.wiki/images/archive/20181112133323%21Calendar_sheet.png?ec376&format=original" alt="Data" className="oreUI-icon" />
+              {post.date}
+            </span>
+            <span className="flex items-center gap-[6px]">
+              <img src="https://minecraft.wiki/images/Book_and_Quill_JE2_BE2.png?2128f&format=original" alt="Autor" className="oreUI-icon" />
+              Jonas Agra
+            </span>
           </div>
         </header>
 
         {/* content box */}
         <div className="border-[4px] border-mc-dark p-[30px] mb-[30px] sm:p-5"
              style={{ background:'#48494a', boxShadow:'inset 0 -4px 0 #313233, inset 0 4px 0 #5a5b5c' }}>
-          <div className="post-body font-mc text-base text-white leading-[1.9]"
+          <div className="post-body text-base"
                dangerouslySetInnerHTML={{ __html: post.content }} />
         </div>
 

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 /* ========== Custom Fonts ========== */
 @font-face {
   font-family: 'MinecraftFive';
@@ -28,6 +30,12 @@
 @layer base {
   html { scroll-behavior: smooth; }
 
+  :root {
+    --oreUI-green: #3c8527;
+    --oreUI-green-light: #4ca632;
+    --oreUI-font: "Noto Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  }
+
   body {
     font-family: 'Minecraft', monospace;
     background-color: #0a0a0a;
@@ -41,46 +49,72 @@
   }
   body.menu-open { overflow: hidden; }
   img { image-rendering: pixelated; }
+  a { color: #5cb83c; }
+  a:hover { color: #5cb83c; }
 }
 
-/* ========== Quill dark-theme override ========== */
-.ql-editor {
+/* ========== oreUI Quill theme ========== */
+.oreUI-quill .ql-editor {
   background: #313233 !important;
   color: #fff !important;
-  font-family: 'Minecraft', monospace !important;
-  min-height: 300px;
+  font-family: var(--oreUI-font) !important;
+  min-height: 80px;
 }
-.ql-toolbar.ql-snow {
+.oreUI-quill .ql-toolbar.ql-snow {
   background: #48494a !important;
   border: none !important;
   border-bottom: 2px solid #1e1e1f !important;
+  min-height: 40px;
 }
-.ql-container.ql-snow            { border: none !important; }
-.ql-snow .ql-stroke              { stroke: #fff; }
-.ql-snow .ql-fill                { fill:  #fff; }
-.ql-snow .ql-picker-label        { color: #fff; }
-.ql-snow .ql-picker-options      { background: #48494a; border: 2px solid #1e1e1f; }
-.ql-snow .ql-picker-item         { color: #fff; }
-.ql-snow .ql-picker-item:hover   { color: #4ca632; }
-.ql-snow.ql-toolbar button:hover { background: #5a5b5c; }
-.ql-snow.ql-toolbar button.ql-active { background: #3c8527; }
-.ql-editor.ql-blank::before      { color: rgba(255,255,255,0.4) !important; font-style: normal !important; }
+.oreUI-quill .ql-container.ql-snow            { border: none !important; }
+.oreUI-quill .ql-snow .ql-stroke              { stroke: #fff; }
+.oreUI-quill .ql-snow .ql-fill                { fill:  #fff; }
+.oreUI-quill .ql-snow .ql-picker-label        { color: #fff; }
+.oreUI-quill .ql-snow .ql-picker-options      { background: #48494a; border: 2px solid #1e1e1f; }
+.oreUI-quill .ql-snow .ql-picker-item         { color: #fff; }
+.oreUI-quill .ql-snow .ql-picker-item:hover   { color: #4ca632; }
+.oreUI-quill .ql-snow.ql-toolbar button:hover { background: #5a5b5c; }
+.oreUI-quill .ql-snow.ql-toolbar button.ql-active { background: #3c8527; }
+.oreUI-quill .ql-editor.ql-blank::before      { color: rgba(255,255,255,0.4) !important; font-style: normal !important; }
+.oreUI-quill { height: auto; }
+.oreUI-quill .ql-container { min-height: 400px; }
+.oreUI-quill .ql-editor { min-height: 400px; }
+.oreUI-quill .ql-editor a { color: #5cb83c !important; }
+.oreUI-quill .ql-editor a:hover { color: #5cb83c !important; }
+.oreUI-quill .ql-editor a:visited { color: #5cb83c !important; }
 
 /* ========== Post-body rich-text styles (Quill output) ========== */
+.oreUI-text {
+  font-family: var(--oreUI-font);
+  color: rgba(255,255,255,0.86);
+}
+.oreUI-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  image-rendering: auto;
+  display: inline-block;
+}
+.post-body {
+  font-family: var(--oreUI-font);
+  color: rgba(255,255,255,0.86);
+  line-height: 1.5;
+}
 .post-body h1, .post-body h2, .post-body h3 {
   font-family: 'MinecraftFive', monospace;
   color: #4ca632;
-  margin: 25px 0 15px;
+  margin: 16px 0 10px;
 }
 .post-body h1 { font-size: 1.5rem; }
 .post-body h2 { font-size: 1.3rem; }
 .post-body h3 { font-size: 1.1rem; }
-.post-body p              { margin-bottom: 15px; }
-.post-body a              { color: #4ca632; text-decoration: underline; }
-.post-body a:hover        { color: #5cb83c; }
-.post-body img            { max-width: 100%; border: 3px solid #1e1e1f; margin: 20px 0; }
-.post-body blockquote     { border-left: 4px solid #3c8527; padding-left: 20px; margin: 20px 0; color: rgba(255,255,255,0.8); font-style: italic; }
+.post-body p              { margin-bottom: 6px; }
+.post-body a              { color: #5cb83c !important; text-decoration: underline; }
+.post-body a:hover        { color: #5cb83c !important; }
+.post-body a:visited      { color: #5cb83c !important; }
+.post-body img            { max-width: 100%; border: 3px solid #1e1e1f; margin: 14px 0; }
+.post-body blockquote     { border-left: 4px solid #3c8527; padding-left: 16px; margin: 12px 0; color: rgba(255,255,255,0.8); font-style: italic; }
 .post-body code           { background: #313233; padding: 2px 8px; font-family: monospace; font-size: 0.9rem; }
-.post-body pre            { background: #313233; padding: 15px; overflow-x: auto; border: 2px solid #1e1e1f; margin: 15px 0; }
-.post-body ul, .post-body ol { margin: 15px 0; padding-left: 25px; }
-.post-body li             { margin-bottom: 8px; }
+.post-body pre            { background: #313233; padding: 12px; overflow-x: auto; border: 2px solid #1e1e1f; margin: 12px 0; }
+.post-body ul, .post-body ol { margin: 8px 0; padding-left: 20px; }
+.post-body li             { margin-bottom: 4px; }

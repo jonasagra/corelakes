@@ -9,7 +9,7 @@ export default function Blog({ isAdmin }) {
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
   const handleDelete = async (id) => {
-    if (!confirm('Tem certeza que deseja excluir este post?')) return;
+                    <img src="https://minecraft.wiki/images/Brush_JE1_BE1.png?fd417" alt="Editar" className="oreUI-icon" />
     try {
       await deletePost(id);
       showToast('Post excluído com sucesso!', 'success');
@@ -54,12 +54,12 @@ export default function Blog({ isAdmin }) {
                   <Link to={`/admin?edit=${post.slug}`}
                         className="flex items-center justify-center px-[10px] py-[6px] text-white border-[2px] border-mc-dark cursor-pointer transition-all duration-[150ms] hover:-translate-y-0.5 hover:bg-mc-green"
                         style={{ background:'#48494a', boxShadow:'inset 0 -2px 0 #313233, inset 0 2px 0 #5a5b5c' }}>
-                    ✏️
+                    <img src="https://minecraft.wiki/images/Brush_JE1_BE1.png?fd417" alt="Editar" className="oreUI-icon" />
                   </Link>
                   <button onClick={() => handleDelete(post.id)}
                           className="flex items-center justify-center px-[10px] py-[6px] text-white border-[2px] border-mc-dark cursor-pointer transition-all duration-[150ms] hover:-translate-y-0.5 hover:bg-mc-red"
                           style={{ background:'#48494a', boxShadow:'inset 0 -2px 0 #313233, inset 0 2px 0 #5a5b5c' }}>
-                    🗑️
+                    <img src="https://minecraft.wiki/images/Lava_Bucket_JE2_BE2.png?55ee0&format=original" alt="Excluir" className="oreUI-icon" />
                   </button>
                 </div>
               )}
@@ -82,11 +82,14 @@ export default function Blog({ isAdmin }) {
                     {post.title}
                   </h2>
                 </Link>
-                <p className="font-mc text-[0.85rem] text-white/70 leading-[1.6] mb-4">
+                <p className="oreUI-text text-[0.85rem] leading-[1.4] mb-4">
                   {post.excerpt || (post.content?.replace(/<[^>]*>/g, '').slice(0, 150) + '…')}
                 </p>
-                <div className="flex justify-between items-center font-mc text-[0.75rem] text-white/50">
-                  <span>📅 {post.date}</span>
+                <div className="flex justify-between items-center oreUI-text text-[0.75rem] opacity-70">
+                  <span className="inline-flex items-center gap-2">
+                    <img src="https://minecraft.wiki/images/archive/20181112133323%21Calendar_sheet.png?ec376&format=original" alt="Data" className="oreUI-icon" />
+                    {post.date}
+                  </span>
                 </div>
               </div>
             </article>
