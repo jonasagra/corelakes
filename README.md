@@ -62,11 +62,11 @@ scripts/create-admin.mjs# Cria/redefine o admin
 
 ## Configuração e deploy
 
-Veja o guia completo em **[SETUP-SEGURANCA.md](./SETUP-SEGURANCA.md)** (Neon, variáveis de
-ambiente, criação do admin, Vercel Blob e deploy).
-
-Resumo das variáveis de ambiente necessárias: `DATABASE_URL`, `AUTH_SECRET`,
+Variáveis de ambiente necessárias (veja `.env.example`): `DATABASE_URL`, `AUTH_SECRET`,
 `BLOB_READ_WRITE_TOKEN`.
+
+Passos: rode `db/schema.sql` no Neon, crie o admin com `npm run create-admin` e configure
+as variáveis na Vercel.
 
 ## Minecraft theme tokens (Tailwind)
 

@@ -20,3 +20,7 @@ Thumbs.db
 
 # vercel
 .vercel
+
+# guia de setup local (nao versionar - repo publico)
+setup.md
+SETUP-SEGURANCA.md
