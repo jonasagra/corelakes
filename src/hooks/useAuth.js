@@ -1,32 +1,26 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getSupabaseClient } from '../utils/supabase';
+import { api } from '../utils/api';
 
 /**
- * useAuth – manages Supabase session & admin flag in localStorage.
+ * useAuth – sessão de admin validada pelo SERVIDOR.
  *
- * Returns { user, loading, isAdmin, login, logout, checkSession }
+ * Não há mais flag de admin no localStorage (que qualquer um editava pelo
+ * DevTools). O estado vem de /api/me, que só responde "logado" se houver um
+ * cookie de sessão httpOnly válido — impossível de forjar pelo navegador.
+ *
+ * Retorna { user, loading, isAdmin, login, logout, checkSession, refresh }
  */
 export default function useAuth() {
-  const [user,    setUser]    = useState(null);
+  const [user, setUser]       = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const checkSession = useCallback(async () => {
+    setLoading(true);
     try {
-      const sb = getSupabaseClient();
-      const { data: { session } } = await sb.auth.getSession();
-      if (session) {
-        setUser(session.user);
-        setIsAdmin(true);
-        localStorage.setItem('admin_authenticated', 'true');
-      } else {
-        setUser(null);
-        setIsAdmin(localStorage.getItem('admin_authenticated') === 'true');
-      }
+      const data = await api.get('/api/me');
+      setUser(data?.user || null);
     } catch {
       setUser(null);
-      setIsAdmin(false);
-      localStorage.removeItem('admin_authenticated');
     } finally {
       setLoading(false);
     }
@@ -34,23 +28,19 @@ export default function useAuth() {
 
   useEffect(() => { checkSession(); }, [checkSession]);
 
-  const login = async (email, password) => {
-    const sb = getSupabaseClient();
-    const { data, error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    setUser(data.user);
-    setIsAdmin(true);
-    localStorage.setItem('admin_authenticated', 'true');
-    return data.user;
+  // Login em duas etapas: se o servidor responder { twofa: true }, a senha
+  // estava certa mas falta o código do app (2º fator).
+  const login = async (email, password, code) => {
+    const data = await api.post('/api/login', { email, password, code });
+    if (data?.twofa) return { twofa: true };
+    setUser({ email: data.email });
+    return { ok: true };
   };
 
   const logout = async () => {
-    const sb = getSupabaseClient();
-    await sb.auth.signOut();
+    try { await api.post('/api/logout'); } catch { /* ignore */ }
     setUser(null);
-    setIsAdmin(false);
-    localStorage.removeItem('admin_authenticated');
   };
 
-  return { user, loading, isAdmin, login, logout, checkSession };
+  return { user, loading, isAdmin: !!user, login, logout, checkSession, refresh: checkSession };
 }

@@ -1,3 +1,5 @@
+import { api } from './api';
+
 /**
  * 📸 ImageProcessor  –  HEIC-safe, EXIF-orientation-aware image pipeline.
  *
@@ -117,26 +119,27 @@ export class ImageProcessor {
 }
 
 /* ─────────────────────────────────────────────────────
- * SupabaseUploader  –  validates → processes → uploads
+ * ApiUploader  –  valida → processa → envia para /api/upload
+ *
+ * O arquivo é redimensionado no navegador e enviado em base64 para a função
+ * serverless, que revalida tipo/tamanho e grava no Vercel Blob. O navegador
+ * não tem nenhuma credencial de storage.
  * ───────────────────────────────────────────────────── */
-export class SupabaseUploader {
-  constructor(supabaseClient) {
-    this.supabase  = supabaseClient;
-    this.bucket    = 'blog-images';
+export class ApiUploader {
+  constructor() {
     this.processor = new ImageProcessor({ maxWidth: 1920, maxHeight: 1080, quality: 0.85 });
   }
 
-  async uploadImage(file, onProgress = null) {
+  async upload(file) {
     this.#validateFile(file);
-
-    onProgress?.({ stage: 'processing', percent: 10 });
-    const processed = await this.processor.processImage(file);
-
-    onProgress?.({ stage: 'uploading', percent: 50 });
-    const { path, publicUrl } = await this.#uploadToStorage(processed);
-
-    onProgress?.({ stage: 'complete', percent: 100 });
-    return { success: true, url: publicUrl, path, size: processed.size, fileName: processed.name };
+    const processed   = await this.processor.processImage(file); // JPEG
+    const dataBase64  = await this.#toBase64(processed);
+    const { url } = await api.post('/api/upload', {
+      filename: processed.name,
+      contentType: processed.type || 'image/jpeg',
+      dataBase64,
+    });
+    return url;
   }
 
   #validateFile(file) {
@@ -146,17 +149,12 @@ export class SupabaseUploader {
     if (file.size > 20 * 1024 * 1024) throw new Error(`Arquivo muito grande (${(file.size / 1024 / 1024).toFixed(1)}MB). Máximo: 20MB`);
   }
 
-  async #uploadToStorage(file) {
-    let filePath = `posts/${file.name}`;
-    let { data, error } = await this.supabase.storage.from(this.bucket).upload(filePath, file, { cacheControl: '3600', upsert: false });
-
-    if (error?.message?.includes('already exists')) {
-      filePath = `posts/${Date.now()}-${file.name}`;
-      ({ data, error } = await this.supabase.storage.from(this.bucket).upload(filePath, file, { cacheControl: '3600', upsert: false }));
-    }
-    if (error) throw error;
-
-    const { data: urlData } = this.supabase.storage.from(this.bucket).getPublicUrl(data.path);
-    return { path: data.path, publicUrl: urlData.publicUrl };
+  #toBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(String(reader.result).split(',')[1] || '');
+      reader.onerror = () => reject(new Error('Falha ao ler a imagem'));
+      reader.readAsDataURL(file);
+    });
   }
 }

@@ -1,0 +1,88 @@
+// ── Validação e sanitização (no SERVIDOR) ──────────────────────
+// É AQUI que mora a segurança contra "manipular campos pelo DevTools".
+// Não importa o que o navegador envie: o servidor corta tamanho, rejeita
+// lixo e remove qualquer HTML perigoso (scripts, onerror, etc.) ANTES de
+// gravar no banco. O cliente é tratado como não-confiável por princípio.
+import sanitizeHtml from 'sanitize-html';
+
+// HTML permitido no conteúdo do post (o que o editor Quill realmente gera).
+const CONTENT_OPTIONS = {
+  allowedTags: [
+    'h1', 'h2', 'h3', 'p', 'br', 'span', 'strong', 'em', 'u', 's',
+    'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'a', 'img',
+  ],
+  allowedAttributes: {
+    a: ['href', 'target', 'rel'],
+    img: ['src', 'alt'],
+    span: ['style'],
+    p: ['style'],
+    // Quill usa classes para alinhamento/indentação
+    '*': ['class'],
+  },
+  // Só cores em style (o que o Quill aplica); nada de position/url/expression.
+  allowedStyles: {
+    '*': {
+      color: [/^#(0x)?[0-9a-f]+$/i, /^rgb\(/i, /^[a-z]+$/i],
+      'background-color': [/^#(0x)?[0-9a-f]+$/i, /^rgb\(/i, /^[a-z]+$/i],
+    },
+  },
+  allowedSchemes: ['http', 'https', 'mailto'],
+  allowedSchemesByTag: { img: ['http', 'https'] },
+  // Força links externos seguros
+  transformTags: {
+    a: sanitizeHtml.simpleTransform('a', { rel: 'noopener noreferrer nofollow' }),
+  },
+};
+
+export function cleanContent(html) {
+  return sanitizeHtml(String(html || ''), CONTENT_OPTIONS);
+}
+
+// Texto puro (título, resumo): remove TODO HTML.
+function cleanText(value) {
+  return sanitizeHtml(String(value ?? ''), { allowedTags: [], allowedAttributes: {} }).trim();
+}
+
+function isValidImageUrl(url) {
+  if (!url) return true; // opcional
+  try {
+    const u = new URL(url);
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Valida e limpa a entrada de um post. Lança Error com mensagem amigável
+ * se algo estiver fora das regras. Retorna campos já sanitizados.
+ */
+export function validatePost(body) {
+  const title = cleanText(body?.title);
+  const excerpt = cleanText(body?.excerpt);
+  const imageUrl = String(body?.imageUrl ?? '').trim();
+  const content = cleanContent(body?.content);
+
+  if (title.length < 1) throw new Error('Título é obrigatório.');
+  if (title.length > 200) throw new Error('Título muito longo (máx. 200).');
+  if (excerpt.length > 300) throw new Error('Resumo muito longo (máx. 300).');
+  if (content.length < 1) throw new Error('Conteúdo é obrigatório.');
+  if (content.length > 100000) throw new Error('Conteúdo muito longo.');
+  if (imageUrl.length > 2000) throw new Error('URL da imagem muito longa.');
+  if (!isValidImageUrl(imageUrl)) throw new Error('URL da imagem inválida.');
+
+  return { title, excerpt, imageUrl: imageUrl || null, content };
+}
+
+/** Gera slug seguro a partir do título (autoridade é do servidor). */
+export function generateSlug(title) {
+  return String(title)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 200) || 'post';
+}

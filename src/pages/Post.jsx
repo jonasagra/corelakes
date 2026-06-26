@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';  // we won't actually use helmet; handle <title> manually
+import DOMPurify from 'dompurify';
 import usePosts from '../hooks/usePosts';
 
 export default function Post() {
@@ -77,7 +78,7 @@ export default function Post() {
         <div className="border-[4px] border-mc-dark p-[30px] mb-[30px] sm:p-5"
              style={{ background:'#48494a', boxShadow:'inset 0 -4px 0 #313233, inset 0 4px 0 #5a5b5c' }}>
           <div className="post-body text-base"
-               dangerouslySetInnerHTML={{ __html: post.content }} />
+               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }} />
         </div>
 
         {/* back nav */}

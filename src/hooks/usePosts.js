@@ -1,37 +1,38 @@
 import { useState, useCallback } from 'react';
-import { getSupabaseClient, generateSlug } from '../utils/supabase';
+import { api } from '../utils/api';
 
 /**
- * usePosts – CRUD layer backed by Supabase with localStorage fallback.
+ * usePosts – camada de CRUD agora via /api (Neon no back-end).
+ *
+ * Leitura (lista/post) é pública. Escrita (criar/editar/excluir) é enviada
+ * para a API, que exige sessão de admin e revalida tudo no servidor. Se o
+ * cookie não for válido, o servidor responde 401 e a operação falha — não
+ * adianta forçar pelo DevTools.
  */
 export default function usePosts() {
-  const [posts,   setPosts]   = useState([]);
+  const [posts, setPosts]     = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState(null);
+  const [error, setError]     = useState(null);
 
-  /* ── helpers ──────────────────────────────────────── */
   const fmt = (p) => ({
     ...p,
-    date: p.date || new Date(p.created_at).toLocaleDateString('pt-BR'),
+    date: p.date || (p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : ''),
   });
 
+  // Cache local apenas de leitura pública (resiliência se a API cair).
   const syncLocal = (arr) => {
-    localStorage.setItem('blog_posts', JSON.stringify(arr.map(fmt)));
+    try { localStorage.setItem('blog_posts', JSON.stringify(arr)); } catch { /* ignore */ }
   };
 
-  /* ── fetch all posts (public) ─────────────────────── */
   const fetchPosts = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const sb   = getSupabaseClient();
-      const { data, error: e } = await sb.from('posts').select('*').order('created_at', { ascending: false });
-      if (e) throw e;
+      const data = await api.get('/api/posts');
       const formatted = (data || []).map(fmt);
       setPosts(formatted);
       syncLocal(formatted);
     } catch (err) {
-      // fall back to localStorage
       const cached = JSON.parse(localStorage.getItem('blog_posts') || '[]');
       setPosts(cached);
       if (!cached.length) setError(err.message);
@@ -40,46 +41,27 @@ export default function usePosts() {
     }
   }, []);
 
-  /* ── single post by slug ──────────────────────────── */
   const getPostBySlug = useCallback(async (slug) => {
     try {
-      const sb = getSupabaseClient();
-      const { data, error: e } = await sb.from('posts').select('*').eq('slug', slug).single();
-      if (!e && data) return fmt(data);
-    } catch { /* fall through */ }
-    // localStorage fallback
+      const data = await api.get(`/api/posts?slug=${encodeURIComponent(slug)}`);
+      if (data) return fmt(data);
+    } catch { /* fallback abaixo */ }
     const cached = JSON.parse(localStorage.getItem('blog_posts') || '[]');
     return cached.find(p => p.slug === slug) || null;
   }, []);
 
-  /* ── create ───────────────────────────────────────── */
   const createPost = useCallback(async ({ title, content, excerpt, imageUrl }) => {
-    const sb   = getSupabaseClient();
-    const now  = new Date().toISOString();
-    const { data, error: e } = await sb.from('posts').insert([{
-      title, slug: generateSlug(title), content, excerpt,
-      image_url: imageUrl || null, created_at: now, updated_at: now,
-    }]).select();
-    if (e) throw e;
-    return fmt(data[0]);
+    const data = await api.post('/api/posts', { title, content, excerpt, imageUrl });
+    return fmt(data);
   }, []);
 
-  /* ── update ───────────────────────────────────────── */
   const updatePost = useCallback(async (id, { title, content, excerpt, imageUrl }) => {
-    const sb = getSupabaseClient();
-    const { data, error: e } = await sb.from('posts').update({
-      title, slug: generateSlug(title), content, excerpt,
-      image_url: imageUrl || null, updated_at: new Date().toISOString(),
-    }).eq('id', id).select();
-    if (e) throw e;
-    return fmt(data[0]);
+    const data = await api.put(`/api/posts/${id}`, { title, content, excerpt, imageUrl });
+    return fmt(data);
   }, []);
 
-  /* ── delete ───────────────────────────────────────── */
   const deletePost = useCallback(async (id) => {
-    const sb = getSupabaseClient();
-    const { error: e } = await sb.from('posts').delete().eq('id', id);
-    if (e) throw e;
+    await api.del(`/api/posts/${id}`);
   }, []);
 
   return { posts, loading, error, fetchPosts, getPostBySlug, createPost, updatePost, deletePost };

@@ -9,9 +9,9 @@ Personal portfolio & blog for Jonas Agra (Corelakes).
 | Bundler | Vite 5 |
 | CSS | Tailwind CSS 3 + custom Minecraft theme |
 | Routing | React Router v6 |
-| Backend / Auth | Supabase (JS SDK v2) |
+| Backend / Auth | Vercel Serverless Functions (`/api`) + Neon (Postgres) + sessão JWT em cookie httpOnly |
 | Rich-text editor | Quill via react-quill |
-| Image pipeline | Custom HEIC-safe processor + Supabase Storage |
+| Image pipeline | Custom HEIC-safe processor + Vercel Blob |
 
 ## Getting started
 
@@ -43,28 +43,30 @@ src/
 │   └── Admin.jsx       # Config → Login → Dashboard (editor + posts table)
 │
 ├── hooks/
-│   ├── useAuth.js      # Supabase session management + admin flag
-│   └── usePosts.js     # CRUD layer with localStorage fallback
+│   ├── useAuth.js      # Sessão validada pelo servidor (/api/me, /api/login)
+│   └── usePosts.js     # CRUD via /api/posts
 │
 └── utils/
-    ├── supabase.js     # Singleton client, config helpers, slug generator
-    └── imageProcessor.js # ImageProcessor (HEIC / EXIF) + SupabaseUploader
+    ├── api.js          # Cliente fetch da API + slug (prévia)
+    └── imageProcessor.js # ImageProcessor (HEIC / EXIF) + ApiUploader
+
+api/                    # Funções serverless (back-end)
+├── _lib/               # db (Neon), auth (sessão/senha), validate (sanitização)
+├── login.js · logout.js · me.js
+├── posts/index.js · posts/[id].js
+└── upload.js           # Upload para o Vercel Blob
+
+db/schema.sql           # Tabelas posts + users
+scripts/create-admin.mjs# Cria/redefine o admin
 ```
 
-## Deployment (Vercel)
+## Configuração e deploy
 
-1. Push to GitHub.
-2. Import repo in [vercel.com](https://vercel.com).
-3. Framework preset → **Vite**.
-4. No environment variables needed – public Supabase credentials are baked in for read access; admin credentials are saved to `localStorage` at runtime via the Config screen.
+Veja o guia completo em **[SETUP-SEGURANCA.md](./SETUP-SEGURANCA.md)** (Neon, variáveis de
+ambiente, criação do admin, Vercel Blob e deploy).
 
-## Supabase tables expected
-
-| Table | Columns |
-|---|---|
-| `posts` | `id` (int, PK) · `title` · `slug` · `content` · `excerpt` · `image_url` · `created_at` · `updated_at` |
-
-Storage bucket: **`blog-images`** (public, path `posts/`).
+Resumo das variáveis de ambiente necessárias: `DATABASE_URL`, `AUTH_SECRET`,
+`BLOB_READ_WRITE_TOKEN`.
 
 ## Minecraft theme tokens (Tailwind)
 
@@ -76,9 +78,4 @@ Storage bucket: **`blog-images`** (public, path `posts/`).
 | `mc-bg-light` | `#5a5b5c` |
 | `mc-green` | `#3c8527` |
 | `mc-green-light` | `#4ca632` |
-| `mc-green-dark` | `#2d6a1e` |
-| `mc-red` | `#8b2020` |
-| `mc-red-light` | `#a52a2a` |
-| `mc-nav` | `#1c1c1d` |
-
-Font families: `font-mc` · `font-mc-bold` · `font-mc-five`
+| `mc-green-dark` |

@@ -5,8 +5,8 @@ import 'react-quill/dist/quill.snow.css';
 import useAuth from '../hooks/useAuth';
 import usePosts from '../hooks/usePosts';
 import { showToast } from '../components/Toast';
-import { saveSupabaseConfig, clearSupabaseConfig, generateSlug, getSupabaseClient } from '../utils/supabase';
-import { SupabaseUploader } from '../utils/imageProcessor';
+import { api, generateSlug } from '../utils/api';
+import { ApiUploader } from '../utils/imageProcessor';
 
 /* ── Quill toolbar config ── */
 const TOOLBAR = [
@@ -58,48 +58,26 @@ const OreButton = ({ variant = 'default', disabled, children, ...props }) => {
  * Sections rendered conditionally
  * ────────────────────────────────────────────────────── */
 
-/** 1. Config section – first-time Supabase setup */
-function ConfigSection({ onSaved }) {
-  const [url, setUrl] = useState('');
-  const [key, setKey] = useState('');
-
-  const save = () => {
-    if (!url.trim() || !key.trim()) { showToast('Preencha a URL e a Key!', 'error'); return; }
-    saveSupabaseConfig(url.trim(), key.trim());
-    showToast('Configuração salva!', 'success');
-    onSaved();
-  };
-
-  return (
-    <section className="border-[4px] border-mc-dark p-[30px] mb-5"
-             style={{ background: '#48494a', boxShadow: 'inset 0 -4px 0 #313233, inset 0 4px 0 #5a5b5c, 0 6px 20px rgba(0,0,0,0.4)' }}>
-      <h1 className="font-mc-five text-[1.5rem] text-white text-center mb-[10px]" style={{ textShadow: '2px 2px 0 #3f3f3f' }}>
-        ⚙️ Configuração do Supabase
-      </h1>
-      <p className="font-mc text-[0.9rem] text-white/70 text-center mb-[25px]">
-        Configure suas credenciais do Supabase uma única vez.
-      </p>
-      <div className="flex flex-col gap-[10px]">
-        <OreInput label="URL do Projeto" placeholder="https://xxxxx.supabase.co" value={url} onChange={e => setUrl(e.target.value)} />
-        <OreInput label="Anon Key" placeholder="eyJhbGciOiJIUzI1NiI…" value={key} onChange={e => setKey(e.target.value)} />
-        <OreButton variant="primary" onClick={save}>Salvar Configuração</OreButton>
-      </div>
-    </section>
-  );
-}
-
-/** 2. Login section */
-function LoginSection({ onLoggedIn, onResetConfig }) {
+/** 1. Login section (com 2FA opcional em duas etapas) */
+function LoginSection({ onLoggedIn }) {
   const { login } = useAuth();
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
+  const [code, setCode]         = useState('');
+  const [needCode, setNeedCode] = useState(false); // pede o 2º fator
   const [busy, setBusy]         = useState(false);
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) { showToast('Preencha e-mail e senha!', 'error'); return; }
+    if (needCode && !code.trim()) { showToast('Digite o código do app!', 'error'); return; }
     setBusy(true);
     try {
-      await login(email.trim(), password.trim());
+      const r = await login(email.trim(), password.trim(), code.trim() || undefined);
+      if (r?.twofa) {
+        setNeedCode(true);
+        showToast('Digite o código do seu app autenticador.', 'success');
+        return;
+      }
       showToast('Login realizado com sucesso!', 'success');
       onLoggedIn();
     } catch (e) {
@@ -114,29 +92,124 @@ function LoginSection({ onLoggedIn, onResetConfig }) {
         🔒 Login Admin
       </h1>
       <p className="font-mc text-[0.9rem] text-white/70 text-center mb-[25px]">
-        Faça login para acessar o painel
+        {needCode ? 'Verificação em duas etapas' : 'Faça login para acessar o painel'}
       </p>
       <div className="flex flex-col gap-[10px]">
-        <OreInput label="E-mail" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} />
-        <OreInput label="Senha" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)}
-                 onKeyDown={e => e.key === 'Enter' && handleLogin()} />
+        {!needCode && (
+          <>
+            <OreInput label="E-mail" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} />
+            <OreInput label="Senha" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)}
+                     onKeyDown={e => e.key === 'Enter' && handleLogin()} />
+          </>
+        )}
+        {needCode && (
+          <OreInput label="Código de verificação (6 dígitos)" type="text" inputMode="numeric" autoComplete="one-time-code"
+                   placeholder="000000" value={code} maxLength={6}
+                   onChange={e => setCode(e.target.value.replace(/\D/g, ''))}
+                   onKeyDown={e => e.key === 'Enter' && handleLogin()} />
+        )}
         <OreButton variant="primary" disabled={busy} onClick={handleLogin}>
-          {busy ? 'Entrando…' : 'Entrar'}
+          {busy ? 'Entrando…' : (needCode ? 'Verificar' : 'Entrar')}
         </OreButton>
-        <p className="text-center mt-[15px]">
-          <button onClick={onResetConfig}
-                  className="font-mc text-[0.8rem] text-white/50 bg-transparent border-none cursor-pointer underline hover:text-white/80">
-            ⚙️ Reconfigurar Supabase
-          </button>
-        </p>
       </div>
     </section>
   );
 }
 
+/** 2. Seção de 2FA (segurança) no painel */
+function TwoFASection({ enabled, onChanged }) {
+  const [setup, setSetup] = useState(null); // { qr, secret } durante a ativação
+  const [code, setCode]   = useState('');
+  const [busy, setBusy]   = useState(false);
+
+  const startSetup = async () => {
+    setBusy(true);
+    try {
+      const data = await api.post('/api/2fa/setup');
+      setSetup({ qr: data.qr, secret: data.secret });
+    } catch (e) {
+      showToast('Erro: ' + e.message, 'error');
+    } finally { setBusy(false); }
+  };
+
+  const confirmEnable = async () => {
+    if (!code.trim()) { showToast('Digite o código do app!', 'error'); return; }
+    setBusy(true);
+    try {
+      await api.post('/api/2fa/enable', { code: code.trim() });
+      showToast('2FA ativado!', 'success');
+      setSetup(null); setCode('');
+      onChanged();
+    } catch (e) {
+      showToast('Erro: ' + e.message, 'error');
+    } finally { setBusy(false); }
+  };
+
+  const disable = async () => {
+    if (!code.trim()) { showToast('Digite o código do app para confirmar!', 'error'); return; }
+    setBusy(true);
+    try {
+      await api.post('/api/2fa/disable', { code: code.trim() });
+      showToast('2FA desativado.', 'success');
+      setCode('');
+      onChanged();
+    } catch (e) {
+      showToast('Erro: ' + e.message, 'error');
+    } finally { setBusy(false); }
+  };
+
+  return (
+    <div className="border-[4px] border-mc-dark p-5 mb-[30px]"
+         style={{ background: '#48494a', boxShadow: 'inset 0 -4px 0 #313233, inset 0 4px 0 #5a5b5c' }}>
+      <h2 className="font-mc-five text-[1.1rem] text-white mb-3" style={{ textShadow: '2px 2px 0 #3f3f3f' }}>
+        🛡️ Verificação em duas etapas (2FA)
+      </h2>
+
+      {enabled ? (
+        <div className="flex flex-col gap-[10px]">
+          <p className="font-mc text-[0.85rem] text-mc-green-light">2FA está ATIVO ✓</p>
+          <p className="font-mc text-[0.8rem] text-white/60">
+            Para desativar, confirme com um código do seu app autenticador.
+          </p>
+          <OreInput label="Código (6 dígitos)" type="text" inputMode="numeric" placeholder="000000"
+                   value={code} maxLength={6} onChange={e => setCode(e.target.value.replace(/\D/g, ''))} />
+          <OreButton variant="danger" disabled={busy} onClick={disable}>Desativar 2FA</OreButton>
+        </div>
+      ) : !setup ? (
+        <div className="flex flex-col gap-[10px]">
+          <p className="font-mc text-[0.8rem] text-white/60">
+            Proteja o login com um app como Google Authenticator ou Authy.
+          </p>
+          <OreButton variant="primary" disabled={busy} onClick={startSetup}>
+            {busy ? 'Gerando…' : 'Ativar 2FA'}
+          </OreButton>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-[12px]">
+          <p className="font-mc text-[0.8rem] text-white/70">
+            1) Escaneie o QR no seu app autenticador:
+          </p>
+          <img src={setup.qr} alt="QR Code 2FA" className="w-[180px] h-[180px] border-[3px] border-mc-dark bg-white" />
+          <p className="font-mc text-[0.75rem] text-white/50 break-all">
+            Ou digite manualmente: <span className="text-mc-green-light">{setup.secret}</span>
+          </p>
+          <p className="font-mc text-[0.8rem] text-white/70">2) Confirme com o código gerado:</p>
+          <OreInput label="Código (6 dígitos)" type="text" inputMode="numeric" placeholder="000000"
+                   value={code} maxLength={6} onChange={e => setCode(e.target.value.replace(/\D/g, ''))}
+                   onKeyDown={e => e.key === 'Enter' && confirmEnable()} />
+          <div className="flex gap-[10px]">
+            <OreButton variant="primary" disabled={busy} onClick={confirmEnable}>Confirmar</OreButton>
+            <OreButton variant="default" disabled={busy} onClick={() => { setSetup(null); setCode(''); }}>Cancelar</OreButton>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** 3. Full Dashboard (editor + posts table) */
 function Dashboard({ onLogout }) {
-  const { user }    = useAuth();
+  const { user, refresh } = useAuth();
   const { posts, fetchPosts, createPost, updatePost, deletePost } = usePosts();
   const navigate          = useNavigate();
   const [searchParams]    = useSearchParams();
@@ -151,7 +224,7 @@ function Dashboard({ onLogout }) {
   const [uploading, setUploading] = useState('');
   const [publishing,setPublishing]= useState(false);
 
-  /* ── CORREÇÃO FINAL: Carregar posts apenas UMA vez usando useRef ── */
+  /* ── Carregar posts apenas UMA vez usando useRef ── */
   useEffect(() => {
     if (!hasFetchedRef.current) {
       hasFetchedRef.current = true;
@@ -187,8 +260,8 @@ function Dashboard({ onLogout }) {
     if (!file) return;
     setUploading('Processando…');
     try {
-      const uploader = new SupabaseUploader(getSupabaseClient());
-      const url = await uploader.upload(file, { folder: 'posts' });
+      const uploader = new ApiUploader();
+      const url = await uploader.upload(file);
       setImageUrl(url);
       showToast('Imagem enviada!', 'success');
     } catch (err) {
@@ -274,6 +347,9 @@ function Dashboard({ onLogout }) {
           </div>
         </div>
       </div>
+
+      {/* ── 2FA / segurança ── */}
+      <TwoFASection enabled={!!user?.twofaEnabled} onChanged={refresh} />
 
       {/* ── editor section ── */}
       <div className="border-[4px] border-mc-dark p-[25px] mb-[30px]"
@@ -419,7 +495,7 @@ function Dashboard({ onLogout }) {
  * ────────────────────────────────────────────────────── */
 export default function Admin() {
   const { user, loading, checkSession, logout } = useAuth();
-  const [view, setView] = useState('loading'); // 'loading' | 'config' | 'login' | 'dashboard'
+  const [view, setView] = useState('loading'); // 'loading' | 'login' | 'dashboard'
 
   useEffect(() => {
     (async () => {
@@ -429,11 +505,7 @@ export default function Admin() {
 
   useEffect(() => {
     if (loading) { setView('loading'); return; }
-
-    const hasConfig = localStorage.getItem('supabase_url');
-    if (!hasConfig) { setView('config'); return; }
-    if (user)       { setView('dashboard'); return; }
-    setView('login');
+    setView(user ? 'dashboard' : 'login');
   }, [loading, user]);
 
   const handleLogout = async () => {
@@ -453,16 +525,9 @@ export default function Admin() {
     <Wrap><p className="font-mc text-base text-white/50 text-center py-[60px]">Carregando…</p></Wrap>
   );
 
-  if (view === 'config') return (
-    <Wrap><ConfigSection onSaved={() => setView('login')} /></Wrap>
-  );
-
   if (view === 'login') return (
     <Wrap>
-      <LoginSection
-        onLoggedIn={() => setView('dashboard')}
-        onResetConfig={() => { clearSupabaseConfig(); setView('config'); }}
-      />
+      <LoginSection onLoggedIn={() => setView('dashboard')} />
     </Wrap>
   );
 
