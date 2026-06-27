@@ -38,7 +38,7 @@ export default function Footer() {
             <a href="https://jonasagra.com.br" target="_blank" rel="noreferrer noopener"
                className="block text-mc-green-link text-[0.85rem] py-1 no-underline hover:text-white">jonasagra.com.br</a>
             <a href="mailto:jonas.agra@icloud.com"
-               className="block text-mc-green-link text-[0.85rem] py-1 no-underline hover:text-white">jonas.agra@icloud.com</a>
+               className="block text-mc-green-link text-[0.85rem] py-1 no-underline hover:text-white">corelakes@gmail.com</a>
             <a href="https://br.minecraft.wiki/Usuário:Corelakes" target="_blank" rel="noreferrer noopener"
                className="block text-mc-green-link text-[0.85rem] py-1 no-underline hover:text-white">Minecraft Wiki</a>
           </div>
