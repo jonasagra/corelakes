@@ -56,12 +56,12 @@ export default function usePosts() {
   }, []);
 
   const updatePost = useCallback(async (id, { title, content, excerpt, imageUrl }) => {
-    const data = await api.put(`/api/posts/${id}`, { title, content, excerpt, imageUrl });
+    const data = await api.put(`/api/posts?id=${id}`, { title, content, excerpt, imageUrl });
     return fmt(data);
   }, []);
 
   const deletePost = useCallback(async (id) => {
-    await api.del(`/api/posts/${id}`);
+    await api.del(`/api/posts?id=${id}`);
   }, []);
 
   return { posts, loading, error, fetchPosts, getPostBySlug, createPost, updatePost, deletePost };
