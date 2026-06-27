@@ -319,7 +319,7 @@ function Dashboard({ onLogout }) {
       <header className="flex justify-between items-center mb-[30px]">
         <h1 className="font-mc-five text-[2rem] text-white" style={{ textShadow: '3px 3px 0 #3f3f3f' }}>
           <span className="inline-flex items-center gap-2">
-            <img src="/icons/redstone-sysop.webp" alt="Dashboard" className="oreUI-icon" />
+            <img src="/icons/admin.webp" alt="Dashboard" className="oreUI-icon" />
             Dashboard
           </span>
         </h1>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;0,800;1,400;1,700&display=swap');
 
 /* ========== Custom Fonts ========== */
 @font-face {
@@ -31,13 +31,14 @@
   html { scroll-behavior: smooth; }
 
   :root {
-    --oreUI-green: #3c8527;
-    --oreUI-green-light: #4ca632;
+    --green: #3c8527;
+    --green-bright: #6cc349;
+    --green-link: #a0e081;
     --oreUI-font: "Noto Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
   }
 
   body {
-    font-family: 'Minecraft', monospace;
+    font-family: var(--oreUI-font);
     background-color: #0a0a0a;
     background-image: url('/assets/pixel-black.png');
     background-size: 500px auto;
@@ -49,22 +50,65 @@
   }
   body.menu-open { overflow: hidden; }
   img { image-rendering: pixelated; }
-  a { color: #5cb83c; }
-  a:hover { color: #5cb83c; }
+  a { color: var(--green-bright); }
+  a:hover { color: var(--green-link); }
 }
 
-/* ========== oreUI Quill theme ========== */
+/* ========== Novo visual (minecraft.net-style) ========== */
+/* Botão vazado (CTA) */
+.mc-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--oreUI-font); font-weight: 800; font-size: 0.78rem;
+  letter-spacing: .5px; text-transform: uppercase; color: var(--green-bright);
+  background: transparent; border: 2px solid var(--green); border-radius: 0;
+  padding: 9px 18px; cursor: pointer; text-decoration: none;
+  transition: background .15s, color .15s, transform .15s;
+}
+.mc-btn:hover { background: var(--green); color: #fff; }
+.mc-btn-solid { background: var(--green); color: #fff; }
+.mc-btn-solid:hover { background: var(--green-bright); color: #fff; }
+.mc-btn-danger { color: #ff8a8a; border-color: #8b2020; }
+.mc-btn-danger:hover { background: #8b2020; color: #fff; }
+
+/* Card escuro semi-transparente (container) */
+.mc-card {
+  background: rgba(23, 22, 21, 0.82); border: 1px solid rgba(255,255,255,0.08);
+  border-left: 4px solid var(--green); border-radius: 0; padding: 22px 24px;
+}
+.mc-panel {
+  background: #1b1b1c; border: 1px solid #000; border-radius: 0;
+}
+
+/* Label pixelado em maiúsculas */
+.mc-label {
+  font-family: 'Minecraft', monospace; text-transform: uppercase; letter-spacing: 2px;
+  color: rgba(255,255,255,0.65);
+}
+
+/* Botão social circular */
+.mc-soc {
+  width: 54px; height: 54px; border-radius: 50%; background: #1d1d1f;
+  border: 1px solid #333; display: flex; align-items: center; justify-content: center;
+  transition: background .15s, transform .15s;
+}
+.mc-soc:hover { background: var(--green); transform: translateY(-3px); }
+.mc-soc img { width: 30px; height: 30px; image-rendering: auto; }
+
+/* Divisor de seção com label central */
+.mc-seclabel { position: relative; text-align: center; }
+.mc-seclabel::before, .mc-seclabel::after {
+  content: ""; position: absolute; top: 50%; width: 26%; height: 1px; background: #2a2a2b;
+}
+.mc-seclabel::before { left: 0; } .mc-seclabel::after { right: 0; }
+
+/* ========== oreUI Quill theme (editor admin) ========== */
 .oreUI-quill .ql-editor {
-  background: #313233 !important;
-  color: #fff !important;
-  font-family: var(--oreUI-font) !important;
-  min-height: 80px;
+  background: #313233 !important; color: #fff !important;
+  font-family: var(--oreUI-font) !important; min-height: 80px;
 }
 .oreUI-quill .ql-toolbar.ql-snow {
-  background: #48494a !important;
-  border: none !important;
-  border-bottom: 2px solid #1e1e1f !important;
-  min-height: 40px;
+  background: #48494a !important; border: none !important;
+  border-bottom: 2px solid #1e1e1f !important; min-height: 40px;
 }
 .oreUI-quill .ql-container.ql-snow            { border: none !important; }
 .oreUI-quill .ql-snow .ql-stroke              { stroke: #fff; }
@@ -79,44 +123,26 @@
 .oreUI-quill { height: auto; }
 .oreUI-quill .ql-container { min-height: 400px; }
 .oreUI-quill .ql-editor { min-height: 400px; }
-.oreUI-quill .ql-editor a { color: #5cb83c !important; }
-.oreUI-quill .ql-editor a:hover { color: #5cb83c !important; }
-.oreUI-quill .ql-editor a:visited { color: #5cb83c !important; }
+.oreUI-quill .ql-editor a,
+.oreUI-quill .ql-editor a:hover,
+.oreUI-quill .ql-editor a:visited { color: #6cc349 !important; }
 
-/* ========== Post-body rich-text styles (Quill output) ========== */
-.oreUI-text {
-  font-family: var(--oreUI-font);
-  color: rgba(255,255,255,0.86);
-}
-.oreUI-icon {
-  width: 22px;
-  height: 22px;
-  min-width: 22px;
-  min-height: 22px;
-  object-fit: contain;
-  image-rendering: auto;
-  display: inline-block;
-}
-.post-body {
-  font-family: var(--oreUI-font);
-  color: rgba(255,255,255,0.86);
-  line-height: 1.5;
-}
-.post-body h1, .post-body h2, .post-body h3 {
-  font-family: 'MinecraftFive', monospace;
-  color: #4ca632;
-  margin: 16px 0 10px;
-}
+/* ========== util ========== */
+.oreUI-text { font-family: var(--oreUI-font); color: rgba(255,255,255,0.86); }
+.oreUI-icon { width: 22px; height: 22px; min-width: 22px; min-height: 22px; object-fit: contain; image-rendering: auto; display: inline-block; }
+
+/* ========== Post-body (Quill output) ========== */
+.post-body { font-family: var(--oreUI-font); color: rgba(255,255,255,0.88); line-height: 1.7; }
+.post-body h1, .post-body h2, .post-body h3 { font-family: 'MinecraftFive', monospace; color: #6cc349; margin: 18px 0 10px; }
 .post-body h1 { font-size: 1.5rem; }
 .post-body h2 { font-size: 1.3rem; }
 .post-body h3 { font-size: 1.1rem; }
-.post-body p              { margin-bottom: 6px; }
-.post-body a              { color: #5cb83c !important; text-decoration: underline; }
-.post-body a:hover        { color: #5cb83c !important; }
-.post-body a:visited      { color: #5cb83c !important; }
-.post-body img            { max-width: 100%; border: 3px solid #1e1e1f; margin: 14px 0; }
+.post-body p              { margin-bottom: 10px; }
+.post-body a              { color: #6cc349 !important; text-decoration: underline; }
+.post-body a:hover        { color: #a0e081 !important; }
+.post-body img            { max-width: 100%; border: 1px solid #000; margin: 14px 0; }
 .post-body blockquote     { border-left: 4px solid #3c8527; padding-left: 16px; margin: 12px 0; color: rgba(255,255,255,0.8); font-style: italic; }
-.post-body code           { background: #313233; padding: 2px 8px; font-family: monospace; font-size: 0.9rem; }
-.post-body pre            { background: #313233; padding: 12px; overflow-x: auto; border: 2px solid #1e1e1f; margin: 12px 0; }
+.post-body code           { background: #1b1b1c; padding: 2px 8px; font-family: monospace; font-size: 0.9rem; }
+.post-body pre            { background: #1b1b1c; padding: 12px; overflow-x: auto; border: 1px solid #000; margin: 12px 0; }
 .post-body ul, .post-body ol { margin: 8px 0; padding-left: 20px; }
 .post-body li             { margin-bottom: 4px; }

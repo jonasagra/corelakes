@@ -3,11 +3,6 @@ import { api } from '../utils/api';
 
 /**
  * useAuth – sessão de admin validada pelo SERVIDOR.
- *
- * Não há mais flag de admin no localStorage (que qualquer um editava pelo
- * DevTools). O estado vem de /api/me, que só responde "logado" se houver um
- * cookie de sessão httpOnly válido — impossível de forjar pelo navegador.
- *
  * Retorna { user, loading, isAdmin, login, logout, checkSession, refresh }
  */
 export default function useAuth() {
@@ -28,8 +23,6 @@ export default function useAuth() {
 
   useEffect(() => { checkSession(); }, [checkSession]);
 
-  // Login em duas etapas: se o servidor responder { twofa: true }, a senha
-  // estava certa mas falta o código do app (2º fator).
   const login = async (email, password, code) => {
     const data = await api.post('/api/login', { email, password, code });
     if (data?.twofa) return { twofa: true };

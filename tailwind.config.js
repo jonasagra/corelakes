@@ -4,6 +4,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        // corpo limpo (igual minecraft.net)
+        sans: ['"Noto Sans"', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+        // títulos/labels pixelados
         mc: ["'Minecraft'", 'monospace'],
         'mc-bold': ["'Minecraft-Bold'", 'monospace'],
         'mc-five': ["'MinecraftFive'", 'monospace'],
@@ -17,10 +20,16 @@ export default {
           green: '#3c8527',
           'green-light': '#4ca632',
           'green-dark': '#2d6a1e',
+          'green-bright': '#6cc349',
+          'green-link': '#a0e081',
           red: '#8b2020',
           'red-light': '#a52a2a',
           'red-dark': '#6a1818',
-          nav: '#1c1c1d',
+          nav: '#111112',
+          black: '#0b0b0c',
+          panel: '#1b1b1c',
+          line: '#2a2a2b',
+          gold: '#ffb12b',
         },
       },
       keyframes: {
@@ -31,9 +40,7 @@ export default {
           '75%':      { transform: 'translateY(-20px) translateX(5px)', opacity: '0.5' },
         },
       },
-      animation: {
-        float: 'float 15s infinite ease-in-out',
-      },
+      animation: { float: 'float 15s infinite ease-in-out' },
     },
   },
   plugins: [],
