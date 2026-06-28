@@ -1,11 +1,10 @@
+// Toolbar enxuta, pensada para mobile — só o essencial.
 export const TOOLBAR = [
   [{ header: [1, 2, 3, false] }],
-  ['bold', 'italic', 'underline', 'strike'],
-  [{ color: [] }, { background: [] }],
+  ['bold', 'italic'],
   [{ list: 'ordered' }, { list: 'bullet' }],
-  ['blockquote', 'code-block'],
+  ['blockquote'],
   ['link', 'image'],
-  ['clean'],
 ];
 
 export const OreInput = ({ label, ...props }) => (

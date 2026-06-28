@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import usePosts from '../hooks/usePosts';
 
-const WALL = '/assets/wallpaper_minecraft_15th-anniversary_2560x1440.webp';
+const WALL = '/assets/wallpaper.webp';
 const SKIN_H = 'clamp(220px, 42vw, 380px)';
 
 export default function Home() {

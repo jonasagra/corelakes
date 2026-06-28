@@ -25,7 +25,8 @@
     "react-helmet": "^6.1.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.25.0",
-    "sanitize-html": "^2.14.0"
+    "sanitize-html": "^2.14.0",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

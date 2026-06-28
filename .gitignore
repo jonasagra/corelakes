@@ -24,3 +24,6 @@ Thumbs.db
 # guia de setup local (nao versionar - repo publico)
 setup.md
 SETUP-SEGURANCA.md
+
+.vercel
+.env*

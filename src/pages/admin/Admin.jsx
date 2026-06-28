@@ -244,6 +244,16 @@ function Dashboard({ onLogout }) {
   );
 }
 
+// IMPORTANTE: definido FORA do componente. Se ficasse dentro de Admin, viraria
+// um componente novo a cada render, e o React desmontaria/remontaria tudo que
+// está dentro (Dashboard + editor Quill) — causando reset de aba e o editor
+// "sumindo". Mantê-lo aqui fora preserva a árvore entre renders.
+const Wrap = ({ children }) => (
+  <main className="relative z-[1] max-w-[1000px] mx-auto px-5 pt-[100px] pb-[140px]">
+    {children}
+  </main>
+);
+
 export default function Admin() {
   const { user, loading, checkSession, logout } = useAuth();
   const [view, setView] = useState('loading');
@@ -264,12 +274,6 @@ export default function Admin() {
     showToast('Você saiu da dashboard.', 'success');
     setView('login');
   };
-
-  const Wrap = ({ children }) => (
-    <main className="relative z-[1] max-w-[1000px] mx-auto px-5 pt-[100px] pb-[140px]">
-      {children}
-    </main>
-  );
 
   if (view === 'loading') return (
     <Wrap><p className="font-mc text-base text-white/50 text-center py-[60px]">Carregando...</p></Wrap>

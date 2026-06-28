@@ -153,3 +153,41 @@
 .post-body pre { background: #1b1b1c; padding: 12px; overflow-x: auto; border: 1px solid #000; margin: 12px 0; }
 .post-body ul, .post-body ol { margin: 8px 0; padding-left: 20px; }
 .post-body li { margin-bottom: 4px; }
+
+/* ========== Editor mobile: evitar zoom automático no iPhone ==========
+   O Safari do iOS dá zoom ao focar campos com font-size < 16px.
+   Forçando 16px em telas pequenas, o zoom para de acontecer. */
+@media (max-width: 640px) {
+  .oreUI-quill .ql-editor,
+  .mc-panel input,
+  .mc-panel textarea,
+  .mc-panel select {
+    font-size: 16px !important;
+  }
+}
+
+/* ========== Imagens no editor e no post: tamanho + alinhamento ==========
+   Codificado em CLASSES (não style/data-*) porque o sanitizador do servidor
+   só preserva `class` em <img>. Ver api/_lib/validate.js. */
+.oreUI-quill .ql-editor img,
+.post-body img { max-width: 100%; height: auto; }
+
+/* tamanhos (largura relativa ao texto) */
+.oreUI-quill .ql-editor img.img-w-40,  .post-body img.img-w-40  { width: 40%; }
+.oreUI-quill .ql-editor img.img-w-70,  .post-body img.img-w-70  { width: 70%; }
+.oreUI-quill .ql-editor img.img-w-100, .post-body img.img-w-100 { width: 100%; }
+
+/* alinhamento */
+.oreUI-quill .ql-editor img.img-align-left,
+.post-body img.img-align-left   { float: left;  margin: 6px 16px 6px 0; }
+.oreUI-quill .ql-editor img.img-align-right,
+.post-body img.img-align-right  { float: right; margin: 6px 0 6px 16px; }
+.oreUI-quill .ql-editor img.img-align-center,
+.post-body img.img-align-center { float: none; display: block; margin-left: auto; margin-right: auto; }
+
+/* limpa o float pra não quebrar o layout */
+.oreUI-quill .ql-editor::after,
+.post-body::after { content: ''; display: block; clear: both; }
+
+/* destaque da imagem selecionada no editor */
+.oreUI-quill .ql-editor img.is-selected { outline: 3px solid #4ca632; outline-offset: 2px; }
