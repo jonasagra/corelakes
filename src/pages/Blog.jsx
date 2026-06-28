@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import usePosts from '../hooks/usePosts';
 import { showToast } from '../components/Toast';
+import { confirmDialog } from '../components/ConfirmModal';
 
 export default function Blog({ isAdmin }) {
   const { posts, loading, fetchPosts, deletePost } = usePosts();
@@ -9,7 +10,8 @@ export default function Blog({ isAdmin }) {
   useEffect(() => { document.title = 'Blog — Corelakes'; fetchPosts(); }, [fetchPosts]);
 
   const handleDelete = async (id) => {
-    if (!confirm('Tem certeza que deseja excluir este post?')) return;
+    const ok = await confirmDialog({ title: 'Excluir post?', message: 'Essa ação não pode ser desfeita.', confirmText: 'Excluir', danger: true });
+    if (!ok) return;
     try {
       await deletePost(id);
       showToast('Post excluído com sucesso!', 'success');

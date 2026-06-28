@@ -5,7 +5,7 @@ import { api } from './api';
  *
  * Usage:
  *   const processor = new ImageProcessor();
- *   const jpegFile  = await processor.processImage(rawFile);
+ *   const webpFile  = await processor.processImage(rawFile);
  */
 export class ImageProcessor {
   constructor(options = {}) {
@@ -34,10 +34,10 @@ export class ImageProcessor {
     ctx.drawImage(img, 0, 0, dims.width, dims.height);
 
     const blob = await new Promise((res, rej) =>
-      canvas.toBlob(b => (b ? res(b) : rej(new Error('toBlob falhou'))), 'image/jpeg', this.quality)
+      canvas.toBlob(b => (b ? res(b) : rej(new Error('toBlob falhou'))), 'image/webp', this.quality)
     );
 
-    return new File([blob], this.#generateName(file.name), { type: 'image/jpeg' });
+    return new File([blob], this.#generateName(file.name), { type: 'image/webp' });
   }
 
   /* ───────────────────── private ──────────────────── */
@@ -114,7 +114,7 @@ export class ImageProcessor {
     const safe = orig.replace(/\.[^/.]+$/, '').toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').slice(0, 30);
-    return `${safe}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+    return `${safe}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
   }
 }
 
@@ -132,11 +132,11 @@ export class ApiUploader {
 
   async upload(file) {
     this.#validateFile(file);
-    const processed   = await this.processor.processImage(file); // JPEG
+    const processed   = await this.processor.processImage(file); // WEBP
     const dataBase64  = await this.#toBase64(processed);
     const { url } = await api.post('/api/upload', {
       filename: processed.name,
-      contentType: processed.type || 'image/jpeg',
+      contentType: processed.type || 'image/webp',
       dataBase64,
     });
     return url;

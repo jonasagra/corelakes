@@ -10,6 +10,7 @@ export default {
         mc: ["'Minecraft'", 'monospace'],
         'mc-bold': ["'Minecraft-Bold'", 'monospace'],
         'mc-five': ["'MinecraftFive'", 'monospace'],
+        'mc-ten': ["'MinecraftTen'", 'monospace'],
       },
       colors: {
         mc: {
