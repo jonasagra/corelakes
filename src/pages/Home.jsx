@@ -58,7 +58,8 @@ export default function Home() {
               >
                 entrevistar o desenvolvedor brasileiro de Minecraft
               </a>{' '}
-              e mantive contato próximo com pessoas da comunidade ligada à produtora do jogo até 2020. Hoje,
+              e mantive contato próximo com pessoas da comunidade ligada à produtora do jogo até 2020 quando gerenciei a minha
+              antiga página. Hoje,
               sou administrador e burocrata da Minecraft Wiki representando o Brasil, um dos maiores sites da comunidade.
             </p>
           </div>
