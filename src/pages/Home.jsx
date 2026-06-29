@@ -43,11 +43,10 @@ export default function Home() {
             </p>
             <h2 className="font-mc-ten text-[1.6rem] text-white text-center mb-5 sm:text-[1.3rem]">Sobre mim</h2>
             <p className="text-white/85 text-[0.98rem] leading-[1.75]">
-              Eu sou Jonas Agra, conhecido como Corelakes. Estudante de Engenharia de Software,
-              designer e criador de conteúdo. Paraibano, represento e administro a Minecraft Wiki em
-              português e já lancei algumas músicas no Spotify. Sou bastante conhecido na comunidade
-              brasileira de Minecraft, principalmente pelos vídeos e por ser um dos maiores
-              contribuidores da Minecraft Wiki.
+              Olá, seja bem vindo ao meu blog, sou Corelakes e crio conteúdo de Minecraft. Anteriormente dono da
+              antiga e encerrada página Minecraft Interessante no Facebook, hoje eu crio conteúdo no YouTube, Instagram
+              e X para as redes sociais, além de ser administrador e burocrata de um dos maiores
+              sites da comunidade, a Minecraft Wiki.
             </p>
           </div>
         </div>

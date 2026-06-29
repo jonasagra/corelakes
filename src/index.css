@@ -144,7 +144,11 @@
 .post-body h1 { font-size: 1.5rem; }
 .post-body h2 { font-size: 1.3rem; }
 .post-body h3 { font-size: 1.1rem; }
-.post-body p { margin-bottom: 10px; }
+.post-body p { margin: 0 0 0.9rem; }
+.post-body p:last-child { margin-bottom: 0; }
+/* colapsa as linhas vazias (<p><br></p>) que o editor cria com Enter duplo,
+   evitando aqueles vãos enormes entre parágrafos. */
+.post-body p:has(> br:only-child) { display: none; }
 .post-body a { color: #6cc349 !important; text-decoration: underline; }
 .post-body a:hover { color: #a0e081 !important; }
 .post-body img { max-width: 100%; border: 1px solid #000; margin: 14px 0; }

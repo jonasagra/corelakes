@@ -41,9 +41,9 @@ export default function Post() {
   );
 
   return (
-    <main className="relative z-[1] max-w-[800px] mx-auto px-5 pt-[110px] pb-16">
+    <main className="relative z-[1] pt-[110px] pb-16">
       <article>
-        <header className="mb-7">
+        <header className="max-w-[800px] mx-auto px-5 mb-7">
           {post.image_url && (
             <img src={post.image_url} alt={post.title}
                  className="w-full max-h-[400px] object-cover border border-black mb-6" />
@@ -59,17 +59,20 @@ export default function Post() {
             </span>
             <span className="flex items-center gap-[6px]">
               <img src="https://minecraft.wiki/images/Book_and_Quill_JE2_BE2.png?2128f&format=original" alt="" aria-hidden="true" className="oreUI-icon !w-4 !h-4" />
-              Jonas Agra
+              Corelakes
             </span>
           </div>
         </header>
 
-        <div className="mc-panel p-7 mb-8 sm:p-5">
-          <div className="post-body text-base"
-               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }} />
+        {/* corpo do post: largura CHEIA, encostado nas bordas (igual "Sobre mim") */}
+        <div className="w-full bg-[#161617] border-t border-b border-black mb-8">
+          <div className="max-w-[800px] mx-auto px-6 py-8 sm:px-5 sm:py-6">
+            <div className="post-body text-base"
+                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }} />
+          </div>
         </div>
 
-        <nav>
+        <nav className="max-w-[800px] mx-auto px-5">
           <Link to="/blog" className="mc-btn">← Voltar ao blog</Link>
         </nav>
       </article>
