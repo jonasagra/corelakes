@@ -45,11 +45,11 @@ export default function Home() {
             <p className="text-white/85 text-[0.98rem] leading-[1.75]">
               Olá, seja bem-vindo ao meu blog! Sou o <strong className="text-white">Corelakes</strong> e crio
               conteúdo sobre Minecraft há anos. Comecei com a <em>Minecraft Interessante</em>, uma página no
-              Facebook que reuniu milhares de fãs antes de ser encerrada — e hoje sigo criando no YouTube, no
+              Facebook que reuniu 20 mil fãs antes de ser encerrada em 2021. Hoje sigo criando no YouTube, no
               Instagram e no X.
             </p>
             <p className="text-white/85 text-[0.98rem] leading-[1.75] mt-4">
-              Pelo caminho, já estive no meio de muita coisa: cheguei a{' '}
+              Pelo caminho, já estive no meio de muita coisa: Cheguei a{' '}
               <a
                 href="https://web.archive.org/web/20251203155933/https://www.tecnogaming.com.br/games/conheca-marcio-oliveira-o-desenvolvedor-brasileiro-do-minecraft/4435"
                 target="_blank"
