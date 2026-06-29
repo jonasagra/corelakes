@@ -43,30 +43,30 @@ export default function Post() {
   return (
     <main className="relative z-[1] pt-[110px] pb-16">
       <article>
-        <header className="max-w-[800px] mx-auto px-5 mb-7">
-          {post.image_url && (
-            <img src={post.image_url} alt={post.title}
-                 className="w-full max-h-[400px] object-cover border border-black mb-6" />
-          )}
-          <h1 className="font-mc-five text-[2rem] text-white mb-4 leading-[1.3] sm:text-[1.5rem]"
-              style={{ textShadow: '3px 3px 0 #3f3f3f' }}>
-            {post.title}
-          </h1>
-          <div className="flex flex-wrap gap-5 text-white/55 text-[0.85rem] pb-5 border-b border-[#2a2a2b]">
-            <span className="flex items-center gap-[6px]">
-              <img src="https://minecraft.wiki/images/archive/20181112133323%21Calendar_sheet.png?ec376&format=original" alt="" aria-hidden="true" className="oreUI-icon !w-4 !h-4" />
-              {post.date}
-            </span>
-            <span className="flex items-center gap-[6px]">
-              <img src="https://minecraft.wiki/images/Book_and_Quill_JE2_BE2.png?2128f&format=original" alt="" aria-hidden="true" className="oreUI-icon !w-4 !h-4" />
-              Corelakes
-            </span>
-          </div>
-        </header>
-
-        {/* corpo do post: largura CHEIA, encostado nas bordas (igual "Sobre mim") */}
+        {/* header + corpo: tudo numa faixa CINZA full-bleed (igual "Sobre mim") */}
         <div className="w-full bg-[#161617] mb-8">
           <div className="max-w-[800px] mx-auto px-6 py-8 sm:px-5 sm:py-6">
+            <header className="mb-7">
+              {post.image_url && (
+                <img src={post.image_url} alt={post.title}
+                     className="w-full max-h-[400px] object-cover mb-6" />
+              )}
+              <h1 className="font-mc-five text-[2rem] text-white mb-4 leading-[1.3] sm:text-[1.5rem]"
+                  style={{ textShadow: '3px 3px 0 #3f3f3f' }}>
+                {post.title}
+              </h1>
+              <div className="flex flex-wrap gap-5 text-white/55 text-[0.85rem] pb-5 border-b border-[#2a2a2b]">
+                <span className="flex items-center gap-[6px]">
+                  <img src="https://minecraft.wiki/images/archive/20181112133323%21Calendar_sheet.png?ec376&format=original" alt="" aria-hidden="true" className="oreUI-icon !w-4 !h-4" />
+                  {post.date}
+                </span>
+                <span className="flex items-center gap-[6px]">
+                  <img src="https://minecraft.wiki/images/Book_and_Quill_JE2_BE2.png?2128f&format=original" alt="" aria-hidden="true" className="oreUI-icon !w-4 !h-4" />
+                  Corelakes
+                </span>
+              </div>
+            </header>
+
             <div className="post-body text-base"
                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }} />
           </div>

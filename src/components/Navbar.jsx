@@ -36,7 +36,7 @@ export default function Navbar({ isAdmin }) {
     'relative flex items-center gap-2 px-4 h-[68px] font-mc text-[0.95rem] uppercase tracking-[1px] no-underline transition-colors duration-200';
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[200] bg-[#1d1d1d] border-b-2 border-black shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+    <nav className="fixed top-0 left-0 right-0 z-[200] bg-mc-nav border-b-2 border-black shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
       <div className="max-w-[1200px] mx-auto px-5 flex items-center justify-between h-[68px]">
 
         <NavLink to="/" className="flex items-center shrink-0" onClick={close}>
