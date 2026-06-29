@@ -16,6 +16,7 @@
     "@vercel/blob": "^0.27.0",
     "cookie": "^1.0.2",
     "dompurify": "^3.2.4",
+    "heic2any": "^0.0.4",
     "jose": "^5.9.6",
     "otpauth": "^9.5.1",
     "qrcode": "^1.5.4",

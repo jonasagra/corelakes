@@ -33,18 +33,34 @@ export class ImageProcessor {
     this.#applyOrientation(ctx, orientation, dims.width, dims.height);
     ctx.drawImage(img, 0, 0, dims.width, dims.height);
 
+    // JPEG: codificação suportada por TODO navegador (incl. iOS Safari, que
+    // NÃO codifica WebP no canvas). O WebP final é gerado no servidor (sharp).
     const blob = await new Promise((res, rej) =>
-      canvas.toBlob(b => (b ? res(b) : rej(new Error('toBlob falhou'))), 'image/webp', this.quality)
+      canvas.toBlob(b => (b ? res(b) : rej(new Error('toBlob falhou'))), 'image/jpeg', this.quality)
     );
 
-    return new File([blob], this.#generateName(file.name), { type: 'image/webp' });
+    return new File([blob], this.#generateName(file.name), { type: 'image/jpeg' });
   }
 
   /* ───────────────────── private ──────────────────── */
   #isHEIC(f) {
     return /image\/hei[cf]/.test(f.type) || /\.hei[cf]$/i.test(f.name);
   }
-  async #handleHEIC(f) { return f; } // Safari auto-converts
+  // Converte HEIC/HEIF (formato padrão do iPhone) para JPEG no navegador.
+  // A lib é carregada só quando necessário (import dinâmico) pra não pesar o
+  // bundle de quem nunca envia HEIC.
+  async #handleHEIC(file) {
+    try {
+      const { default: heic2any } = await import('heic2any');
+      const out = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
+      const blob = Array.isArray(out) ? out[0] : out;
+      const name = file.name.replace(/\.hei[cf]$/i, '.jpg');
+      return new File([blob], name, { type: 'image/jpeg' });
+    } catch {
+      // Se a conversão falhar (ex.: iOS já entregou JPEG), segue com o original.
+      return file;
+    }
+  }
 
   #loadImage(file) {
     return new Promise((resolve, reject) => {
@@ -114,7 +130,7 @@ export class ImageProcessor {
     const safe = orig.replace(/\.[^/.]+$/, '').toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').slice(0, 30);
-    return `${safe}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
+    return `${safe}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
   }
 }
 
@@ -132,11 +148,11 @@ export class ApiUploader {
 
   async upload(file) {
     this.#validateFile(file);
-    const processed   = await this.processor.processImage(file); // WEBP
+    const processed   = await this.processor.processImage(file); // JPEG (vira WEBP no servidor)
     const dataBase64  = await this.#toBase64(processed);
     const { url } = await api.post('/api/upload', {
       filename: processed.name,
-      contentType: processed.type || 'image/webp',
+      contentType: processed.type || 'image/jpeg',
       dataBase64,
     });
     return url;

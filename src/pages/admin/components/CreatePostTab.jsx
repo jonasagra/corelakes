@@ -36,7 +36,7 @@ export default function CreatePostTab({
   const imageHandler = useCallback(() => {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'image/*';
+    input.accept = 'image/*,.heic,.heif';
     input.onchange = async () => {
       const file = input.files?.[0];
       if (!file) return;
@@ -154,14 +154,19 @@ export default function CreatePostTab({
       <div className="mb-5">
         <OreInput label="Imagem de Destaque" placeholder="Cole a URL da imagem ou use o upload abaixo" value={imageUrl} onChange={e => setImageUrl(e.target.value)} />
         <div className="border border-dashed border-[#3a3a3a] bg-[#0d0d0d] p-5 text-center mt-[10px] cursor-pointer hover:border-mc-green-bright transition-colors duration-200"
-             onClick={() => document.getElementById('img-file').click()}>
+             onClick={() => {
+               const el = document.getElementById('img-file');
+               el.value = ''; // permite re-selecionar o mesmo arquivo
+               el.click();
+             }}>
           <p className="font-mc text-[0.85rem] text-white/60 mb-[10px]">
             {uploading || <span className="inline-flex items-center gap-2"><IcImage /> Arraste uma imagem ou clique para fazer upload</span>}
           </p>
-          <input id="img-file" type="file" accept="image/*" className="hidden" onChange={onImageUpload} />
-          <label htmlFor="img-file" className="inline-block px-4 py-2 font-mc text-[0.8rem] text-white bg-[#1b1b1c] border border-[#2f2f2f] cursor-pointer hover:border-mc-green-bright transition-colors">
+          {/* input acionado SÓ pela div acima (sem <label> pra não abrir o seletor 2x) */}
+          <input id="img-file" type="file" accept="image/*,.heic,.heif" className="hidden" onChange={onImageUpload} />
+          <span className="inline-block px-4 py-2 font-mc text-[0.8rem] text-white bg-[#1b1b1c] border border-[#2f2f2f] hover:border-mc-green-bright transition-colors">
             Escolher Imagem
-          </label>
+          </span>
         </div>
         {imageUrl && (
           <div className="mt-[10px]">
