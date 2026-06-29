@@ -41,10 +41,11 @@ export default function Post() {
   );
 
   return (
-    <main className="relative z-[1] pt-[110px] pb-16">
+    <main className="relative z-[1] pb-16">
       <article>
-        {/* header + corpo: tudo numa faixa CINZA full-bleed (igual "Sobre mim") */}
-        <div className="w-full bg-[#161617] mb-8">
+        {/* header + corpo: faixa CINZA começando logo abaixo da navbar (pt-[110px]
+            traz o espaço pra DENTRO do cinza, sem o fundo pixelado aparecer) */}
+        <div className="w-full bg-[#161617] mb-8 pt-[110px]">
           <div className="max-w-[800px] mx-auto px-6 py-8 sm:px-5 sm:py-6">
             <header className="mb-7">
               {post.image_url && (
