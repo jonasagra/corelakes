@@ -43,10 +43,23 @@ export default function Home() {
             </p>
             <h2 className="font-mc-ten text-[1.6rem] text-white text-center mb-5 sm:text-[1.3rem]">Sobre mim</h2>
             <p className="text-white/85 text-[0.98rem] leading-[1.75]">
-              Olá, seja bem vindo ao meu blog, sou Corelakes e crio conteúdo de Minecraft. Anteriormente dono da
-              antiga e encerrada página Minecraft Interessante no Facebook, hoje eu crio conteúdo no YouTube, Instagram
-              e X para as redes sociais, além de ser administrador e burocrata de um dos maiores
-              sites da comunidade, a Minecraft Wiki.
+              Olá, seja bem-vindo ao meu blog! Sou o <strong className="text-white">Corelakes</strong> e crio
+              conteúdo sobre Minecraft há anos. Comecei com a <em>Minecraft Interessante</em>, uma página no
+              Facebook que reuniu milhares de fãs antes de ser encerrada — e hoje sigo criando no YouTube, no
+              Instagram e no X.
+            </p>
+            <p className="text-white/85 text-[0.98rem] leading-[1.75] mt-4">
+              Pelo caminho, já estive no meio de muita coisa: cheguei a{' '}
+              <a
+                href="https://web.archive.org/web/20251203155933/https://www.tecnogaming.com.br/games/conheca-marcio-oliveira-o-desenvolvedor-brasileiro-do-minecraft/4435"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-mc-green-bright hover:text-white transition-colors"
+              >
+                entrevistar o desenvolvedor brasileiro de Minecraft
+              </a>{' '}
+              e mantive contato próximo com pessoas da comunidade ligada à produtora do jogo até 2020. Hoje,
+              sou administrador e burocrata da Minecraft Wiki representando o Brasil, um dos maiores sites da comunidade.
             </p>
           </div>
         </div>
