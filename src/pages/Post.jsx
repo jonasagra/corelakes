@@ -65,7 +65,7 @@ export default function Post() {
         </header>
 
         {/* corpo do post: largura CHEIA, encostado nas bordas (igual "Sobre mim") */}
-        <div className="w-full bg-[#161617] border-t border-b border-black mb-8">
+        <div className="w-full bg-[#161617] mb-8">
           <div className="max-w-[800px] mx-auto px-6 py-8 sm:px-5 sm:py-6">
             <div className="post-body text-base"
                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }} />
