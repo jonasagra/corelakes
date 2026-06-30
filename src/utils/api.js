@@ -1,7 +1,7 @@
 // ── Cliente da API ─────────────────────────────────────────────
-// Substitui o antigo supabase.js. O navegador NÃO fala mais com o banco:
-// só conversa com /api/*. A sessão vai no cookie httpOnly automaticamente
-// (credentials: 'include'); não há token nem chave guardada no front.
+// O navegador NÃO fala com o banco (Neon) diretamente: só conversa com /api/*.
+// A sessão vai no cookie httpOnly automaticamente (credentials: 'include');
+// não há token nem chave de banco guardada no front.
 
 async function request(path, { method = 'GET', body } = {}) {
   const res = await fetch(path, {

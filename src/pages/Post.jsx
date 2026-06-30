@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import usePosts from '../hooks/usePosts';
+import useAuth from '../hooks/useAuth';
 
 export default function Post() {
   const { slug }              = useParams();
   const { getPostBySlug }     = usePosts();
+  const { isAdmin }           = useAuth();
   const [post,    setPost]    = useState(null);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(false);
@@ -65,6 +67,13 @@ export default function Post() {
                   <img src="https://minecraft.wiki/images/Book_and_Quill_JE2_BE2.png?2128f&format=original" alt="" aria-hidden="true" className="oreUI-icon !w-4 !h-4" />
                   Corelakes
                 </span>
+                {isAdmin && (
+                  <Link to={`/admin?edit=${post.slug}`}
+                        className="flex items-center gap-[6px] text-mc-green-bright hover:text-white transition-colors no-underline">
+                    <img src="https://minecraft.wiki/images/Brush_JE1_BE1.png?fd417" alt="" aria-hidden="true" className="oreUI-icon !w-4 !h-4" />
+                    Editar post
+                  </Link>
+                )}
               </div>
             </header>
 

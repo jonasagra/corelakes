@@ -9,6 +9,7 @@ import ConfirmModal from './components/ConfirmModal';
 import Home      from './pages/Home';
 import Blog      from './pages/Blog';
 import Post      from './pages/Post';
+import NotFound  from './pages/NotFound';
 const Admin = lazy(() => import('./pages/admin/Admin'));
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/blog"        element={<Blog isAdmin={isAdmin} />} />
           <Route path="/post/:slug"  element={<Post />} />
           <Route path="/admin"       element={<Admin />} />
+          <Route path="*"            element={<NotFound />} />
         </Routes>
       </Suspense>
 

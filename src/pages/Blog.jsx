@@ -32,9 +32,9 @@ export default function Blog({ isAdmin }) {
       <section className="text-center mb-10">
         <h1 className="font-mc-five text-[2.2rem] text-white mb-2 sm:text-[1.7rem]"
             style={{ textShadow: '3px 3px 0 #3f3f3f' }}>
-          Meu diário pessoal
+          Página do Coreblog
         </h1>
-        <p className="text-white/60 text-[0.95rem]">Pensamentos, experiências e dia a dia</p>
+        <p className="text-white/60 text-[0.95rem]">Com postagens sobre os projetos que participo, opiniões, notícias recentes, e experiências pela internet</p>
       </section>
 
       {posts.length === 0 ? (
