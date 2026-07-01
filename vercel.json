@@ -1,14 +1,9 @@
 {
+  "framework": "nextjs",
+  "devCommand": "next dev",
+  "buildCommand": "next build",
   "rewrites": [
-    {
-      "source": "/post/:slug",
-      "has": [
-        { "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Facebot|Twitterbot|WhatsApp|Discordbot|TelegramBot|Slackbot|LinkedInBot|Pinterest|redditbot|Bluesky|Cardyb|Embedly|Iframely|vkShare|SkypeUriPreview|Applebot|Googlebot|bingbot|Mastodon|Yahoo).*" }
-      ],
-      "destination": "/api/og?slug=:slug"
-    },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    { "source": "/news-sitemap.xml", "destination": "/api/news-sitemap" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/news-sitemap.xml", "destination": "/api/news-sitemap" }
   ]
 }

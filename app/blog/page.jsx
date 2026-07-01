@@ -1,13 +1,17 @@
+'use client';
+
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import usePosts from '../hooks/usePosts';
-import { showToast } from '../components/Toast';
-import { confirmDialog } from '../components/ConfirmModal';
+import Link from 'next/link';
+import usePosts from '@/hooks/usePosts';
+import useAuth from '@/hooks/useAuth';
+import { showToast } from '@/components/Toast';
+import { confirmDialog } from '@/components/ConfirmModal';
 
-export default function Blog({ isAdmin }) {
+export default function Blog() {
   const { posts, loading, fetchPosts, deletePost } = usePosts();
+  const { isAdmin } = useAuth();
 
-  useEffect(() => { document.title = 'Blog — Corelakes'; fetchPosts(); }, [fetchPosts]);
+  useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
   const handleDelete = async (id) => {
     const ok = await confirmDialog({ title: 'Excluir post?', message: 'Essa ação não pode ser desfeita.', confirmText: 'Excluir', danger: true });
@@ -46,7 +50,7 @@ export default function Blog({ isAdmin }) {
                      className="mc-panel relative overflow-hidden transition-transform duration-200 hover:-translate-y-1">
               {isAdmin && (
                 <div className="absolute top-[10px] right-[10px] flex gap-[6px] z-[10]">
-                  <Link to={`/admin?edit=${post.slug}`} aria-label="Editar"
+                  <Link href={`/admin?edit=${post.slug}`} aria-label="Editar"
                         className="flex items-center justify-center w-9 h-9 border border-black bg-[#2a2a2b] hover:bg-mc-green transition-colors">
                     <img src="https://minecraft.wiki/images/Brush_JE1_BE1.png?fd417" alt="" aria-hidden="true" className="w-5 h-5" />
                   </Link>
@@ -58,14 +62,14 @@ export default function Blog({ isAdmin }) {
               )}
 
               {post.image_url && (
-                <Link to={`/post/${post.slug}`} className="block h-[180px] overflow-hidden border-b border-black">
+                <Link href={`/post/${post.slug}`} className="block h-[180px] overflow-hidden border-b border-black">
                   <img src={post.image_url} alt={post.title}
                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" />
                 </Link>
               )}
 
               <div className="p-5">
-                <Link to={`/post/${post.slug}`} className="no-underline">
+                <Link href={`/post/${post.slug}`} className="no-underline">
                   <h2 className="font-mc text-[1.05rem] text-white mb-2 leading-snug hover:text-mc-green-bright transition-colors">
                     {post.title}
                   </h2>

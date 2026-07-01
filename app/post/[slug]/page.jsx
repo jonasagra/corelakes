@@ -1,23 +1,27 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import DOMPurify from 'dompurify';
-import usePosts from '../hooks/usePosts';
-import useAuth from '../hooks/useAuth';
+import usePosts from '@/hooks/usePosts';
+import useAuth from '@/hooks/useAuth';
 
 export default function Post() {
-  const { slug }              = useParams();
-  const { getPostBySlug }     = usePosts();
-  const { isAdmin }           = useAuth();
-  const [post,    setPost]    = useState(null);
+  const params = useParams();
+  const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
+  const { getPostBySlug } = usePosts();
+  const { isAdmin } = useAuth();
+  const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error,   setError]   = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const p = await getPostBySlug(slug);
       if (cancelled) return;
-      if (p) { setPost(p); document.title = `${p.title} — Corelakes`; }
+      if (p) { setPost(p); }
       else setError(true);
       setLoading(false);
     })();
@@ -37,7 +41,7 @@ export default function Post() {
           Post não encontrado
         </h1>
         <p className="text-white/70 mb-7">O post que você procura não existe ou foi removido.</p>
-        <Link to="/blog" className="mc-btn">← Voltar ao blog</Link>
+        <Link href="/blog" className="mc-btn">← Voltar ao blog</Link>
       </div>
     </main>
   );
@@ -52,10 +56,10 @@ export default function Post() {
             <header className="mb-7">
               {post.image_url && (
                 <img src={post.image_url} alt={post.title}
-                     className="w-full max-h-[400px] object-cover mb-6" />
+                  className="w-full max-h-[400px] object-cover mb-6" />
               )}
               <h1 className="font-mc-five text-[2rem] text-white mb-4 leading-[1.3] sm:text-[1.5rem]"
-                  style={{ textShadow: '3px 3px 0 #3f3f3f' }}>
+                style={{ textShadow: '3px 3px 0 #3f3f3f' }}>
                 {post.title}
               </h1>
               <div className="flex flex-wrap gap-5 text-white/55 text-[0.85rem] pb-5 border-b border-[#2a2a2b]">
@@ -68,8 +72,8 @@ export default function Post() {
                   Corelakes
                 </span>
                 {isAdmin && (
-                  <Link to={`/admin?edit=${post.slug}`}
-                        className="flex items-center gap-[6px] text-mc-green-bright hover:text-white transition-colors no-underline">
+                  <Link href={`/admin?edit=${post.slug}`}
+                    className="flex items-center gap-[6px] text-mc-green-bright hover:text-white transition-colors no-underline">
                     <img src="https://minecraft.wiki/images/Brush_JE1_BE1.png?fd417" alt="" aria-hidden="true" className="oreUI-icon !w-4 !h-4" />
                     Editar post
                   </Link>
@@ -78,12 +82,12 @@ export default function Post() {
             </header>
 
             <div className="post-body text-base"
-                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }} />
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }} />
           </div>
         </div>
 
         <nav className="max-w-[800px] mx-auto px-5">
-          <Link to="/blog" className="mc-btn">← Voltar ao blog</Link>
+          <Link href="/blog" className="mc-btn">← Voltar ao blog</Link>
         </nav>
       </article>
     </main>

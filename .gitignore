@@ -1,8 +1,8 @@
 # dependencies
 node_modules
 
-# build
-dist
+# build (Next.js)
+.next
 
 # env files
 .env
@@ -24,6 +24,3 @@ Thumbs.db
 # guia de setup local (nao versionar - repo publico)
 setup.md
 SETUP-SEGURANCA.md
-
-.vercel
-.env*

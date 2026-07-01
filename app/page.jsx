@@ -1,6 +1,8 @@
+'use client';
+
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import usePosts from '../hooks/usePosts';
+import Link from 'next/link';
+import usePosts from '@/hooks/usePosts';
 
 const WALL = '/assets/wallpaper.webp';
 const SKIN_H = 'clamp(220px, 42vw, 380px)';
@@ -9,7 +11,6 @@ export default function Home() {
   const { posts, fetchPosts } = usePosts();
 
   useEffect(() => {
-    document.title = 'Corelakes | Blog & Minecraft';
     fetchPosts();
   }, [fetchPosts]);
 
@@ -69,7 +70,7 @@ export default function Home() {
       {/* ── conteúdo normal (fundo do site) ── */}
       <main className="relative z-[1] max-w-[860px] mx-auto px-5 pt-9 pb-16">
         <div className="flex flex-wrap justify-center gap-3">
-          <Link to="/blog" className="mc-btn min-w-[190px]">Ver o blog</Link>
+          <Link href="/blog" className="mc-btn min-w-[190px]">Ver o blog</Link>
           <a href="#redes" className="mc-btn min-w-[190px]">Minhas redes</a>
         </div>
 
@@ -80,7 +81,7 @@ export default function Home() {
             </p>
             <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
               {recentes.map((p) => (
-                <Link key={p.id} to={`/post/${p.slug}`}
+                <Link key={p.id} href={`/post/${p.slug}`}
                       className="mc-panel block overflow-hidden no-underline transition-transform duration-200 hover:-translate-y-1">
                   {p.image_url && (
                     <div className="h-[140px] overflow-hidden border-b border-black">

@@ -1,12 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { api } from '../utils/api';
+import { api } from '@/utils/api';
 
-/**
- * useAuth – sessão de admin validada pelo SERVIDOR.
- * Retorna { user, loading, isAdmin, login, logout, checkSession, refresh }
- */
 export default function useAuth() {
-  const [user, setUser]       = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const checkSession = useCallback(async () => {
@@ -21,7 +17,9 @@ export default function useAuth() {
     }
   }, []);
 
-  useEffect(() => { checkSession(); }, [checkSession]);
+  useEffect(() => {
+    checkSession();
+  }, [checkSession]);
 
   const login = async (email, password, code) => {
     const data = await api.post('/api/login', { email, password, code });
@@ -31,7 +29,9 @@ export default function useAuth() {
   };
 
   const logout = async () => {
-    try { await api.post('/api/logout'); } catch { /* ignore */ }
+    try {
+      await api.post('/api/logout');
+    } catch {}
     setUser(null);
   };
 

@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 
 export default function NotFound() {
-  useEffect(() => { document.title = 'Página não encontrada — Corelakes'; }, []);
-
   return (
     <main className="relative z-[1] max-w-[800px] mx-auto px-5 pt-[120px] pb-16">
       <div className="text-center py-[60px]">
@@ -19,8 +18,8 @@ export default function NotFound() {
           O endereço que você acessou não existe ou foi movido. Confira o link e tente de novo, ou volte para a página inicial.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          <Link to="/" className="mc-btn">← Início</Link>
-          <Link to="/blog" className="mc-btn">Ir para o blog</Link>
+          <Link href="/" className="mc-btn">← Início</Link>
+          <Link href="/blog" className="mc-btn">Ir para o blog</Link>
         </div>
       </div>
     </main>

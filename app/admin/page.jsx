@@ -1,11 +1,13 @@
+'use client';
+
 import { useState, useEffect, useRef } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useRouter, useSearchParams } from 'next/navigation';
 import 'react-quill/dist/quill.snow.css';
-import useAuth from '../../hooks/useAuth';
-import usePosts from '../../hooks/usePosts';
-import { showToast } from '../../components/Toast';
-import { confirmDialog } from '../../components/ConfirmModal';
-import { ApiUploader } from '../../utils/imageProcessor';
+import useAuth from '@/hooks/useAuth';
+import usePosts from '@/hooks/usePosts';
+import { showToast } from '@/components/Toast';
+import { confirmDialog } from '@/components/ConfirmModal';
+import { ApiUploader } from '@/utils/imageProcessor';
 import { OreButton, OreInput } from './components/AdminControls';
 import CreatePostTab from './components/CreatePostTab';
 import InfoPostsTab from './components/InfoPostsTab';
@@ -25,11 +27,7 @@ function LoginSection({ onLoggedIn }) {
     setBusy(true);
     try {
       const r = await login(email.trim(), password.trim(), code.trim() || undefined);
-      if (r?.twofa) {
-        setNeedCode(true);
-        showToast('Digite o código do seu app autenticador.', 'success');
-        return;
-      }
+      if (r?.twofa) { setNeedCode(true); showToast('Digite o código do seu app autenticador.', 'success'); return; }
       showToast('Login realizado com sucesso!', 'success');
       onLoggedIn();
     } catch (e) {
@@ -73,8 +71,8 @@ function LoginSection({ onLoggedIn }) {
 function Dashboard({ onLogout }) {
   const { user, refresh } = useAuth();
   const { posts, fetchPosts, createPost, updatePost, deletePost } = usePosts();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const hasFetchedRef = useRef(false);
 
   const [editId, setEditId] = useState(null);
@@ -149,7 +147,7 @@ function Dashboard({ onLogout }) {
       clearEditor();
       hasFetchedRef.current = false;
       await fetchPosts();
-      navigate('/admin');
+      router.push('/admin');
     } catch (e) {
       showToast('Erro: ' + e.message, 'error');
     } finally {
@@ -254,7 +252,7 @@ const Wrap = ({ children }) => (
   </main>
 );
 
-export default function Admin() {
+export default function AdminPage() {
   const { user, loading, checkSession, logout } = useAuth();
   const [view, setView] = useState('loading');
 

@@ -1,27 +1,18 @@
 import { useState, useCallback } from 'react';
-import { api } from '../utils/api';
+import { api } from '@/utils/api';
 
-/**
- * usePosts – camada de CRUD agora via /api (Neon no back-end).
- *
- * Leitura (lista/post) é pública. Escrita (criar/editar/excluir) é enviada
- * para a API, que exige sessão de admin e revalida tudo no servidor. Se o
- * cookie não for válido, o servidor responde 401 e a operação falha — não
- * adianta forçar pelo DevTools.
- */
 export default function usePosts() {
-  const [posts, setPosts]     = useState([]);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState(null);
+  const [error, setError] = useState(null);
 
   const fmt = (p) => ({
     ...p,
     date: p.date || (p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : ''),
   });
 
-  // Cache local apenas de leitura pública (resiliência se a API cair).
   const syncLocal = (arr) => {
-    try { localStorage.setItem('blog_posts', JSON.stringify(arr)); } catch { /* ignore */ }
+    try { localStorage.setItem('blog_posts', JSON.stringify(arr)); } catch {}
   };
 
   const fetchPosts = useCallback(async () => {
@@ -45,9 +36,9 @@ export default function usePosts() {
     try {
       const data = await api.get(`/api/posts?slug=${encodeURIComponent(slug)}`);
       if (data) return fmt(data);
-    } catch { /* fallback abaixo */ }
+    } catch {}
     const cached = JSON.parse(localStorage.getItem('blog_posts') || '[]');
-    return cached.find(p => p.slug === slug) || null;
+    return cached.find((p) => p.slug === slug) || null;
   }, []);
 
   const createPost = useCallback(async ({ title, content, excerpt, imageUrl }) => {

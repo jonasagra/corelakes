@@ -1,63 +1,74 @@
-# Corelakes — React + Vite + Tailwind CSS
+# Corelakes — Next.js 15 (App Router) + Tailwind CSS
 
-Personal portfolio & blog for Jonas Agra (Corelakes).
+Portfolio pessoal e blog de Jonas Agra (Corelakes).
 
 ## Tech stack
-| Layer | Tool |
+| Camada | Ferramenta |
 |---|---|
-| UI framework | React 18 |
-| Bundler | Vite 5 |
-| CSS | Tailwind CSS 3 + custom Minecraft theme |
-| Routing | React Router v6 |
-| Backend / Auth | Vercel Serverless Functions (`/api`) + Neon (Postgres) + sessão JWT em cookie httpOnly |
+| Framework | Next.js 15 (App Router) |
+| UI | React 18 |
+| CSS | Tailwind CSS 3 + tema Minecraft customizado |
+| Backend / Auth | API Routes (`/api`) + Neon (Postgres) + sessão JWT em cookie httpOnly |
 | Rich-text editor | Quill via react-quill |
-| Image pipeline | Custom HEIC-safe processor + Vercel Blob |
+| Image pipeline | Upload para Vercel Blob |
+| Deploy | Vercel |
 
 ## Getting started
 
 ```bash
-npm install        # install deps
-npm run dev        # start dev-server → http://localhost:5173
-npm run build      # production bundle → dist/
-npm run preview    # preview the production build locally
+npm install        # instalar dependências
+npm run dev        # iniciar servidor de dev → http://localhost:3000
+npm run build      # build de produção → .next/
+npm run start      # servir build de produção localmente
 ```
 
 ## Project structure
 
 ```
+app/
+├── layout.jsx              # Root layout (metadata, fonts, JSON-LD, RootShell)
+├── page.jsx                # Página inicial (Home)
+├── not-found.jsx           # Página 404
+├── blog/
+│   └── page.jsx            # Listagem de posts
+├── post/
+│   └── [slug]/
+│       └── page.jsx        # Post individual (dinâmico)
+└── admin/
+    ├── page.jsx            # Dashboard admin (login + editor)
+    └── components/             # Componentes privados do admin
+        ├── AdminControls.jsx
+        ├── CreatePostTab.jsx
+        ├── InfoPostsTab.jsx
+        ├── SecurityTab.jsx
+        └── quillImage.js
+
 src/
-├── main.jsx            # React root + BrowserRouter
-├── App.jsx             # Layout shell: Navbar, Particles, Toast, Routes, Footer
-├── index.css           # Tailwind imports, @font-face, Quill overrides, .post-body styles
-│
+├── index.css               # Tailwind imports, @font-face, estilos globais
 ├── components/
-│   ├── Navbar.jsx      # Fixed nav – desktop horizontal / mobile slide panel
-│   ├── Footer.jsx      # Glass-effect footer (full contacts on Home, minimal elsewhere)
-│   ├── Particles.jsx   # 15 animated green particles
-│   └── Toast.jsx       # Global toast bus (import { showToast } anywhere)
-│
-├── pages/
-│   ├── Home.jsx        # Profile photos, logo, bio, social grid
-│   ├── Blog.jsx        # Post cards grid with admin edit/delete
-│   ├── Post.jsx        # Single post view with rich-text body
-│   └── Admin.jsx       # Config → Login → Dashboard (editor + posts table)
-│
+│   ├── RootShell.jsx       # Shell: Navbar + Particles + Toast + ConfirmModal + Footer
+│   ├── Navbar.jsx          # Nav fixa – desktop horizontal / mobile slide
+│   ├── Footer.jsx          # Rodapé com redes sociais e links
+│   ├── Particles.jsx       # Partículas animadas verdes
+│   ├── Toast.jsx           # Sistema de toast global
+│   └── ConfirmModal.jsx    # Modal de confirmação global
 ├── hooks/
-│   ├── useAuth.js      # Sessão validada pelo servidor (/api/me, /api/login)
-│   └── usePosts.js     # CRUD via /api/posts
-│
-└── utils/
-    ├── api.js          # Cliente fetch da API + slug (prévia)
-    └── imageProcessor.js # ImageProcessor (HEIC / EXIF) + ApiUploader
+│   ├── useAuth.js          # Sessão validada pelo servidor (/api/me, /api/login)
+│   └── usePosts.js         # CRUD via /api/posts
+├── utils/
+│   ├── api.js              # Cliente fetch + gerador de slug
+│   └── imageProcessor.js   # Upload de imagens para Vercel Blob
+└── data/
+    └── socials.js          # Lista de redes sociais
 
-api/                    # Funções serverless (back-end)
-├── _lib/               # db (Neon), auth (sessão/senha), validate (sanitização)
+api/                        # Funções serverless (back-end Vercel)
+├── _lib/                   # db (Neon), auth (sessão/senha), validate (sanitização)
 ├── login.js · logout.js · me.js
-├── posts/index.js · posts/[id].js
-└── upload.js           # Upload para o Vercel Blob
+├── posts/                  # CRUD de posts
+└── upload.js               # Upload para o Vercel Blob
 
-db/schema.sql           # Tabelas posts + users
-scripts/create-admin.mjs# Cria/redefine o admin
+db/schema.sql               # Tabelas posts + users
+scripts/create-admin.mjs    # Cria/redefine o admin
 ```
 
 ## Configuração e deploy
@@ -78,4 +89,11 @@ as variáveis na Vercel.
 | `mc-bg-light` | `#5a5b5c` |
 | `mc-green` | `#3c8527` |
 | `mc-green-light` | `#4ca632` |
-| `mc-green-dark` |
+| `mc-green-dark` | `#2d6a1e` |
+| `mc-green-bright` | `#6cc349` |
+| `mc-green-link` | `#a0e081` |
+| `mc-red` | `#8b2020` |
+| `mc-nav` | `#111112` |
+| `mc-black` | `#0b0b0c` |
+| `mc-panel` | `#1b1b1c` |
+| `mc-gold` | `#ffb12b` |
