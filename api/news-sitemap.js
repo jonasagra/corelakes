@@ -2,7 +2,7 @@
 // Sitemap no formato Google News: SÓ os posts dos últimos 2 dias (exigência
 // do Google News). Atualiza sozinho. Lembre de cadastrar o site no Google
 // News Publisher Center pra que ele seja considerado.
-import { sql } from './_lib/db.js';
+import { sql } from '../lib/db.js';
 
 const BASE = 'https://corelakes.jonasagra.com.br';
 

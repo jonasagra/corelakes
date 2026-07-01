@@ -7,8 +7,8 @@
 //
 // Roda contra o mesmo banco Neon da aplicação. A senha é guardada como
 // hash scrypt; o texto puro nunca é salvo.
-import { sql } from '../api/_lib/db.js';
-import { hashPassword } from '../api/_lib/auth.js';
+import { sql } from '../lib/db.js';
+import { hashPassword } from '../lib/auth.js';
 
 const email = (process.argv[2] || process.env.ADMIN_EMAIL || '').trim().toLowerCase();
 const password = process.argv[3] || process.env.ADMIN_PASSWORD || '';

@@ -6,7 +6,7 @@
 // do navegador codificar WebP. O token do Blob fica só no servidor.
 import { put } from '@vercel/blob';
 import sharp from 'sharp';
-import { requireAuth, verifyOrigin } from './_lib/auth.js';
+import { requireAuth, verifyOrigin } from '../lib/auth.js';
 
 // O corpo do request na Vercel é limitado a ~4.5MB. Como base64 infla ~33%,
 // limitamos o arquivo real a 3MB (3MB -> ~4MB em base64, dentro do limite).

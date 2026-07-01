@@ -4,7 +4,7 @@
 //
 // Uso:
 //   node --env-file=.env scripts/disable-2fa.mjs "seu@email.com"
-import { sql } from '../api/_lib/db.js';
+import { sql } from '../lib/db.js';
 
 const email = (process.argv[2] || process.env.ADMIN_EMAIL || '').trim().toLowerCase();
 if (!email) {

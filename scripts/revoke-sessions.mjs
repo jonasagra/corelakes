@@ -5,7 +5,7 @@
 //
 // Uso:
 //   node --env-file=.env scripts/revoke-sessions.mjs "seu@email.com"
-import { sql } from '../api/_lib/db.js';
+import { sql } from '../lib/db.js';
 
 const email = (process.argv[2] || process.env.ADMIN_EMAIL || '').trim().toLowerCase();
 

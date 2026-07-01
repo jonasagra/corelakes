@@ -1,8 +1,8 @@
 // GET /api/me -> devolve o admin logado (e se tem 2FA ativo), ou 401.
 // O front usa isto para saber se mostra o dashboard. A decisão real de
 // autorização acontece em cada endpoint de escrita, não aqui.
-import { getSession } from './_lib/auth.js';
-import { sql } from './_lib/db.js';
+import { getSession } from '../lib/auth.js';
+import { sql } from '../lib/db.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {

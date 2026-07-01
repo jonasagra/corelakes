@@ -2,7 +2,7 @@
 // Devolve um HTML com as meta tags Open Graph/Twitter DO POST, pra que a
 // imagem de destaque, título e descrição apareçam ao compartilhar o link
 // em WhatsApp, Twitter/X, Facebook, Messenger, Instagram, Discord, Bluesky, etc.
-import { sql } from './_lib/db.js';
+import { sql } from '../lib/db.js';
 
 const BASE = 'https://corelakes.jonasagra.com.br';
 

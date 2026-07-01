@@ -172,7 +172,7 @@
 
 /* ========== Imagens no editor e no post: tamanho + alinhamento ==========
    Codificado em CLASSES (não style/data-*) porque o sanitizador do servidor
-   só preserva `class` em <img>. Ver api/_lib/validate.js. */
+   só preserva `class` em <img>. Ver lib/validate.js. */
 .oreUI-quill .ql-editor img,
 .post-body img { max-width: 100%; height: auto; }
 

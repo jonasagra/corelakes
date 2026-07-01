@@ -1,5 +1,5 @@
 // POST /api/logout  -> apaga o cookie de sessão.
-import { clearSessionCookie, verifyOrigin } from './_lib/auth.js';
+import { clearSessionCookie, verifyOrigin } from '../lib/auth.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

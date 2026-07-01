@@ -4,7 +4,7 @@
 // mas algumas redes (Facebook, X, LinkedIn) não renderizam WebP de forma
 // confiável no preview do link. Aqui entregamos um JPG padrão pra elas.
 import sharp from 'sharp';
-import { sql } from './_lib/db.js';
+import { sql } from '../lib/db.js';
 
 const BASE = 'https://corelakes.jonasagra.com.br';
 const FALLBACK = `${BASE}/logo.webp`;

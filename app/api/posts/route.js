@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import handler from '../../../api/posts/index.js';
+import handler from '../../../lib/handlers/posts.js';
 
 function createReq(request) {
   const url = new URL(request.url);

@@ -8,7 +8,7 @@ async function getPostBySlug(slug) {
   if (!slug) return null;
 
   try {
-    const { sql } = await import('../../../api/_lib/db.js');
+    const { sql } = await import('../../../lib/db.js');
     const rows = await sql`
       SELECT title, slug, excerpt, content, image_url, created_at, updated_at
       FROM posts
