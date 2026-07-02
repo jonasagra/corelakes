@@ -11,6 +11,19 @@ const nextConfig = {
       { protocol: 'https', hostname: 'br.minecraft.wiki' },
     ],
   },
+  // SEO: o domínio oficial é corelakes.jonasagra.com.br. Redirecionar o
+  // domínio *.vercel.app (301) evita que o Google indexe o site duplicado —
+  // era por isso que os dois apareciam na busca.
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'corelakes.vercel.app' }],
+        destination: 'https://corelakes.jonasagra.com.br/:path*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

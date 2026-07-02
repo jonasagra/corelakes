@@ -3,13 +3,12 @@ import RootShell from '@/components/RootShell';
 
 const BASE = 'https://corelakes.jonasagra.com.br';
 const DESC =
-  'Corelakes é a marca pessoal de Jonas Agra, um estudante de Engenharia de Software, criador de conteúdo e administrador da Minecraft Wiki em português.';
+  'Corelakes é um blog de Minecraft com notícias, guias e conteúdo da comunidade brasileira do jogo, escrito por um administrador da Minecraft Wiki em português.';
 
 export const metadata = {
   metadataBase: new URL(BASE),
   title: { default: 'Corelakes | Blog e Minecraft', template: '%s — Corelakes' },
   description: DESC,
-  authors: [{ name: 'Jonas Agra' }],
   alternates: { canonical: '/' },
   icons: { icon: '/icons/favicons/favicon.png', apple: '/icons/favicons/favicon.png' },
   verification: { google: 'f9duBKOPka4HMW2h5aeu0YAginVbWJQlQJx2ve3xXqQ' },

@@ -20,7 +20,7 @@ export default function Footer() {
         <div className="grid gap-8 py-9 border-t border-[#1d1d1d] sm:grid-cols-1" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
           <div>
             <img src="/logo.png" alt="Corelakes" className="h-8 w-auto mb-3" />
-            <p className="font-mc text-[0.95rem] text-white/55 leading-relaxed max-w-[280px]">A marca pessoal de Jonas Agra.</p>
+            <p className="font-mc text-[0.95rem] text-white/55 leading-relaxed max-w-[280px]">Blog e conteúdo de Minecraft.</p>
             <p className="font-mc text-[0.9rem] text-white/40 mt-3">João Pessoa · Paraíba</p>
           </div>
           <div>

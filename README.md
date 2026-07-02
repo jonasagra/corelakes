@@ -29,14 +29,24 @@ app/
 ├── layout.jsx              # Root layout (metadata, fonts, JSON-LD, RootShell)
 ├── page.jsx                # Página inicial (Home)
 ├── not-found.jsx           # Página 404
+├── robots.js · sitemap.js  # SEO (robots.txt e sitemap.xml gerados)
+├── api/                    # Route Handlers (TODO o back-end mora aqui)
+│   ├── posts/route.js      # CRUD de posts
+│   ├── login/ · logout/ · me/ · 2fa/
+│   ├── upload/route.js     # Upload de imagens (FormData → WEBP → Vercel Blob)
+│   ├── og/ · og-image/     # Previews de compartilhamento (Open Graph)
+│   └── news-sitemap/       # Sitemap Google News (via rewrite /news-sitemap.xml)
 ├── blog/
+│   ├── layout.jsx          # Metadata do /blog (canonical próprio)
 │   └── page.jsx            # Listagem de posts
 ├── post/
 │   └── [slug]/
+│       ├── layout.jsx      # Metadata dinâmica + JSON-LD do post
 │       └── page.jsx        # Post individual (dinâmico)
 └── admin/
+    ├── layout.jsx          # noindex (painel não aparece no Google)
     ├── page.jsx            # Dashboard admin (login + editor)
-    └── components/             # Componentes privados do admin
+    └── components/         # Componentes privados do admin
         ├── AdminControls.jsx
         ├── CreatePostTab.jsx
         ├── InfoPostsTab.jsx
@@ -57,15 +67,17 @@ src/
 │   └── usePosts.js         # CRUD via /api/posts
 ├── utils/
 │   ├── api.js              # Cliente fetch + gerador de slug
-│   └── imageProcessor.js   # Upload de imagens para Vercel Blob
+│   └── imageProcessor.js   # Prepara imagem (HEIC→JPEG) e envia p/ /api/upload
 └── data/
     └── socials.js          # Lista de redes sociais
 
-api/                        # Funções serverless (back-end Vercel)
-├── _lib/                   # db (Neon), auth (sessão/senha), validate (sanitização)
-├── login.js · logout.js · me.js
-├── posts/                  # CRUD de posts
-└── upload.js               # Upload para o Vercel Blob
+lib/                        # Lógica de servidor compartilhada
+├── db.js                   # Conexão Neon (Postgres)
+├── auth.js                 # Sessão JWT, senha scrypt, anti-CSRF
+├── validate.js             # Sanitização de posts
+├── totp.js · ratelimit.js  # 2FA e limite de tentativas
+├── routeAdapter.js         # Converte Request → (req, res) p/ os handlers
+└── handlers/               # Handlers usados pelas rotas em app/api/*
 
 db/schema.sql               # Tabelas posts + users
 scripts/create-admin.mjs    # Cria/redefine o admin
