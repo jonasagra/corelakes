@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import useAuth from '@/hooks/useAuth';
 import usePosts from '@/hooks/usePosts';
 import { showToast } from '@/components/Toast';

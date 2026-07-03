@@ -9,7 +9,7 @@ Portfolio pessoal e blog de Jonas Agra (Corelakes).
 | UI | React 18 |
 | CSS | Tailwind CSS 3 + tema Minecraft customizado |
 | Backend / Auth | API Routes (`/api`) + Neon (Postgres) + sessão JWT em cookie httpOnly |
-| Rich-text editor | Quill via react-quill |
+| Rich-text editor | Quill 2 via react-quill-new (compatível com React 19 / Next 15) |
 | Image pipeline | Upload para Vercel Blob |
 | Deploy | Vercel |
 

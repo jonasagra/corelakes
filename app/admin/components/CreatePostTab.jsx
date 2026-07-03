@@ -10,7 +10,7 @@ const WIDTHS = ['img-w-40', 'img-w-70', 'img-w-100'];
 const ALIGNS = ['img-align-left', 'img-align-center', 'img-align-right'];
 const PLACEHOLDER = 'Enviando imagem…';
 
-const ReactQuill = dynamic(() => import('react-quill').then((mod) => mod.default), { ssr: false });
+const ReactQuill = dynamic(() => import('react-quill-new').then((mod) => mod.default), { ssr: false });
 
 export default function CreatePostTab({ editId, title, setTitle, excerpt, setExcerpt, imageUrl, setImageUrl, content, setContent, uploading, publishing, onImageUpload, onPublish, onClear }) {
   const quillRef = useRef(null);
@@ -52,8 +52,9 @@ export default function CreatePostTab({ editId, title, setTitle, excerpt, setExc
     let cancelled = false;
     (async () => {
       if (typeof window === 'undefined') return;
-      const { Quill } = await import('react-quill');
-      if (cancelled) return;
+      const mod = await import('react-quill-new');
+      const Quill = mod.Quill ?? mod.default?.Quill;
+      if (cancelled || !Quill) return;
       const quill = quillRef.current?.getEditor();
       if (!quill) return;
       const root = quill.root;

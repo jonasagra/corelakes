@@ -1,7 +1,12 @@
 export default function registerQuillImage() {
   if (typeof window === 'undefined') return;
 
-  import('react-quill').then(({ Quill }) => {
+  // react-quill-new expõe o Quill como propriedade estática do componente
+  // (mod.default.Quill); algumas versões também exportam nomeado (mod.Quill).
+  import('react-quill-new').then((mod) => {
+    const Quill = mod.Quill ?? mod.default?.Quill;
+    if (!Quill) return;
+
     const BaseImage = Quill.import('formats/image');
     const ATTRIBUTES = ['alt', 'height', 'width', 'class'];
 
