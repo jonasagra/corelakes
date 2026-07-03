@@ -112,12 +112,16 @@ const Divider = () => <span className="w-px h-6 bg-[#2a2a2b] mx-1" aria-hidden="
 /* ── Editor ────────────────────────────────────────────────────── */
 export default function PostEditor({
   editId,
+  status = 'published',            // status atual do post ('draft' | 'published')
   title, setTitle,
   excerpt, setExcerpt,
   imageUrl, setImageUrl,
   content, setContent,
+  categories = [],                 // lista de categorias (id, name, color)
+  categoryId, setCategoryId,
+  featured, setFeatured,
   uploading, publishing,
-  onImageUpload, onPublish, onExit,
+  onImageUpload, onPublish, onSaveDraft, onExit,
 }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -216,8 +220,19 @@ export default function PostEditor({
 
         <div className="flex items-center gap-2">
           <span className="hidden md:inline font-mc text-[0.72rem] text-white/40">
-            {editId ? 'Editando post' : 'Novo post'}
+            {editId ? (status === 'draft' ? 'Editando rascunho' : 'Editando post') : 'Novo post'}
           </span>
+          {(!editId || status === 'draft') && (
+            <button
+              type="button"
+              disabled={publishing}
+              onClick={onSaveDraft}
+              title="Salva sem publicar — fica na aba Rascunhos"
+              className="h-[34px] px-3 font-mc text-[0.8rem] text-white/80 bg-[#1b1b1c] border border-black hover:text-white hover:bg-[#2a2a2b] transition-colors disabled:opacity-50"
+            >
+              Salvar rascunho
+            </button>
+          )}
           <Btn title="Configurações do post" active={settingsOpen} onClick={() => setSettingsOpen(!settingsOpen)}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <circle cx="12" cy="12" r="3" />
@@ -230,7 +245,7 @@ export default function PostEditor({
             onClick={onPublish}
             className="h-[34px] px-4 font-mc text-[0.8rem] text-white bg-mc-green border border-black hover:bg-mc-green-light transition-colors disabled:opacity-50"
           >
-            {publishing ? 'Publicando…' : (editId ? 'Atualizar' : 'Publicar')}
+            {publishing ? 'Salvando…' : (editId && status === 'published' ? 'Atualizar' : 'Publicar')}
           </button>
         </div>
       </header>
@@ -309,6 +324,45 @@ export default function PostEditor({
             </div>
 
             <div className="p-4 flex flex-col gap-6">
+              <section>
+                <h3 className="font-mc text-[0.75rem] text-mc-green-link uppercase tracking-[1px] mb-2">Categoria</h3>
+                <select
+                  value={categoryId ?? ''}
+                  onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : null)}
+                  className="admin-input w-full px-3 py-2 text-sm bg-[#0d0d0d] border border-[#2f2f2f] text-white/85 focus:outline-none focus:border-mc-green-bright"
+                >
+                  <option value="">Sem categoria</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+                {categoryId && (
+                  <span
+                    className="inline-block mt-2 px-2 py-1 text-[0.7rem] font-mc text-white border border-black"
+                    style={{ background: categories.find((c) => Number(c.id) === Number(categoryId))?.color || '#3c8527' }}
+                  >
+                    {categories.find((c) => Number(c.id) === Number(categoryId))?.name}
+                  </span>
+                )}
+              </section>
+
+              <section>
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={!!featured}
+                    onChange={(e) => setFeatured(e.target.checked)}
+                    className="mt-[3px] w-4 h-4 accent-[#3c8527]"
+                  />
+                  <span>
+                    <span className="block font-mc text-[0.8rem] text-white">Post destaque</span>
+                    <span className="block text-[0.75rem] text-white/45 mt-1">
+                      Aparece em tela cheia no topo do blog, com título, resumo, data e categoria.
+                    </span>
+                  </span>
+                </label>
+              </section>
+
               <section>
                 <h3 className="font-mc text-[0.75rem] text-mc-green-link uppercase tracking-[1px] mb-2">Imagem de destaque</h3>
                 {imageUrl && (

@@ -15,14 +15,15 @@ export default function usePosts() {
     try { localStorage.setItem('blog_posts', JSON.stringify(arr)); } catch {}
   };
 
-  const fetchPosts = useCallback(async () => {
+  // { all: true } → admin: inclui rascunhos (o servidor exige sessão)
+  const fetchPosts = useCallback(async ({ all = false } = {}) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await api.get('/api/posts');
+      const data = await api.get(all ? '/api/posts?all=1' : '/api/posts');
       const formatted = (data || []).map(fmt);
       setPosts(formatted);
-      syncLocal(formatted);
+      if (!all) syncLocal(formatted); // cache local só do conteúdo público
     } catch (err) {
       const cached = JSON.parse(localStorage.getItem('blog_posts') || '[]');
       setPosts(cached);
@@ -41,13 +42,13 @@ export default function usePosts() {
     return cached.find((p) => p.slug === slug) || null;
   }, []);
 
-  const createPost = useCallback(async ({ title, content, excerpt, imageUrl }) => {
-    const data = await api.post('/api/posts', { title, content, excerpt, imageUrl });
+  const createPost = useCallback(async ({ title, content, excerpt, imageUrl, status, featured, categoryId }) => {
+    const data = await api.post('/api/posts', { title, content, excerpt, imageUrl, status, featured, categoryId });
     return fmt(data);
   }, []);
 
-  const updatePost = useCallback(async (id, { title, content, excerpt, imageUrl }) => {
-    const data = await api.put(`/api/posts?id=${id}`, { title, content, excerpt, imageUrl });
+  const updatePost = useCallback(async (id, { title, content, excerpt, imageUrl, status, featured, categoryId }) => {
+    const data = await api.put(`/api/posts?id=${id}`, { title, content, excerpt, imageUrl, status, featured, categoryId });
     return fmt(data);
   }, []);
 

@@ -18,7 +18,7 @@ export default async function sitemap() {
 
   try {
     const { sql } = await import('../lib/db.js');
-    const posts = await sql`SELECT slug, created_at, updated_at FROM posts ORDER BY created_at DESC`;
+    const posts = await sql`SELECT slug, created_at, updated_at FROM posts WHERE status = 'published' ORDER BY created_at DESC`;
 
     const postRoutes = posts.map((post) => ({
       url: `${BASE}/post/${post.slug}`,

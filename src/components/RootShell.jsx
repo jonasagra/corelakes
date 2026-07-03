@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -9,6 +10,10 @@ import ConfirmModal from '@/components/ConfirmModal';
 
 export default function RootShell({ children }) {
   const { isAdmin } = useAuth();
+  const pathname = usePathname();
+
+  // O painel admin (e o editor em tela cheia) não têm footer — é o "CMS".
+  const hideFooter = pathname?.startsWith('/admin');
 
   return (
     <>
@@ -17,7 +22,7 @@ export default function RootShell({ children }) {
       <Toast />
       <ConfirmModal />
       {children}
-      <Footer />
+      {!hideFooter && <Footer />}
     </>
   );
 }

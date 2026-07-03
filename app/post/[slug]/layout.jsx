@@ -12,7 +12,7 @@ async function getPostBySlug(slug) {
     const rows = await sql`
       SELECT title, slug, excerpt, content, image_url, created_at, updated_at
       FROM posts
-      WHERE slug = ${String(slug)}
+      WHERE slug = ${String(slug)} AND status = 'published'
       LIMIT 1
     `;
     return rows[0] || null;

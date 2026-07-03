@@ -1,6 +1,6 @@
 # Corelakes — Next.js 15 (App Router) + Tailwind CSS
 
-Portfolio pessoal e blog de Jonas Agra (Corelakes).
+Site oficial do Corelakes — criador de conteúdo de Minecraft. Blog com CMS próprio (dashboard, rascunhos, categorias e métricas).
 
 ## Tech stack
 | Camada | Ferramenta |
@@ -46,10 +46,12 @@ app/
 └── admin/
     ├── layout.jsx          # noindex (painel não aparece no Google)
     ├── page.jsx            # Dashboard admin (login + editor)
-    └── components/         # Componentes privados do admin
+    └── components/          # Componentes privados do admin (CMS)
         ├── AdminControls.jsx
         ├── PostEditor.jsx   # Editor TipTap em tela cheia (estilo Gutenberg)
-        ├── InfoPostsTab.jsx
+        ├── PostsTable.jsx   # Lista de posts/rascunhos com busca e filtro
+        ├── CategoriesTab.jsx# CRUD de categorias (nome + cor)
+        ├── MetricsTab.jsx   # Métricas (posts, views, ranking)
         └── SecurityTab.jsx
 
 src/

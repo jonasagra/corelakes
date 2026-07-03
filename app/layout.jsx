@@ -3,11 +3,11 @@ import RootShell from '@/components/RootShell';
 
 const BASE = 'https://corelakes.jonasagra.com.br';
 const DESC =
-  'Corelakes é um blog de Minecraft com notícias, guias e conteúdo da comunidade brasileira do jogo, escrito por um administrador da Minecraft Wiki em português.';
+  'Corelakes é um criador de conteúdo de Minecraft e administrador da Minecraft Wiki em português. Notícias do jogo, guias e projetos da comunidade brasileira.';
 
 export const metadata = {
   metadataBase: new URL(BASE),
-  title: { default: 'Corelakes | Blog e Minecraft', template: '%s — Corelakes' },
+  title: { default: 'Corelakes | Criador de Conteúdo de Minecraft', template: '%s — Corelakes' },
   description: DESC,
   alternates: { canonical: '/' },
   icons: { icon: '/icons/favicons/favicon.png', apple: '/icons/favicons/favicon.png' },
@@ -15,7 +15,7 @@ export const metadata = {
   openGraph: {
     type: 'website',
     siteName: 'Corelakes',
-    title: 'Corelakes | Blog e Minecraft',
+    title: 'Corelakes | Criador de Conteúdo de Minecraft',
     description: DESC,
     url: BASE,
     locale: 'pt_BR',
@@ -23,7 +23,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Corelakes | Blog e Minecraft',
+    title: 'Corelakes | Criador de Conteúdo de Minecraft',
     description: DESC,
     images: ['/logo.webp'],
     site: '@corelakes',
@@ -72,8 +72,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR">
       <head>
+        <link rel="preload" href="/fonts/San Francisco/SF-Pro-Text-Regular.otf" as="font" type="font/otf" crossOrigin="" />
+        <link rel="preload" href="/fonts/San Francisco/SF-Pro-Display-Bold.otf" as="font" type="font/otf" crossOrigin="" />
         <link rel="preload" href="/fonts/MinecraftTen-VGORe.ttf" as="font" type="font/ttf" crossOrigin="" />
-        <link rel="preload" href="/fonts/Monocraft.ttf" as="font" type="font/ttf" crossOrigin="" />
         <link rel="preload" href="/fonts/Minecraft-Fivev2.fecd15.ttf" as="font" type="font/ttf" crossOrigin="" />
         <script
           type="application/ld+json"

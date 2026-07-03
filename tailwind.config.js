@@ -4,13 +4,18 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        // corpo limpo (igual minecraft.net)
-        sans: ['"Noto Sans"', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
-        // títulos/labels pixelados
-        mc: ["'Minecraft'", 'monospace'],
+        // corpo/UI: San Francisco (leitura); Minecraft fica só decorativa
+        sans: ['"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        display: ['"SF Pro Display"', '"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        // `font-mc` era Monocraft (pixel) — remapeado para SF: todo texto de
+        // leitura do site (navbar, footer, admin) migra sem tocar componente.
+        mc: ['"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        // decorativas (título do blog e afins)
         'mc-bold': ["'Minecraft-Bold'", 'monospace'],
         'mc-five': ["'MinecraftFive'", 'monospace'],
         'mc-ten': ["'MinecraftTen'", 'monospace'],
+        // pixel (Monocraft.ttf — registrada como 'Minecraft' no @font-face)
+        'mc-pixel': ["'Minecraft'", 'monospace'],
       },
       colors: {
         mc: {

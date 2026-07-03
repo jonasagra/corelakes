@@ -68,11 +68,26 @@ export default function Post() {
           <div className="max-w-[800px] mx-auto px-6 py-8 sm:px-5 sm:py-6">
             <header className="mb-7">
               {post.image_url && (
-                <img src={post.image_url} alt={post.title}
-                  className="w-full max-h-[400px] object-cover mb-6" />
+                <div className="relative mb-8">
+                  <img src={post.image_url} alt={post.title}
+                    className="w-full max-h-[420px] object-cover" />
+                  {/* tag da categoria centralizada sobre a borda inferior da
+                      imagem (metade dentro, metade fora) — como no minecraft.net */}
+                  {post.category_name && (
+                    <span className="absolute left-1/2 -translate-x-1/2 -bottom-[13px] px-3 py-[5px] font-mc-pixel text-[0.78rem] uppercase tracking-[1px] text-white border-2 border-black whitespace-nowrap"
+                      style={{ background: post.category_color || '#3c8527' }}>
+                      {post.category_name}
+                    </span>
+                  )}
+                </div>
               )}
-              <h1 className="font-mc-five text-[2rem] text-white mb-4 leading-[1.3] sm:text-[1.5rem]"
-                style={{ textShadow: '3px 3px 0 #3f3f3f' }}>
+              {!post.image_url && post.category_name && (
+                <span className="inline-block mb-3 px-2 py-[3px] font-mc-pixel text-[0.78rem] uppercase tracking-[1px] text-white border border-black"
+                  style={{ background: post.category_color || '#3c8527' }}>
+                  {post.category_name}
+                </span>
+              )}
+              <h1 className="text-[2rem] font-bold text-white mb-4 leading-[1.25] sm:text-[1.5rem]">
                 {post.title}
               </h1>
               <div className="flex flex-wrap gap-5 text-white/55 text-[0.85rem] pb-5 border-b border-[#2a2a2b]">

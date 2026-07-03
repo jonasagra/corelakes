@@ -1,6 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;0,800;1,400;1,700&display=swap');
+/* ========== San Francisco (SF Pro) — fonte de LEITURA do site ==========
+   Text: corpo de texto e UI. Display: títulos grandes.
+   As fontes Minecraft ficam só como decoração (título do blog). */
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/fonts/San Francisco/SF-Pro-Text-Regular.otf') format('opentype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/fonts/San Francisco/SF-Pro-Text-RegularItalic.otf') format('opentype');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/fonts/San Francisco/SF-Pro-Text-Medium.otf') format('opentype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/fonts/San Francisco/SF-Pro-Text-Semibold.otf') format('opentype');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/fonts/San Francisco/SF-Pro-Text-Bold.otf') format('opentype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/fonts/San Francisco/SF-Pro-Text-BoldItalic.otf') format('opentype');
+  font-weight: 700; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/San Francisco/SF-Pro-Display-Semibold.otf') format('opentype');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/San Francisco/SF-Pro-Display-Bold.otf') format('opentype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
 
-/* ========== Fontes Minecraft (arquivos novos .otf/.ttf) ========== */
+/* ========== Fontes Minecraft (decorativas) ========== */
 @font-face {
   font-family: 'Minecraft';
   src: url('/fonts/Monocraft.ttf') format('truetype');
@@ -32,7 +74,8 @@
     --green: #3c8527;
     --green-bright: #6cc349;
     --green-link: #a0e081;
-    --oreUI-font: "Noto Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    --oreUI-font: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --display-font: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
   }
   body {
     font-family: var(--oreUI-font);
@@ -84,7 +127,7 @@
 }
 
 .mc-label {
-  font-family: 'Minecraft', monospace; text-transform: uppercase; letter-spacing: 2px;
+  font-family: var(--oreUI-font); font-weight: 600; text-transform: uppercase; letter-spacing: 2px;
   color: rgba(255,255,255,0.65);
 }
 
@@ -104,8 +147,9 @@
 
 /* ========== TipTap (editor admin, estilo Gutenberg) ========== */
 /* título grande no topo do canvas (como o "Adicionar título" do Gutenberg) */
+/* SF Pro Display: dá pra distinguir maiúscula/minúscula (a fonte pixelada não) */
 .editor-title {
-  font-family: 'MinecraftFive', monospace;
+  font-family: var(--display-font); font-weight: 700;
   font-size: clamp(1.5rem, 4.5vw, 2.2rem);
   line-height: 1.25; color: #fff; margin-bottom: 14px;
 }
@@ -119,7 +163,7 @@
 }
 .core-editor p { margin: 0 0 0.9rem; }
 .core-editor h1, .core-editor h2, .core-editor h3 {
-  font-family: 'MinecraftFive', monospace; color: #6cc349; margin: 20px 0 10px;
+  font-family: var(--display-font); font-weight: 700; color: #6cc349; margin: 20px 0 10px;
 }
 .core-editor h1 { font-size: 1.5rem; }
 .core-editor h2 { font-size: 1.3rem; }
@@ -139,7 +183,7 @@
 .core-editor p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   color: rgba(255,255,255,0.35); float: left; height: 0; pointer-events: none;
-  font-family: 'MinecraftFive', monospace; font-size: 0.95rem;
+  font-family: var(--oreUI-font); font-size: 0.95rem;
 }
 
 /* nó selecionado (imagem, embed) */
@@ -156,8 +200,8 @@
 .embed-card-url  { font-family: monospace; font-size: 0.78rem; color: #1d9bf0; word-break: break-all; }
 .embed-card-hint { font-size: 0.72rem; color: rgba(255,255,255,0.4); }
 
-/* placeholder dos campos de admin em MinecraftFive */
-.admin-input::placeholder { font-family: 'MinecraftFive', monospace; color: rgba(255,255,255,0.4); }
+/* placeholder dos campos de admin (legível, em SF) */
+.admin-input::placeholder { font-family: var(--oreUI-font); color: rgba(255,255,255,0.4); }
 
 /* ========== util ========== */
 .oreUI-text { font-family: var(--oreUI-font); color: rgba(255,255,255,0.86); }
@@ -165,7 +209,7 @@
 
 /* ========== Post-body ========== */
 .post-body { font-family: var(--oreUI-font); color: rgba(255,255,255,0.88); line-height: 1.7; }
-.post-body h1, .post-body h2, .post-body h3 { font-family: 'MinecraftFive', monospace; color: #6cc349; margin: 18px 0 10px; }
+.post-body h1, .post-body h2, .post-body h3 { font-family: var(--display-font); font-weight: 700; color: #6cc349; margin: 18px 0 10px; }
 .post-body h1 { font-size: 1.5rem; }
 .post-body h2 { font-size: 1.3rem; }
 .post-body h3 { font-size: 1.1rem; }

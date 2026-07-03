@@ -14,11 +14,16 @@ export default function Home() {
     fetchPosts();
   }, [fetchPosts]);
 
-  const recentes = posts.slice(0, 5);
+  // Destaques (estilo minecraft.net): 1 cartão grande + até 2 laterais.
+  const featured = posts.filter((p) => p.featured && p.image_url);
+  const big = featured[0] || null;
+  const sides = featured.slice(1, 3);
+  const shownIds = new Set([big, ...sides].filter(Boolean).map((p) => p.id));
+  const recentes = posts.filter((p) => !shownIds.has(p.id)).slice(0, 5);
 
   return (
     <>
-      <h1 className="sr-only">Corelakes | Blog & Minecraft</h1>
+      <h1 className="sr-only">Corelakes | Criador de Conteúdo de Minecraft</h1>
 
       {/* ── CABEÇALHO full-bleed: wallpaper + skin ── */}
       <header className="relative">
@@ -73,6 +78,70 @@ export default function Home() {
           <Link href="/blog" className="mc-btn min-w-[190px]">Ver o blog</Link>
           <a href="#redes" className="mc-btn min-w-[190px]">Minhas redes</a>
         </div>
+
+        {/* ── EM DESTAQUE (estilo minecraft.net/article) ── */}
+        {big && (
+          <section className="mt-16">
+            <p className="mc-label mc-seclabel text-[0.8rem] text-white/55 text-center mb-7 mx-auto max-w-[420px]">
+              Em destaque
+            </p>
+            <div className={`grid gap-5 ${sides.length ? 'md:grid-cols-3' : ''}`}>
+
+              {/* cartão grande: imagem + painel com título, resumo e botão */}
+              <article className={`mc-panel overflow-hidden flex flex-col ${sides.length ? 'md:col-span-2' : ''}`}>
+                <Link href={`/post/${big.slug}`} className="block overflow-hidden">
+                  <img src={big.image_url} alt={big.title}
+                       className="w-full aspect-[16/8] object-cover transition-transform duration-500 hover:scale-[1.03]" />
+                </Link>
+                <div className="p-6 flex flex-col gap-3 flex-1">
+                  {big.category_name && (
+                    <p className="text-[0.7rem] font-bold uppercase tracking-[1px]"
+                       style={{ color: big.category_color || '#6cc349' }}>
+                      {big.category_name}
+                    </p>
+                  )}
+                  <h3 className="font-display text-[1.45rem] font-bold text-white leading-snug">
+                    {big.title}
+                  </h3>
+                  {big.excerpt && (
+                    <p className="text-white/60 text-[0.92rem] leading-[1.6]"
+                       style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {big.excerpt}
+                    </p>
+                  )}
+                  <div className="mt-auto pt-2">
+                    <Link href={`/post/${big.slug}`} className="mc-btn mc-btn-solid">
+                      Ver o post completo <span aria-hidden="true">›</span>
+                    </Link>
+                  </div>
+                </div>
+              </article>
+
+              {/* destaques secundários: imagem + título + link verde */}
+              {sides.map((p) => (
+                <article key={p.id} className="mc-panel overflow-hidden flex flex-col">
+                  <Link href={`/post/${p.slug}`} className="block overflow-hidden">
+                    <img src={p.image_url} alt={p.title}
+                         className="w-full aspect-video object-cover transition-transform duration-500 hover:scale-[1.03]" />
+                  </Link>
+                  <div className="p-5 flex flex-col gap-2 flex-1">
+                    {p.category_name && (
+                      <p className="text-[0.68rem] font-bold uppercase tracking-[1px]"
+                         style={{ color: p.category_color || '#6cc349' }}>
+                        {p.category_name}
+                      </p>
+                    )}
+                    <h3 className="text-[1.05rem] font-bold text-white leading-snug">{p.title}</h3>
+                    <Link href={`/post/${p.slug}`}
+                          className="mt-auto pt-1 text-mc-green-bright text-[0.85rem] font-semibold no-underline hover:text-white transition-colors">
+                      Ler o post <span aria-hidden="true">↗</span>
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
 
         {recentes.length > 0 && (
           <section className="mt-16">

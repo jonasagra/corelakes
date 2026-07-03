@@ -4,12 +4,12 @@
 export const metadata = {
   title: 'Blog',
   description:
-    'Todos os posts do Corelakes: notícias de Minecraft, guias e conteúdo da comunidade brasileira do jogo.',
+    'O blog do Corelakes, criador de conteúdo de Minecraft: notícias do jogo, guias e projetos da comunidade brasileira.',
   alternates: { canonical: '/blog' },
   openGraph: {
     title: 'Blog — Corelakes',
     description:
-      'Todos os posts do Corelakes: notícias de Minecraft, guias e conteúdo da comunidade brasileira do jogo.',
+      'O blog do Corelakes, criador de conteúdo de Minecraft: notícias do jogo, guias e projetos da comunidade brasileira.',
     url: '/blog',
   },
 };

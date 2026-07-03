@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import useAuth from '@/hooks/useAuth';
 
 const HamburgerSVG = () => (
   <svg viewBox="0 0 40 46" className="w-9 h-[42px]" xmlns="http://www.w3.org/2000/svg">
@@ -20,9 +21,21 @@ const LINKS = [
   { to: '/blog', icon: '/icons/journal.webp', label: 'Blog' },
 ];
 
+// Sub-opções da dashboard no menu hambúrguer (mobile). Em telas grandes o
+// menu lateral do /admin cuida disso; aqui é o equivalente responsivo.
+const ADMIN_LINKS = [
+  { to: '/admin?view=create',     label: '+ Criar postagem' },
+  { to: '/admin?view=posts',      label: 'Editar postagens' },
+  { to: '/admin?view=drafts',     label: 'Rascunhos' },
+  { to: '/admin?view=categories', label: 'Configurar categorias' },
+  { to: '/admin?view=metrics',    label: 'Métricas gerais' },
+  { to: '/admin?view=security',   label: 'Segurança e privacidade' },
+];
+
 export default function Navbar({ isAdmin }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { logout } = useAuth();
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen);
@@ -32,6 +45,12 @@ export default function Navbar({ isAdmin }) {
   const close = () => setMenuOpen(false);
   const isActive = (to) => (to === '/' ? pathname === '/' : pathname.startsWith(to));
   const navItems = isAdmin ? [...LINKS, { to: '/admin', icon: '/icons/admin.webp', label: 'Dashboard' }] : LINKS;
+
+  const handleLogout = async () => {
+    close();
+    await logout();
+    window.location.href = '/admin'; // recarrega e cai na tela de login
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-[200] bg-mc-nav border-b-2 border-black shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
@@ -43,7 +62,7 @@ export default function Navbar({ isAdmin }) {
           {navItems.map(({ to, icon, label }) => {
             const active = isActive(to);
             return (
-              <Link key={to} href={to} onClick={close} className={'relative flex items-center gap-2 px-4 h-[68px] font-mc text-[0.95rem] uppercase tracking-[1px] no-underline transition-colors duration-200 ' + (active ? 'text-white' : 'text-white/80 hover:text-white hover:bg-white/5')}>
+              <Link key={to} href={to} onClick={close} className={'relative flex items-center gap-2 px-4 h-[68px] font-mc-pixel text-[0.95rem] uppercase tracking-[1px] no-underline transition-colors duration-200 ' + (active ? 'text-white' : 'text-white/80 hover:text-white hover:bg-white/5')}>
                 <img src={icon} alt="" aria-hidden="true" className="w-5 h-5" />
                 <span>{label}</span>
                 {active && <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-mc-green-bright" />}
@@ -59,16 +78,35 @@ export default function Navbar({ isAdmin }) {
         <Link href="/" className="flex items-center px-5 py-5 border-b border-white/10" onClick={close}>
           <img src="/logo.png" alt="Corelakes" className="h-8 w-auto" />
         </Link>
-        <div className="flex flex-col">
+        <div className="flex flex-col pb-10">
           {navItems.map(({ to, icon, label }) => {
             const active = isActive(to);
             return (
-              <Link key={to} href={to} onClick={close} className={'flex items-center justify-between px-6 py-5 font-mc text-[1.05rem] uppercase tracking-[1px] no-underline border-b border-white/10 transition-colors duration-200 ' + (active ? 'text-white bg-white/5 border-l-4 border-l-mc-green-bright' : 'text-white/85 hover:bg-white/5')}>
+              <Link key={to} href={to} onClick={close} className={'flex items-center justify-between px-6 py-5 font-mc-pixel text-[1.05rem] uppercase tracking-[1px] no-underline border-b border-white/10 transition-colors duration-200 ' + (active ? 'text-white bg-white/5 border-l-4 border-l-mc-green-bright' : 'text-white/85 hover:bg-white/5')}>
                 <span className="flex items-center gap-4"><img src={icon} alt="" aria-hidden="true" className="w-6 h-6" />{label}</span>
                 <span className="text-white/40 text-[1.2rem]">&rsaquo;</span>
               </Link>
             );
           })}
+
+          {/* ── Sub-opções da dashboard (só para o admin logado) ── */}
+          {isAdmin && (
+            <>
+              <p className="px-6 pt-6 pb-2 text-[0.7rem] uppercase tracking-[2px] text-white/35 font-semibold">
+                Dashboard
+              </p>
+              {ADMIN_LINKS.map(({ to, label }) => (
+                <Link key={to} href={to} onClick={close}
+                      className="flex items-center px-6 py-4 text-[0.95rem] text-white/75 no-underline border-b border-white/5 hover:bg-white/5 hover:text-white transition-colors">
+                  {label}
+                </Link>
+              ))}
+              <button type="button" onClick={handleLogout}
+                      className="flex items-center px-6 py-4 text-[0.95rem] text-[#ff8a8a] bg-transparent border-none border-b border-white/5 hover:bg-[#8b2020]/30 cursor-pointer transition-colors text-left">
+                Sair da conta
+              </button>
+            </>
+          )}
         </div>
       </div>
     </nav>
