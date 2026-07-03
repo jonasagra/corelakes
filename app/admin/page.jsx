@@ -2,14 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import 'react-quill-new/dist/quill.snow.css';
 import useAuth from '@/hooks/useAuth';
 import usePosts from '@/hooks/usePosts';
 import { showToast } from '@/components/Toast';
 import { confirmDialog } from '@/components/ConfirmModal';
 import { ApiUploader } from '@/utils/imageProcessor';
 import { OreButton, OreInput } from './components/AdminControls';
-import CreatePostTab from './components/CreatePostTab';
+import PostEditor from './components/PostEditor';
 import InfoPostsTab from './components/InfoPostsTab';
 import SecurityTab from './components/SecurityTab';
 
@@ -145,6 +144,7 @@ function Dashboard({ onLogout }) {
         showToast('Post criado com sucesso!', 'success');
       }
       clearEditor();
+      setActiveTab('posts');
       hasFetchedRef.current = false;
       await fetchPosts();
       router.push('/admin');
@@ -153,6 +153,13 @@ function Dashboard({ onLogout }) {
     } finally {
       setPublishing(false);
     }
+  };
+
+  // sai do editor em tela cheia (limpa estado e volta pra lista)
+  const exitEditor = () => {
+    clearEditor();
+    setActiveTab('posts');
+    router.push('/admin'); // remove o ?edit= da URL
   };
 
   const handleDelete = async (id) => {
@@ -217,7 +224,8 @@ function Dashboard({ onLogout }) {
       )}
 
       {activeTab === 'create' && (
-        <CreatePostTab
+        <PostEditor
+          key={editId ?? 'new'} /* remonta o editor ao trocar de post */
           editId={editId}
           title={title}
           setTitle={setTitle}
@@ -231,7 +239,7 @@ function Dashboard({ onLogout }) {
           publishing={publishing}
           onImageUpload={handleImageUpload}
           onPublish={publish}
-          onClear={clearEditor}
+          onExit={exitEditor}
         />
       )}
 

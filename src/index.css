@@ -102,34 +102,59 @@
 }
 .mc-seclabel::before { left: 0; } .mc-seclabel::after { right: 0; }
 
-/* ========== Quill (editor admin) — placeholder em MinecraftFive ========== */
-.oreUI-quill .ql-editor {
-  background: #313233 !important; color: #fff !important;
-  font-family: var(--oreUI-font) !important; min-height: 80px;
+/* ========== TipTap (editor admin, estilo Gutenberg) ========== */
+/* título grande no topo do canvas (como o "Adicionar título" do Gutenberg) */
+.editor-title {
+  font-family: 'MinecraftFive', monospace;
+  font-size: clamp(1.5rem, 4.5vw, 2.2rem);
+  line-height: 1.25; color: #fff; margin-bottom: 14px;
 }
-.oreUI-quill .ql-toolbar.ql-snow {
-  background: #48494a !important; border: none !important;
-  border-bottom: 2px solid #1e1e1f !important; min-height: 40px;
+.editor-title::placeholder { color: rgba(255,255,255,0.3); }
+
+/* canvas de escrita */
+.core-editor {
+  outline: none; min-height: 55vh;
+  font-family: var(--oreUI-font); color: rgba(255,255,255,0.9);
+  line-height: 1.75; font-size: 1.02rem;
 }
-.oreUI-quill .ql-container.ql-snow { border: none !important; }
-.oreUI-quill .ql-snow .ql-stroke { stroke: #fff; }
-.oreUI-quill .ql-snow .ql-fill { fill: #fff; }
-.oreUI-quill .ql-snow .ql-picker-label { color: #fff; }
-.oreUI-quill .ql-snow .ql-picker-options { background: #48494a; border: 2px solid #1e1e1f; }
-.oreUI-quill .ql-snow .ql-picker-item { color: #fff; }
-.oreUI-quill .ql-snow .ql-picker-item:hover { color: #4ca632; }
-.oreUI-quill .ql-snow.ql-toolbar button:hover { background: #5a5b5c; }
-.oreUI-quill .ql-snow.ql-toolbar button.ql-active { background: #3c8527; }
-.oreUI-quill .ql-editor.ql-blank::before {
-  color: rgba(255,255,255,0.45) !important; font-style: normal !important;
-  font-family: 'MinecraftFive', monospace !important;
+.core-editor p { margin: 0 0 0.9rem; }
+.core-editor h1, .core-editor h2, .core-editor h3 {
+  font-family: 'MinecraftFive', monospace; color: #6cc349; margin: 20px 0 10px;
 }
-.oreUI-quill { height: auto; }
-.oreUI-quill .ql-container { min-height: 400px; }
-.oreUI-quill .ql-editor { min-height: 400px; }
-.oreUI-quill .ql-editor a,
-.oreUI-quill .ql-editor a:hover,
-.oreUI-quill .ql-editor a:visited { color: #6cc349 !important; }
+.core-editor h1 { font-size: 1.5rem; }
+.core-editor h2 { font-size: 1.3rem; }
+.core-editor h3 { font-size: 1.1rem; }
+.core-editor a { color: #6cc349; text-decoration: underline; }
+.core-editor blockquote { border-left: 4px solid #3c8527; padding-left: 16px; margin: 12px 0; color: rgba(255,255,255,0.8); font-style: italic; }
+.core-editor code { background: #1b1b1c; padding: 2px 8px; font-family: monospace; font-size: 0.9rem; }
+.core-editor pre { background: #1b1b1c; padding: 12px; overflow-x: auto; border: 1px solid #000; margin: 12px 0; }
+.core-editor pre code { background: none; padding: 0; }
+.core-editor ul, .core-editor ol { margin: 8px 0; padding-left: 22px; }
+.core-editor ul { list-style: disc; }
+.core-editor ol { list-style: decimal; }
+.core-editor li { margin-bottom: 4px; }
+.core-editor hr { border: none; border-top: 2px solid #2a2a2b; margin: 22px 0; }
+
+/* placeholder ("Comece a escrever…") */
+.core-editor p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: rgba(255,255,255,0.35); float: left; height: 0; pointer-events: none;
+  font-family: 'MinecraftFive', monospace; font-size: 0.95rem;
+}
+
+/* nó selecionado (imagem, embed) */
+.core-editor .ProseMirror-selectednode { outline: 3px solid #4ca632; outline-offset: 2px; }
+
+/* embeds no editor */
+.core-editor iframe { max-width: 100%; border: 1px solid #000; margin: 14px 0; display: block; }
+.embed-card {
+  display: flex; flex-direction: column; gap: 4px;
+  background: #16181c; border: 1px solid #2f3336; border-left: 4px solid #1d9bf0;
+  padding: 14px 16px; margin: 14px 0; cursor: default;
+}
+.embed-card-kind { font-family: 'MinecraftFive', monospace; font-size: 0.8rem; color: #fff; }
+.embed-card-url  { font-family: monospace; font-size: 0.78rem; color: #1d9bf0; word-break: break-all; }
+.embed-card-hint { font-size: 0.72rem; color: rgba(255,255,255,0.4); }
 
 /* placeholder dos campos de admin em MinecraftFive */
 .admin-input::placeholder { font-family: 'MinecraftFive', monospace; color: rgba(255,255,255,0.4); }
@@ -162,7 +187,9 @@
    O Safari do iOS dá zoom ao focar campos com font-size < 16px.
    Forçando 16px em telas pequenas, o zoom para de acontecer. */
 @media (max-width: 640px) {
-  .oreUI-quill .ql-editor,
+  .core-editor,
+  .editor-title,
+  .admin-input,
   .mc-panel input,
   .mc-panel textarea,
   .mc-panel select {
@@ -173,25 +200,31 @@
 /* ========== Imagens no editor e no post: tamanho + alinhamento ==========
    Codificado em CLASSES (não style/data-*) porque o sanitizador do servidor
    só preserva `class` em <img>. Ver lib/validate.js. */
-.oreUI-quill .ql-editor img,
+.core-editor img,
 .post-body img { max-width: 100%; height: auto; }
 
 /* tamanhos (largura relativa ao texto) */
-.oreUI-quill .ql-editor img.img-w-40,  .post-body img.img-w-40  { width: 40%; }
-.oreUI-quill .ql-editor img.img-w-70,  .post-body img.img-w-70  { width: 70%; }
-.oreUI-quill .ql-editor img.img-w-100, .post-body img.img-w-100 { width: 100%; }
+.core-editor img.img-w-40,  .post-body img.img-w-40  { width: 40%; }
+.core-editor img.img-w-70,  .post-body img.img-w-70  { width: 70%; }
+.core-editor img.img-w-100, .post-body img.img-w-100 { width: 100%; }
 
 /* alinhamento */
-.oreUI-quill .ql-editor img.img-align-left,
+.core-editor img.img-align-left,
 .post-body img.img-align-left   { float: left;  margin: 6px 16px 6px 0; }
-.oreUI-quill .ql-editor img.img-align-right,
+.core-editor img.img-align-right,
 .post-body img.img-align-right  { float: right; margin: 6px 0 6px 16px; }
-.oreUI-quill .ql-editor img.img-align-center,
+.core-editor img.img-align-center,
 .post-body img.img-align-center { float: none; display: block; margin-left: auto; margin-right: auto; }
 
 /* limpa o float pra não quebrar o layout */
-.oreUI-quill .ql-editor::after,
+.core-editor::after,
 .post-body::after { content: ''; display: block; clear: both; }
 
-/* destaque da imagem selecionada no editor */
-.oreUI-quill .ql-editor img.is-selected { outline: 3px solid #4ca632; outline-offset: 2px; }
+/* ========== Embeds na página pública do post ========== */
+/* YouTube: iframe responsivo 16:9 */
+.post-body iframe {
+  width: 100%; aspect-ratio: 16 / 9; height: auto;
+  border: 1px solid #000; margin: 14px 0; display: block;
+}
+/* X/Twitter: o widgets.js injeta o tweet real; centraliza e limita largura */
+.post-body .twitter-tweet { margin: 14px auto !important; }

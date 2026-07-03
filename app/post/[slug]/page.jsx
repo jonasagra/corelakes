@@ -28,6 +28,19 @@ export default function Post() {
     return () => { cancelled = true; };
   }, [slug, getPostBySlug]);
 
+  // Embeds do X/Twitter: se o post tem um tweet, carrega o widgets.js
+  // (uma vez) e pede pra ele transformar os blockquotes em tweets reais.
+  useEffect(() => {
+    if (!post?.content?.includes('twitter-tweet')) return;
+    const render = () => window.twttr?.widgets?.load();
+    if (window.twttr?.widgets) { render(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://platform.twitter.com/widgets.js';
+    s.async = true;
+    s.onload = render;
+    document.body.appendChild(s);
+  }, [post]);
+
   if (loading) return (
     <main className="relative z-[1] max-w-[800px] mx-auto px-5 pt-[110px] pb-16">
       <p className="text-white/60 text-center py-[60px]">Carregando post…</p>
@@ -81,8 +94,16 @@ export default function Post() {
               </div>
             </header>
 
+            {/* O DOMPurify remove iframes por padrão; liberamos só o necessário
+                pros embeds. A autoridade real é o servidor (lib/validate.js),
+                que já limita iframes aos hosts do YouTube antes de salvar. */}
             <div className="post-body text-base"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }} />
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(post.content || '', {
+                  ADD_TAGS: ['iframe'],
+                  ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'target'],
+                }),
+              }} />
           </div>
         </div>
 

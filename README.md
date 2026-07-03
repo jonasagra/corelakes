@@ -9,7 +9,7 @@ Portfolio pessoal e blog de Jonas Agra (Corelakes).
 | UI | React 18 |
 | CSS | Tailwind CSS 3 + tema Minecraft customizado |
 | Backend / Auth | API Routes (`/api`) + Neon (Postgres) + sessão JWT em cookie httpOnly |
-| Rich-text editor | Quill 2 via react-quill-new (compatível com React 19 / Next 15) |
+| Rich-text editor | TipTap (estilo Gutenberg: blocos, embeds de YouTube/X, tela cheia) |
 | Image pipeline | Upload para Vercel Blob |
 | Deploy | Vercel |
 
@@ -48,10 +48,9 @@ app/
     ├── page.jsx            # Dashboard admin (login + editor)
     └── components/         # Componentes privados do admin
         ├── AdminControls.jsx
-        ├── CreatePostTab.jsx
+        ├── PostEditor.jsx   # Editor TipTap em tela cheia (estilo Gutenberg)
         ├── InfoPostsTab.jsx
-        ├── SecurityTab.jsx
-        └── quillImage.js
+        └── SecurityTab.jsx
 
 src/
 ├── index.css               # Tailwind imports, @font-face, estilos globais
