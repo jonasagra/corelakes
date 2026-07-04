@@ -30,18 +30,19 @@ export default function PostsTable({ title, posts, categories, onEdit, onDelete,
     <section className="mc-panel p-5 md:p-[25px]">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h2 className="text-[1.05rem] font-semibold text-white">{title}</h2>
-        <div className="flex flex-wrap gap-2">
+        {/* mobile: busca e filtro empilhados em largura total; desktop: lado a lado */}
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <input
             type="search"
             value={search}
             placeholder="Buscar por título…"
             onChange={(e) => setSearch(e.target.value)}
-            className="admin-input px-3 py-2 text-sm bg-[#0d0d0d] border border-[#2f2f2f] text-white/85 focus:outline-none focus:border-mc-green-bright"
+            className="admin-input w-full sm:w-[220px] min-w-0 px-3 py-2 text-sm bg-[#0d0d0d] border border-[#2f2f2f] text-white/85 focus:outline-none focus:border-mc-green-bright"
           />
           <select
             value={filterCat}
             onChange={(e) => setFilterCat(e.target.value)}
-            className="admin-input px-3 py-2 text-sm bg-[#0d0d0d] border border-[#2f2f2f] text-white/85 focus:outline-none focus:border-mc-green-bright"
+            className="admin-input w-full sm:w-auto min-w-0 px-3 py-2 text-sm bg-[#0d0d0d] border border-[#2f2f2f] text-white/85 focus:outline-none focus:border-mc-green-bright"
           >
             <option value="all">Todas as categorias</option>
             <option value="none">Sem categoria</option>

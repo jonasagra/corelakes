@@ -5,7 +5,7 @@
 // publicado (visitas do admin logado não contam).
 import { CatBadge } from './PostsTable';
 
-const Card = ({ label, value, hint }) => (
+export const Card = ({ label, value, hint }) => (
   <div className="mc-panel p-5">
     <p className="text-[0.75rem] uppercase tracking-[1px] text-white/45">{label}</p>
     <p className="text-[1.9rem] font-bold text-white leading-tight mt-1">{value}</p>

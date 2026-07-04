@@ -6,7 +6,7 @@ const linkCls = 'block font-mc text-[0.95rem] text-mc-green-link py-1 no-underli
 export default function Footer() {
   return (
     <footer className="relative z-[10] mt-20 bg-mc-black border-t border-[#1d1d1d]">
-      <div id="redes" className="pt-10 pb-2 px-5 scroll-mt-[80px]">
+      <div id="redes" className="pt-10 pb-9 px-5 scroll-mt-[80px]">
         <p className="mc-label text-[0.95rem] text-white/80 text-center mb-5">Siga Corelakes</p>
         <div className="flex flex-wrap justify-center gap-[14px] max-w-[640px] mx-auto">
           {SOCIALS.map(({ href, img, alt }) => (
@@ -20,7 +20,7 @@ export default function Footer() {
         <div className="grid gap-8 py-9 border-t border-[#1d1d1d] sm:grid-cols-1" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
           <div>
             <img src="/logo.png" alt="Corelakes" className="h-8 w-auto mb-3" />
-            <p className="font-mc text-[0.95rem] text-white/55 leading-relaxed max-w-[280px]">Criador de conteúdo de Minecraft.</p>
+            <p className="font-mc text-[0.95rem] text-white/55 leading-relaxed max-w-[280px]">Meu blog e conteúdo de Minecraft.</p>
             <p className="font-mc text-[0.9rem] text-white/40 mt-3">João Pessoa · Paraíba</p>
           </div>
           <div>

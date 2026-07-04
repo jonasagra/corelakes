@@ -103,7 +103,7 @@ export default function Blog() {
                 )}
 
                 <Link href={`/post/${post.slug}`} className="no-underline">
-                  <h2 className="text-[1.12rem] font-bold text-white leading-snug mb-2 hover:text-mc-green-bright transition-colors">
+                  <h2 className="font-mc-pixel text-[1rem] text-white leading-snug mb-2 hover:text-mc-green-bright transition-colors">
                     {post.title}
                   </h2>
                 </Link>

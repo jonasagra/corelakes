@@ -13,7 +13,8 @@ export default {
         // decorativas (título do blog e afins)
         'mc-bold': ["'Minecraft-Bold'", 'monospace'],
         'mc-five': ["'MinecraftFive'", 'monospace'],
-        'mc-ten': ["'MinecraftTen'", 'monospace'],
+        // Minercraftory substituiu a MinecraftTen (tem acentos)
+        'mc-ten': ["'Minercraftory'", 'monospace'],
         // pixel (Monocraft.ttf — registrada como 'Minecraft' no @font-face)
         'mc-pixel': ["'Minecraft'", 'monospace'],
       },

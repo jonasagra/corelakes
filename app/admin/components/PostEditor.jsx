@@ -210,16 +210,16 @@ export default function PostEditor({
     <div className="fixed inset-x-0 bottom-0 top-[70px] z-[150] bg-[#0e0e0f] flex flex-col">
 
       {/* ── Cabeçalho do editor ── */}
-      <header className="h-[54px] shrink-0 flex items-center justify-between gap-2 px-3 bg-[#161617] border-b border-black">
-        <div className="flex items-center gap-1">
+      <header className="h-[54px] shrink-0 flex items-center justify-between gap-1 sm:gap-2 px-2 sm:px-3 bg-[#161617] border-b border-black overflow-hidden">
+        <div className="flex items-center gap-1 shrink-0">
           <Btn title="Sair do editor" onClick={onExit}>←</Btn>
           <Divider />
           <Btn title="Desfazer" disabled={!editor.can().undo()} onClick={() => editor.chain().focus().undo().run()}>↶</Btn>
           <Btn title="Refazer" disabled={!editor.can().redo()} onClick={() => editor.chain().focus().redo().run()}>↷</Btn>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="hidden md:inline font-mc text-[0.72rem] text-white/40">
+        <div className="flex items-center gap-1 sm:gap-2 min-w-0">
+          <span className="hidden md:inline font-mc text-[0.72rem] text-white/40 whitespace-nowrap">
             {editId ? (status === 'draft' ? 'Editando rascunho' : 'Editando post') : 'Novo post'}
           </span>
           {(!editId || status === 'draft') && (
@@ -228,9 +228,10 @@ export default function PostEditor({
               disabled={publishing}
               onClick={onSaveDraft}
               title="Salva sem publicar — fica na aba Rascunhos"
-              className="h-[34px] px-3 font-mc text-[0.8rem] text-white/80 bg-[#1b1b1c] border border-black hover:text-white hover:bg-[#2a2a2b] transition-colors disabled:opacity-50"
+              className="h-[34px] px-2 sm:px-3 whitespace-nowrap font-mc text-[0.78rem] sm:text-[0.8rem] text-white/80 bg-[#1b1b1c] border border-black hover:text-white hover:bg-[#2a2a2b] transition-colors disabled:opacity-50"
             >
-              Salvar rascunho
+              <span className="sm:hidden">Rascunho</span>
+              <span className="hidden sm:inline">Salvar rascunho</span>
             </button>
           )}
           <Btn title="Configurações do post" active={settingsOpen} onClick={() => setSettingsOpen(!settingsOpen)}>
@@ -243,7 +244,7 @@ export default function PostEditor({
             type="button"
             disabled={publishing}
             onClick={onPublish}
-            className="h-[34px] px-4 font-mc text-[0.8rem] text-white bg-mc-green border border-black hover:bg-mc-green-light transition-colors disabled:opacity-50"
+            className="h-[34px] px-3 sm:px-4 whitespace-nowrap font-mc text-[0.78rem] sm:text-[0.8rem] text-white bg-mc-green border border-black hover:bg-mc-green-light transition-colors disabled:opacity-50"
           >
             {publishing ? 'Salvando…' : (editId && status === 'published' ? 'Atualizar' : 'Publicar')}
           </button>
@@ -271,7 +272,7 @@ export default function PostEditor({
 
         {/* barra de formatação (seleção de texto) / controles de imagem */}
         <BubbleMenu editor={editor} tippyOptions={{ duration: 100, maxWidth: 'none' }}>
-          <div className="flex items-center gap-1 p-1 bg-[#161617] border-2 border-black shadow-lg">
+          <div className="flex flex-wrap items-center gap-1 p-1 max-w-[92vw] bg-[#161617] border-2 border-black shadow-lg">
             {editor.isActive('image') ? (
               <>
                 <Btn title="Pequena" active={imgClass.includes('img-w-40')} onClick={() => setImgClass('w', 'img-w-40')}>40%</Btn>
@@ -302,7 +303,7 @@ export default function PostEditor({
 
         {/* inserção de blocos em linha vazia (o "+" do Gutenberg) */}
         <FloatingMenu editor={editor} tippyOptions={{ duration: 100, maxWidth: 'none', placement: 'bottom-start' }}>
-          <div className="flex flex-wrap items-center gap-1 p-1 bg-[#161617] border-2 border-black shadow-lg">
+          <div className="flex flex-wrap items-center gap-1 p-1 max-w-[92vw] bg-[#161617] border-2 border-black shadow-lg">
             <Btn title="Título (H2)" active={editor.isActive('heading', { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>H2</Btn>
             <Btn title="Subtítulo (H3)" active={editor.isActive('heading', { level: 3 })} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>H3</Btn>
             <Btn title="Lista" onClick={() => editor.chain().focus().toggleBulletList().run()}>•≡</Btn>

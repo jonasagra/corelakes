@@ -64,8 +64,8 @@ function CategoryRow({ cat, onUpdate, onDelete }) {
       >
         {name || '—'}
       </span>
-      <span className="text-[0.75rem] text-white/40 w-[70px]">{cat.post_count} post(s)</span>
-      <div className="flex gap-2">
+      <span className="text-[0.75rem] text-white/40 whitespace-nowrap">{cat.post_count} post(s)</span>
+      <div className="flex gap-2 shrink-0">
         <button className="mc-btn !py-[6px] !px-3" disabled={!dirty || busy} onClick={save}
           style={!dirty ? { opacity: 0.35, pointerEvents: 'none' } : undefined}>
           Salvar

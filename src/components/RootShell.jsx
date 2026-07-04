@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import Particles from '@/components/Particles';
 import Toast from '@/components/Toast';
 import ConfirmModal from '@/components/ConfirmModal';
+import BackToTop from '@/components/BackToTop';
 
 export default function RootShell({ children }) {
   const { isAdmin } = useAuth();
@@ -22,6 +23,8 @@ export default function RootShell({ children }) {
       <Toast />
       <ConfirmModal />
       {children}
+      {/* fora do <main> (que tem z-index próprio): fica na FRENTE do footer */}
+      <BackToTop />
       {!hideFooter && <Footer />}
     </>
   );

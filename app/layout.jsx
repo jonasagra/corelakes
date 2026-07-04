@@ -74,7 +74,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="preload" href="/fonts/San Francisco/SF-Pro-Text-Regular.otf" as="font" type="font/otf" crossOrigin="" />
         <link rel="preload" href="/fonts/San Francisco/SF-Pro-Display-Bold.otf" as="font" type="font/otf" crossOrigin="" />
-        <link rel="preload" href="/fonts/MinecraftTen-VGORe.ttf" as="font" type="font/ttf" crossOrigin="" />
+        <link rel="preload" href="/fonts/Minercraftory.ttf" as="font" type="font/ttf" crossOrigin="" />
         <link rel="preload" href="/fonts/Minecraft-Fivev2.fecd15.ttf" as="font" type="font/ttf" crossOrigin="" />
         <script
           type="application/ld+json"

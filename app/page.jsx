@@ -47,7 +47,7 @@ export default function Home() {
             <p className="font-mc text-[0.72rem] uppercase tracking-[2px] text-mc-green-link text-center mb-4">
               Engenharia de Software · Criador de Conteúdo
             </p>
-            <h2 className="font-mc-ten text-[1.6rem] text-white text-center mb-5 sm:text-[1.3rem]">Sobre mim</h2>
+            <h2 className="font-mc-ten uppercase text-[1.6rem] text-white text-center mb-5 sm:text-[1.3rem]">Sobre mim</h2>
             <p className="text-white/85 text-[0.98rem] leading-[1.75]">
               Olá, seja bem-vindo ao meu blog! Sou o <strong className="text-white">Corelakes</strong> e crio
               conteúdo sobre Minecraft há anos. Comecei com a <em>Minecraft Interessante</em>, uma página no
@@ -74,11 +74,6 @@ export default function Home() {
 
       {/* ── conteúdo normal (fundo do site) ── */}
       <main className="relative z-[1] max-w-[860px] mx-auto px-5 pt-9 pb-16">
-        <div className="flex flex-wrap justify-center gap-3">
-          <Link href="/blog" className="mc-btn min-w-[190px]">Ver o blog</Link>
-          <a href="#redes" className="mc-btn min-w-[190px]">Minhas redes</a>
-        </div>
-
         {/* ── EM DESTAQUE (estilo minecraft.net/article) ── */}
         {big && (
           <section className="mt-16">
@@ -100,7 +95,7 @@ export default function Home() {
                       {big.category_name}
                     </p>
                   )}
-                  <h3 className="font-display text-[1.45rem] font-bold text-white leading-snug">
+                  <h3 className="font-mc-pixel text-[1.25rem] text-white leading-snug">
                     {big.title}
                   </h3>
                   {big.excerpt && (
@@ -131,7 +126,7 @@ export default function Home() {
                         {p.category_name}
                       </p>
                     )}
-                    <h3 className="text-[1.05rem] font-bold text-white leading-snug">{p.title}</h3>
+                    <h3 className="font-mc-pixel text-[0.95rem] text-white leading-snug">{p.title}</h3>
                     <Link href={`/post/${p.slug}`}
                           className="mt-auto pt-1 text-mc-green-bright text-[0.85rem] font-semibold no-underline hover:text-white transition-colors">
                       Ler o post <span aria-hidden="true">↗</span>
@@ -158,7 +153,7 @@ export default function Home() {
                     </div>
                   )}
                   <div className="p-4">
-                    <h3 className="font-mc text-[0.98rem] text-white mb-2 leading-snug hover:text-mc-green-bright transition-colors">
+                    <h3 className="font-mc-pixel text-[0.92rem] text-white mb-2 leading-snug hover:text-mc-green-bright transition-colors">
                       {p.title}
                     </h3>
                     <span className="text-white/45 text-[0.75rem]">{p.date}</span>

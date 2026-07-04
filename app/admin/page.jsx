@@ -15,6 +15,7 @@ import { confirmDialog } from '@/components/ConfirmModal';
 import { ApiUploader } from '@/utils/imageProcessor';
 import { OreButton, OreInput } from './components/AdminControls';
 import PostEditor from './components/PostEditor';
+import OverviewTab from './components/OverviewTab';
 import PostsTable from './components/PostsTable';
 import CategoriesTab from './components/CategoriesTab';
 import MetricsTab from './components/MetricsTab';
@@ -76,21 +77,29 @@ function LoginSection({ onLoggedIn }) {
 }
 
 /* ── Menu lateral (estilo WordPress) ───────────────────────────── */
+const DOOR_ICON = 'https://minecraft.wiki/images/Oak_Door_JE8.png?f3318&format=original';
+
 const MENU = [
+  {
+    group: 'Painel',
+    items: [
+      { id: 'overview', icon: '/icons/compass.gif', label: 'Visão geral' },
+    ],
+  },
   {
     group: 'Informações de postagens',
     items: [
-      { id: 'create',     label: 'Criar postagem' },
-      { id: 'posts',      label: 'Editar postagens' },
-      { id: 'drafts',     label: 'Rascunhos' },
-      { id: 'categories', label: 'Configurar categorias' },
-      { id: 'metrics',    label: 'Métricas gerais' },
+      { id: 'create',     icon: '/icons/new-post-icon.png',      label: 'Criar postagem' },
+      { id: 'posts',      icon: '/icons/edit-post.png',          label: 'Editar postagens' },
+      { id: 'drafts',     icon: '/icons/drafts-icon.png',        label: 'Rascunhos' },
+      { id: 'categories', icon: '/icons/edit-category-icon.png', label: 'Configurar categorias' },
+      { id: 'metrics',    icon: '/icons/metrics-icon.gif',       label: 'Métricas gerais' },
     ],
   },
   {
     group: 'Segurança e privacidade',
     items: [
-      { id: 'security', label: '2FA e sessões' },
+      { id: 'security', icon: '/icons/security-icon.png', label: '2FA e sessões' },
     ],
   },
 ];
@@ -99,28 +108,28 @@ const MENU = [
 // menu hambúrguer da navbar (links /admin?view=...).
 function Sidebar({ view, onNavigate, draftCount, onLogout }) {
   return (
-    <aside className="hidden md:block md:w-[230px] shrink-0">
-      <nav className="mc-panel p-3 md:sticky md:top-[86px]">
-        <div className="flex flex-col gap-1">
+    <aside className="hidden md:block md:w-[240px] shrink-0">
+      {/* placas com entalhe 3D sobre fundo preto (ref. minecraft.net) */}
+      <nav className="bg-[#0a0a0b] border border-black p-[3px] md:sticky md:top-[86px]">
+        <div className="flex flex-col gap-[3px]">
           {MENU.map(({ group, items }) => (
-            <div key={group} className="flex flex-col gap-1 mb-3">
-              <p className="text-[0.68rem] uppercase tracking-[1.5px] text-white/35 px-2 pt-2 pb-1">
+            <div key={group} className="flex flex-col gap-[3px]">
+              <p className="text-[0.66rem] uppercase tracking-[1.5px] text-white/35 px-2 pt-3 pb-1 font-semibold">
                 {group}
               </p>
-              {items.map(({ id, label }) => (
+              {items.map(({ id, icon, label }) => (
                 <button
                   key={id}
                   type="button"
                   onClick={() => onNavigate(id)}
-                  className={`whitespace-nowrap text-left text-[0.85rem] px-3 py-2 border border-transparent transition-colors ${
-                    view === id
-                      ? 'bg-mc-green text-white border-black'
-                      : 'text-white/65 hover:text-white hover:bg-white/5'
+                  className={`flex items-center gap-[10px] whitespace-nowrap text-left font-mc-pixel text-[0.78rem] px-3 py-[10px] ${
+                    view === id ? 'mc-bevel-green text-white' : 'mc-bevel text-white/70 hover:text-white'
                   }`}
                 >
-                  {id === 'create' ? `+ ${label}` : label}
+                  <img src={icon} alt="" aria-hidden="true" className="w-[18px] h-[18px] object-contain shrink-0" />
+                  <span className="flex-1">{label}</span>
                   {id === 'drafts' && draftCount > 0 && (
-                    <span className="ml-2 px-[6px] py-[1px] text-[0.68rem] bg-mc-gold text-black font-bold">{draftCount}</span>
+                    <span className="px-[6px] py-[1px] text-[0.68rem] bg-mc-gold text-black font-bold">{draftCount}</span>
                   )}
                 </button>
               ))}
@@ -129,9 +138,10 @@ function Sidebar({ view, onNavigate, draftCount, onLogout }) {
           <button
             type="button"
             onClick={onLogout}
-            className="text-left text-[0.85rem] px-3 py-2 text-[#ff8a8a] hover:text-white hover:bg-[#8b2020]/40 border border-transparent transition-colors mt-2"
+            className="mc-bevel flex items-center gap-[10px] text-left font-mc-pixel text-[0.78rem] px-3 py-[10px] text-[#ff8a8a] hover:text-white mt-3"
           >
-            Sair
+            <img src={DOOR_ICON} alt="" aria-hidden="true" className="w-[18px] h-[18px] object-contain shrink-0" />
+            Sair da conta
           </button>
         </div>
       </nav>
@@ -147,7 +157,7 @@ function Dashboard({ onLogout }) {
   const searchParams = useSearchParams();
   const hasFetchedRef = useRef(false);
 
-  const [view, setView] = useState('posts');
+  const [view, setView] = useState('overview');
   const [editorOpen, setEditorOpen] = useState(false);
 
   // campos do post em edição
@@ -181,7 +191,7 @@ function Dashboard({ onLogout }) {
     if (v === 'create') {
       clearEditor();
       setEditorOpen(true);
-    } else if (['posts', 'drafts', 'categories', 'metrics', 'security'].includes(v)) {
+    } else if (['overview', 'posts', 'drafts', 'categories', 'metrics', 'security'].includes(v)) {
       setEditorOpen(false);
       setView(v);
     }
@@ -319,6 +329,16 @@ function Dashboard({ onLogout }) {
         <Sidebar view={view} onNavigate={navigate} draftCount={draftPosts.length} onLogout={onLogout} />
 
         <div className="flex-1 min-w-0 w-full">
+          {view === 'overview' && (
+            <OverviewTab
+              posts={posts}
+              categories={categories}
+              onEdit={fillEditor}
+              onNew={openNew}
+              onNavigate={setView}
+            />
+          )}
+
           {view === 'posts' && (
             <PostsTable
               title="Editar postagens"

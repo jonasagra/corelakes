@@ -6,6 +6,9 @@ import Link from 'next/link';
 import DOMPurify from 'dompurify';
 import usePosts from '@/hooks/usePosts';
 import useAuth from '@/hooks/useAuth';
+import ShareBar from '@/components/ShareBar';
+
+const BASE = 'https://corelakes.jonasagra.com.br';
 
 export default function Post() {
   const params = useParams();
@@ -87,10 +90,10 @@ export default function Post() {
                   {post.category_name}
                 </span>
               )}
-              <h1 className="text-[2rem] font-bold text-white mb-4 leading-[1.25] sm:text-[1.5rem]">
+              <h1 className="font-mc-ten uppercase text-[1.9rem] text-white mb-4 leading-[1.3] sm:text-[1.4rem]">
                 {post.title}
               </h1>
-              <div className="flex flex-wrap gap-5 text-white/55 text-[0.85rem] pb-5 border-b border-[#2a2a2b]">
+              <div className="flex flex-wrap gap-5 font-mc-pixel text-white/55 text-[0.8rem] pb-5 border-b border-[#2a2a2b]">
                 <span className="flex items-center gap-[6px]">
                   <img src="https://minecraft.wiki/images/archive/20181112133323%21Calendar_sheet.png?ec376&format=original" alt="" aria-hidden="true" className="oreUI-icon !w-4 !h-4" />
                   {post.date}
@@ -119,6 +122,9 @@ export default function Post() {
                   ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'target'],
                 }),
               }} />
+
+            {/* compartilhar nas redes (intents oficiais) */}
+            <ShareBar title={post.title} url={`${BASE}/post/${post.slug}`} />
           </div>
         </div>
 
