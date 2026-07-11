@@ -1,5 +1,7 @@
 const BASE = 'https://corelakes.jonasagra.com.br';
 
+export const revalidate = 3600; // regenera o sitemap a cada 1h
+
 export default async function sitemap() {
   const routes = [
     {
