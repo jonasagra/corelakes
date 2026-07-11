@@ -126,22 +126,27 @@ export default function PostEditor({
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const editor = useEditor({
-    immediatelyRender: false, // obrigatório no Next.js (evita erro de SSR)
-    extensions: [
-      StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
-      Underline,
-      TipTapLink.configure({ openOnClick: false, autolink: true }),
-      CoreImage,
-      Youtube.configure({ nocookie: true, width: 640, height: 360 }),
-      Tweet,
-      TextStyle,
-      Color,
-      Placeholder.configure({ placeholder: 'Comece a escrever, ou use o + para adicionar blocos…' }),
-    ],
-    content: content || '',
-    onUpdate: ({ editor: ed }) => setContent(ed.getHTML()),
-    editorProps: { attributes: { class: 'core-editor' } },
-  });
+  immediatelyRender: false, // obrigatório no Next.js (evita erro de SSR)
+  extensions: [
+    StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
+    Underline,
+    TipTapLink.configure({ openOnClick: false, autolink: true }),
+    CoreImage,
+    Youtube.configure({ nocookie: true, width: 640, height: 360 }),
+    Tweet,
+    TextStyle,
+    Color,
+    Placeholder.configure({ placeholder: 'Comece a escrever, ou use o + para adicionar blocos…' }),
+  ],
+  content: content || '',
+  onUpdate: ({ editor: ed }) => setContent(ed.getHTML()),
+  editorProps: {
+    attributes: { class: 'core-editor' },
+    transformPastedHTML(html) {
+      return html.replace(/\s*(color|background-color)\s*:\s*[^;"]+;?/gi, '');
+    },
+  },
+});
 
   // trava o scroll da página atrás do editor
   useEffect(() => {
